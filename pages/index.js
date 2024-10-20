@@ -1,20 +1,10 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
-import { Plus_Jakarta_Sans, DM_Sans } from 'next/font/google';
+import "@/styles/theme"
 import "@phosphor-icons/web/light";
 import "@phosphor-icons/web/bold";
+import { Text } from "@chakra-ui/react";
 
-export const jakarta = Plus_Jakarta_Sans({
-  weight: 'variable',
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--jakarta',
-})
-export const dm_sans = DM_Sans({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--dm-sans',
-}) 
 
 export default function Home() {
   return (
@@ -26,10 +16,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div
-        className={`${styles.page} ${dm_sans.variable} ${jakarta.variable}`}
+        className={`${styles.page}`}
       >
         <main className={styles.main}>
-          <p> testing 1</p>
+          <Text fontFamily="heading">The quick brown fox jumps over the lazy dog</Text>
         </main>
       </div>
     </>
