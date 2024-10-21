@@ -14,7 +14,7 @@ const overrides = {
     components: {
         Button: {
             ...Button,
-        }
+        },
     },
     fontWeights: {
         normal: 400,
