@@ -1,5 +1,6 @@
 import { extendTheme } from "@chakra-ui/react";
 import { theme as chakraTheme } from "@chakra-ui/react";
+import Button from './components/button';
 
 const fonts = {
     ...chakraTheme.fonts,
@@ -10,6 +11,11 @@ const fonts = {
 const overrides = {
     ...chakraTheme,
     fonts,
+    components: {
+        Button: {
+            ...Button,
+        }
+    },
     fontWeights: {
         normal: 400,
         medium: 500,
