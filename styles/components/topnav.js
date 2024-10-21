@@ -25,7 +25,7 @@ export default function TopNav() {
                         <IconButton 
                             aria-label="User settings" 
                             icon={<User />}  
-                            variant="ghost" 
+  variant="ghost" 
                             mr="55px"
                         />
                     </Link>

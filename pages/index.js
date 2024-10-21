@@ -6,6 +6,7 @@ import "@phosphor-icons/web/bold";
 import { Text } from "@chakra-ui/react";
 import { Button as ChakraButton } from '@chakra-ui/react';
 import TopNav from "@/styles/components/topnav";
+import { SideNavBar } from "@/styles/components/sidenav";
 
 export default function Home() {
   return (
@@ -19,7 +20,7 @@ export default function Home() {
       <div className={`${styles.page}`}>
         <TopNav />
         <main className={styles.main}>
-          
+          <SideNavBar />
         </main>
       </div>
     </>
