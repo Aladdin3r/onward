@@ -7,6 +7,7 @@ import { Text } from "@chakra-ui/react";
 import { Button as ChakraButton } from '@chakra-ui/react';
 import TopNav from "@/styles/components/topnav";
 import { SideNavBar } from "@/styles/components/sidenav";
+import Footer from "@/styles/components/footer";
 
 export default function Home() {
   return (
@@ -22,6 +23,7 @@ export default function Home() {
         <main className={styles.main}>
           <SideNavBar />
         </main>
+        <Footer />
       </div>
     </>
   );
