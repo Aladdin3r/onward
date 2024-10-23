@@ -14,7 +14,7 @@ export default function TopNav() {
 
     return (
         <Box bg={bgColor} px={4} borderBottom="1px solid #E6EAF2">
-            <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
+            <Flex h={"104px"} alignItems={'center'} justifyContent={'space-between'}>
                 <Box fontSize={{ base: 'md', md: 'lg' }}>
                     <Link href="/">
                         <Image src="logo.svg" boxSize="253px" alt="Onward Logo" style={{ padding: "30px" }} />
