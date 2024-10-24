@@ -3,7 +3,7 @@ import styles from "@/styles/Home.module.css";
 import "@/styles/theme";
 import "@phosphor-icons/web/light";
 import "@phosphor-icons/web/bold";
-import { Heading, Box, CardBody, Text, Stack, Card, Link, Flex } from "@chakra-ui/react";
+import { Heading, Box, CardBody, Text, Stack, Card, Link } from "@chakra-ui/react";
 import { Button as ChakraButton } from "@chakra-ui/react";
 import TopNav from "@/styles/components/topnav";
 import { SideNavBar } from "@/styles/components/sidenav";
