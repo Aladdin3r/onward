@@ -36,7 +36,7 @@ export const SideNavBar = ({ property1 }) => {
   return (
     <Box
       bg="brand.blueberryCreme"
-      height="1080px"
+      height="100vh"
       width="275px"
       position="relative"
       pt={5}
