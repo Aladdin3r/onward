@@ -25,12 +25,8 @@ export default function Practice() {
                     <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <main className={styles.main} style={{ position: "relative" }}>
                 {/* container for interview */}
-                <Box ml={"17.1875rem"}>
-                    <ProgressBar/>
-                </Box>
-            </main>
+                <ProgressBar/>
         </Layout>
         </>
     );

@@ -22,6 +22,8 @@ const overrides = {
         bold: 700,
     },
     fontSizes: {
+        xxs: "14pt",
+        xs: "16pt",
         sm: "20pt",
         md: "24pt",
         lg: "32pt",
