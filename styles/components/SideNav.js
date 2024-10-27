@@ -44,19 +44,16 @@ export const SideNavBar = ({ activeVariant  }) => {
     <Box
       bg="brand.blueberryCreme"
       height="100vh"
-      width="275px"
+      width="280px"
       position="relative"
       pt={5}
       pl={3}
     >
-      <VStack align="flex-start" spacing={6}>
+      <VStack align="flex-start" spacing={6} width="100%">
         {Object.keys(variants).map((variant, index) => (
           <Link href={variants[variant].path} key={variant} passHref>
             <Flex
-              key={variant}
               align="center"
-              justify="center"
-              position="relative"
               cursor="pointer"
               width="100%"
               bg={activeVariant === variant ? "brand.blushPink" : "none"} // Active state
@@ -66,37 +63,30 @@ export const SideNavBar = ({ activeVariant  }) => {
                   ? "26px 0 0 26px" // Match hover border-radius for active state
                   : "md"
               } // Rounded corners
-              p={5} // Padding for hover area
+              p={4} // Padding for hover area
               _hover={
                 activeVariant !== variant // Only apply hover effect if not active
                   ? {
                       bg: "brand.blushPink", // Hover background
-                      height: "52px",
                       color: "brand.frostWhite",
-                      borderTopRightRadius: "0",
-                      borderBottomRightRadius: "0",
-                      borderBottomLeftRadius: "26px",
-                      borderTopLeftRadius: "26px",
+                      borderRadius: "26px 0 0 26px",
                       transition: "background-color 0.3s, transform 0.3s",
                     }
                   : {}
-                }
-              >
-              <Box position="absolute" left="20px">
+              }
+            >
+              <Box mr={4}>
                 {variants[variant].icon}
               </Box>
               <Text
-                position="absolute"
-                left="66px"
                 fontFamily="body"
                 fontSize="20px"
                 fontWeight="bold"
-                top="7px"
               >
                 {variants[variant].label}
               </Text>
             </Flex>
-        </Link>
+          </Link>
         ))}
       </VStack>
     </Box>
@@ -104,5 +94,5 @@ export const SideNavBar = ({ activeVariant  }) => {
 };
 
 SideNavBar.propTypes = {
-  property1: PropTypes.oneOf(["variant-4", "variant-2", "variant-3", "default"]),
+  activeVariant: PropTypes.oneOf(["variant4", "variant2", "variant3", "default"]),
 };
