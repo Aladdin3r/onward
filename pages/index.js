@@ -4,10 +4,11 @@ import "@/styles/theme";
 import "@phosphor-icons/web/light";
 import "@phosphor-icons/web/bold";
 import { Heading, Box, CardBody, Text, Stack, Card, Link } from "@chakra-ui/react";
-import { Button as ChakraButton } from "@chakra-ui/react";
+// import { Button as ChakraButton } from "@chakra-ui/react";
 import TopNav from "@/styles/components/TopNav";
 import { SideNavBar } from "@/styles/components/SideNav";
 import Footer from "@/styles/components/Footer";
+import Popup from "@/styles/components/modal"; // Adjust the import path as necessary
 
 export default function Home() {
   return (
@@ -25,7 +26,7 @@ export default function Home() {
         <TopNav />
         <main className={styles.main} style={{ position: "relative" }}>
           <SideNavBar property1="default" />
-          <Box className="content" m={8}>
+          <Box className="content" m={6}>
             <Heading
               fontFamily="heading"
               color="black"
@@ -54,11 +55,7 @@ export default function Home() {
                     Whether you're preparing for your first interview or refining your skills, we're here to help you succeed. Your next opportunity is just a practice session away. Are you ready to start practicing for your upcoming nursing interview?
                     <span style={{ fontWeight: "bold" }}><br/>Let’s get you confident and prepared!</span>
                     </Text>
-                    <ChakraButton variant="mdPrimary" p={3} position="relative">
-                      <Text display="flex" p={2} fontSize="24px">
-                        Start Practicing!
-                      </Text>
-                    </ChakraButton>
+                    <Popup title="Start Practicing" heading="Select an Interview Type:" />
                   </Stack>
                 </CardBody>
               </Card>
@@ -174,11 +171,6 @@ export default function Home() {
                       width="90%"
                       overflowY="auto" // Enable vertical scrolling
                     >
-                      <Text>This is a placeholder for Job Posting 1</Text>
-                      <Text>This is a placeholder for Job Posting 2</Text>
-                      <Text>This is a placeholder for Job Posting 3</Text>
-                      <Text>This is a placeholder for Job Posting 4</Text>
-                      <Text>This is a placeholder for Job Posting 5</Text>
                       <Text>This is a placeholder for Job Posting 1</Text>
                       <Text>This is a placeholder for Job Posting 2</Text>
                       <Text>This is a placeholder for Job Posting 3</Text>
