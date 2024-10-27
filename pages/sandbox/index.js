@@ -3,11 +3,11 @@ import styles from "@/styles/Home.module.css";
 import "@/styles/theme"
 import "@phosphor-icons/web/light";
 import "@phosphor-icons/web/bold";
-import { Text } from "@chakra-ui/react";
-import { Button as ChakraButton } from '@chakra-ui/react';
-import TopNav from "@/styles/components/topnav";
-import { SideNavBar } from "@/styles/components/sidenav";
-import Footer from "@/styles/components/footer";
+// import { Text } from "@chakra-ui/react";
+// import { Button as ChakraButton } from '@chakra-ui/react';
+import TopNav from "@/styles/components/TopNav";
+import { SideNavBar } from "@/styles/components/SideNav";
+import Footer from "@/styles/components/Footer";
 
 import SandboxTranscriber from "@/pages/sandbox/components/SandboxTranscriber";
 
