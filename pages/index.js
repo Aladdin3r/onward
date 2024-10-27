@@ -5,9 +5,9 @@ import "@phosphor-icons/web/light";
 import "@phosphor-icons/web/bold";
 import { Heading, Box, CardBody, Text, Stack, Card, Link } from "@chakra-ui/react";
 import { Button as ChakraButton } from "@chakra-ui/react";
-import TopNav from "@/styles/components/topnav";
-import { SideNavBar } from "@/styles/components/sidenav";
-import Footer from "@/styles/components/footer";
+import TopNav from "@/styles/components/TopNav";
+import { SideNavBar } from "@/styles/components/SideNav";
+import Footer from "@/styles/components/Footer";
 
 export default function Home() {
   return (
