@@ -47,7 +47,7 @@ const Button = {
         bg: 'brand.blushPink',
         color: 'brand.frostWhite',
         width: ['100%', '150px'],
-        height: '45px',
+        height: '64px',
         fontSize: ['14pt', '16pt', '20pt'],
         borderRadius: '999px',
       },

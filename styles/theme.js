@@ -1,6 +1,6 @@
 import { extendTheme } from "@chakra-ui/react";
 import { theme as chakraTheme } from "@chakra-ui/react";
-import Button from './components/button';
+import Button from './components/Button.js';
 
 const fonts = {
     ...chakraTheme.fonts,
@@ -38,6 +38,7 @@ const overrides = {
         imperialRed: "#EAE84A",
         canaryYellow: "#EAE84A",
         oceanBlue: "#214DDF",
+        pureWhite: "#FFFFFF"
         }
     },
     styles: {
