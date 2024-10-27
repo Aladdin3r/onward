@@ -1,6 +1,10 @@
+// web-app layout with the sidebar and top bar layout
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { SideNavBar } from "@/styles/components/sidenav"; 
+import AppTopNav from "@/styles/components/AppTopNav";
+import { Box, Flex } from "@chakra-ui/react";
 
 const variants = {
   default: "/",
@@ -26,9 +30,15 @@ export default function Layout({ children }) {
 
   return (
     <>
-      <apptopnav title="Onward" />
-        <SideNavBar activeVariant={activeVariant} /> 
-      <main>{children}</main>
+   <Flex>
+      <SideNavBar activeVariant={activeVariant} />
+      <Flex direction="column" flex="1"> 
+        <Box>
+          <AppTopNav title="Practice Overview" />
+        </Box>
+        <main>{children}</main>
+      </Flex>
+    </Flex>
     </>
   );
 }

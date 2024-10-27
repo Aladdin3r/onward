@@ -5,7 +5,7 @@ export default function AppTopNav({ title }) {
     return (
         <Box 
             id="app-top-nav" 
-            bg="bg"
+            bg=""
             px={4} 
             borderBottom="1px solid #E6EAF2"
         >
