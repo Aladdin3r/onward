@@ -10,24 +10,25 @@ import {
   ChalkboardTeacher,
   ClockCounterClockwise,
   UserSound,
+  Presentation,
 } from "@phosphor-icons/react";
 
 const variants = {
   default: {
     label: "Dashboard",
-    icon: <ChalkboardTeacher size={32} />,
+    icon: <UserSound size={32} />,
   },
   variant2: {
     label: "Mock Interview",
-    icon: <UserSound size={32} />,
+    icon: <ChalkboardTeacher size={32} />,
   },
   variant3: {
-    label: "History",
-    icon: <ClockCounterClockwise size={32} />,
+    label: "Practice Interview",
+    icon: <Presentation size={32} />,
   },
   variant4: {
     label: "History",
-    icon: <ChalkboardTeacher size={32} />,
+    icon: <ClockCounterClockwise size={32} />,
   },
 };
 
@@ -35,52 +36,54 @@ export const SideNavBar = ({ property1 }) => {
   return (
     <Box
       bg="brand.blueberryCreme"
-      height="1080px"
+      height="100vh"
       width="275px"
       position="relative"
-      p={4}
+      pt={5}
+      pl={3}
     >
       <VStack align="flex-start" spacing={6}>
         {Object.keys(variants).map((variant, index) => (
           <Flex
             key={variant}
             align="center"
+            justify="center"
             position="relative"
             cursor="pointer"
             width="100%"
-            _hover={{
-              bg: "brand.blushPink", // Hover background
-              color: "brand.frostWhite",
-              transform: "translateY(-2px)",
-              borderRadius: "md",
-              transition: "background-color 0.3s, transform 0.3s",
-            }}
             bg={property1 === variant ? "brand.blushPink" : "none"} // Active state
-            p={3} // Padding for hover area
-            borderRadius="md" // Rounded corners
+            color={property1 === variant ? "brand.frostWhite" : "initial"} // Active color
+            borderRadius={
+              property1 === variant
+                ? "26px 0 0 26px" // Match hover border-radius for active state
+                : "md"
+            } // Rounded corners
+            p={5} // Padding for hover area
+            _hover={
+              property1 !== variant // Only apply hover effect if not active
+                ? {
+                    bg: "brand.blushPink", // Hover background
+                    height: "52px",
+                    color: "brand.frostWhite",
+                    borderTopRightRadius: "0",
+                    borderBottomRightRadius: "0",
+                    borderBottomLeftRadius: "26px",
+                    borderTopLeftRadius: "26px",
+                    transition: "background-color 0.3s, transform 0.3s",
+                  }
+                : {}
+            }
           >
-            {property1 === variant && (
-              <Box
-                bg="#EA4A7D" // Blush Pink color
-                borderRadius="26px 0 0 26px"
-                height="52px"
-                width="255px"
-                position="absolute"
-                left="20px"
-                top={`${32 + index * 76}px`} // Adjust top position based on index
-                zIndex={1}
-              />
-            )}
             <Box position="absolute" left="20px">
               {variants[variant].icon}
             </Box>
             <Text
               position="absolute"
               left="66px"
-              fontFamily="var(--bold-body-p-font-family)"
-              fontSize="var(--bold-body-p-font-size)"
-              fontWeight="var(--bold-body-p-font-weight)"
-              top="3px"
+              fontFamily="body"
+              fontSize="20px"
+              fontWeight="bold"
+              top="7px"
             >
               {variants[variant].label}
             </Text>
