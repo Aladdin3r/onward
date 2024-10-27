@@ -8,13 +8,6 @@ const SandboxTranscriber = () => {
   const recognizer = useRef(null);
   const lastRecognizedTextRef = useRef('');
 
-  // check if using sandbox env
-  const environment = process.env.NEXT_PUBLIC_ENV;
-
-  if (environment === 'SANDBOX') {
-    console.log("Running in sandbox mode")
-  }
-
   const subscriptionKey = process.env.NEXT_PUBLIC_AZURE_API_KEY;
   const serviceRegion = process.env.NEXT_PUBLIC_AZURE_SPEECH_REGION;
 
@@ -25,16 +18,12 @@ const SandboxTranscriber = () => {
 
   const speechConfig = SpeechSDK.SpeechConfig.fromSubscription(subscriptionKey, serviceRegion);
 
-  // toggle recording start/stop
   const toggleRecording = async () => {
     if (isRecording) {
-      // stop recognition
       if (recognizer.current) {
         recognizer.current.stopContinuousRecognitionAsync(async () => {
           console.log('Recognition stopped.');
           setIsRecording(false);
-
-          // send transcription to API route
           await sendTranscriptionToAPI(transcription);
         });
       }
@@ -48,12 +37,8 @@ const SandboxTranscriber = () => {
       recognizer.current.recognizing = (s, e) => {
         if (e.result.reason === SpeechSDK.ResultReason.RecognizingSpeech && e.result.text) {
           const trimmedText = e.result.text.trim();
-          // debugger;
           if (lastRecognizedTextRef.current !== trimmedText) {
             lastRecognizedTextRef.current = trimmedText;
-            // debugger;
-            // setTranscription((prev) => prev + (prev ? ' ' : '') + trimmedText); 
-            // append text, removing to see if it stops repeating words
           }
         }
       };
@@ -61,15 +46,11 @@ const SandboxTranscriber = () => {
       recognizer.current.recognized = (s, e) => {
         if (e.result.reason === SpeechSDK.ResultReason.RecognizedSpeech) {
           const trimmedText = e.result.text.trim();
-          // debugger;
-          // only update if the new text is different from the last added transcription
           if (!transcription.endsWith(trimmedText)) {
-            // debugger
             setTranscription((prev) => prev + (prev ? ' ' : '') + trimmedText);
           }
         }
       };
-      
 
       recognizer.current.canceled = (s, e) => {
         console.error(`Recognition canceled: ${e.reason}`);
@@ -88,7 +69,6 @@ const SandboxTranscriber = () => {
     }
   };
 
-  // send transcription to API route
   const sendTranscriptionToAPI = async (text) => {
     try {
       const response = await fetch('/api/speech-to-text', {
@@ -96,7 +76,7 @@ const SandboxTranscriber = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ transcription: text }), // Send transcription to API
+        body: JSON.stringify({ transcription: text }),
       });
 
       const data = await response.json();
