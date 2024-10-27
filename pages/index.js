@@ -8,7 +8,7 @@ import { Heading, Box, CardBody, Text, Stack, Card, Link } from "@chakra-ui/reac
 import TopNav from "@/styles/components/TopNav";
 import { SideNavBar } from "@/styles/components/SideNav";
 import Footer from "@/styles/components/Footer";
-import Popup from "@/styles/components/modal"; // Adjust the import path as necessary
+import Popup from "@/styles/components/modal";
 
 export default function Home() {
   return (

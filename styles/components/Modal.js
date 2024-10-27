@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Box, Stack } from '@chakra-ui/react';
 import { useDisclosure } from '@chakra-ui/react';
 
-export default function VerticallyCenter({ title, heading }) {
+export default function Popup({ title, heading }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
