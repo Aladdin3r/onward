@@ -1,3 +1,4 @@
+// components/SandboxTranscriber.js
 "use client"; 
 import React, { useState, useRef } from 'react';
 import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk';
@@ -7,6 +8,12 @@ const SandboxTranscriber = () => {
   const [isRecording, setIsRecording] = useState(false);
   const recognizer = useRef(null);
   const lastRecognizedTextRef = useRef('');
+
+  const environment = process.env.NEXT_PUBLIC_ENV;
+
+  if (environment === 'SANDBOX') {
+    console.log("Running in sandbox mode");
+  }
 
   const subscriptionKey = process.env.NEXT_PUBLIC_AZURE_API_KEY;
   const serviceRegion = process.env.NEXT_PUBLIC_AZURE_SPEECH_REGION;
@@ -24,6 +31,7 @@ const SandboxTranscriber = () => {
         recognizer.current.stopContinuousRecognitionAsync(async () => {
           console.log('Recognition stopped.');
           setIsRecording(false);
+
           await sendTranscriptionToAPI(transcription);
         });
       }
@@ -76,7 +84,7 @@ const SandboxTranscriber = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ transcription: text }),
+        body: JSON.stringify({ transcription: text }), 
       });
 
       const data = await response.json();
