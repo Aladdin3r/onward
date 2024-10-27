@@ -71,7 +71,7 @@ const SandboxTranscriber = () => {
 
   const sendTranscriptionToAPI = async (text) => {
     try {
-      const response = await fetch('/api/speech-to-text', {
+      const response = await fetch('/api/azure-speech', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
