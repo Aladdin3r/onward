@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { SideNavBar } from "@/styles/components/sidenav"; 
+import { SideNavBar } from "@/styles/components/SideNav"; 
 import AppTopNav from "@/styles/components/AppTopNav";
 import { Box, Flex } from "@chakra-ui/react";
 
