@@ -1,9 +1,10 @@
-import {
-    Box, 
-    Flex, 
-    Text,
-    useColorModeValue,
-} from "@chakra-ui/react";
+// import {
+//     Box, 
+//     Flex, 
+//     Text,
+//     useColorModeValue,
+// } from "@chakra-ui/react";
+import { Box, Flex, Text, useColorModeValue } from "@chakra-ui/react";
 
 export default function Footer() {
     const bgColor = useColorModeValue('brand.frostWhite', 'gray.800');

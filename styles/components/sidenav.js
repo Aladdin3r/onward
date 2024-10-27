@@ -16,19 +16,19 @@ import {
 const variants = {
   default: {
     label: "Dashboard",
-    icon: <UserSound size={32} />,
+    icon: <UserSound size={30} />,
   },
   variant2: {
     label: "Mock Interview",
-    icon: <ChalkboardTeacher size={32} />,
+    icon: <ChalkboardTeacher size={30} />,
   },
   variant3: {
     label: "Practice Interview",
-    icon: <Presentation size={32} />,
+    icon: <Presentation size={30} />,
   },
   variant4: {
     label: "History",
-    icon: <ClockCounterClockwise size={32} />,
+    icon: <ClockCounterClockwise size={30} />,
   },
 };
 
@@ -36,11 +36,11 @@ export const SideNavBar = ({ property1 }) => {
   return (
     <Box
       bg="brand.blueberryCreme"
-      height="1080px"
-      width="275px"
+      height="100vh"
+      width="25vw"
       position="relative"
       pt={5}
-      pl={3}
+      pl={2}
     >
       <VStack align="flex-start" spacing={6}>
         {Object.keys(variants).map((variant, index) => (
@@ -63,7 +63,7 @@ export const SideNavBar = ({ property1 }) => {
               property1 !== variant // Only apply hover effect if not active
                 ? {
                     bg: "brand.blushPink", // Hover background
-                    height: "52px",
+                    height: "54px",
                     color: "brand.frostWhite",
                     borderTopRightRadius: "0",
                     borderBottomRightRadius: "0",
@@ -79,9 +79,9 @@ export const SideNavBar = ({ property1 }) => {
             </Box>
             <Text
               position="absolute"
-              left="66px"
+              left="60px"
               fontFamily="body"
-              fontSize="20px"
+              fontSize="17px"
               fontWeight="bold"
               top="7px"
             >
