@@ -8,6 +8,8 @@ import Image from "next/image";
 import VideoPLayer from "@/styles/components/VideoPlayer";
 import ArrowControls from "@/styles/components/ArrowControls";
 import QuestionProgressIndicator from "@/styles/components/QuestionProgressIndicator";
+import QuestionCard from "@/styles/components/QuestionCard";
+import HighlightFillerWords from "@/styles/components/HighlightFillerWords";
 
 export default function PracticeInterview() {
     const router = useRouter();
@@ -51,7 +53,7 @@ export default function PracticeInterview() {
                                     <Text fontWeight="bold" mb={2} fontSize="sm" color="brand.nightBlack">
                                         QUESTION 1
                                     </Text>
-                                    <Text fontSize="xs" mb={4} color="brand.nightBlack">
+                                    <Text fontSize="xxs" mb={4} color="brand.nightBlack">
                                         Can you describe a time when you were faced with an emergency situation and had to make a quick decision? 
                                         How did you prioritize tasks, and what steps did you take to ensure the best possible outcome for the patient?
                                     </Text>
@@ -66,18 +68,23 @@ export default function PracticeInterview() {
                                     </Flex>
                                 </Box>
 
-                                <QuestionProgressIndicator totalSteps={5} currentStep={1} />
+                                <QuestionProgressIndicator totalSteps={5} currentStep={0} />
 
                                 {/* Your Response Box */}
-                                <Box bg="white" borderRadius="md" borderWidth="1px" boxShadow="sm" overflowX="auto" mb={50}>
+                                <Box bg="white" borderRadius="md" borderWidth="1px" boxShadow="sm" mb={50}>
                                     <Box p={4} borderBottomWidth="1px">
                                         <Text fontWeight="bold" fontSize="sm">
                                             Your Response
                                         </Text>
                                     </Box>
-                                    <Box p={4}>
-                                        <Text fontSize="xs" color="brand.nightBlack">
-                                            Um, in my previous role as a nurse in the ER, there was this one time when, like, a patient came in with chest pain, and we thought it might be a heart attack. At the same time, uh, another patient had a severe allergic reaction. So, I had to, like, figure out who needed help faster. I quickly checked the chest pain patient and told the doctor to start treatment while I, uh, helped the allergic reaction patient by giving them epinephrine and, like, monitoring their breathing. I stayed with them until they were stable. I, um, made sure to communicate with my team, and, uh, even though it was urgent, I stayed calm. In the end, both patients got the care they needed, so, uh, yeah, it worked out okay.
+                                    <Box p={4} maxW="820px">
+                                    <Text 
+                                        fontSize="xxs" 
+                                        color="brand.nightBlack" 
+                                        whiteSpace="normal" 
+                                        overflowWrap="break-word" 
+                                        wordBreak="keep-all"
+                                    ><HighlightFillerWords answer={"Um, in my previous role as a nurse in the ER, there was this one time when, like, a patient came in with chest pain, and we thought it might be a heart attack. At the same time, uh, another patient had a severe allergic reaction. So, I had to, like, figure out who needed help faster. I quickly checked the chest pain patient and told the doctor to start treatment while I, uh, helped the allergic reaction patient by giving them epinephrine and, like, monitoring their breathing. I stayed with them until they were stable. I, um, made sure to communicate with my team, and, uh, even though it was urgent, I stayed calm. In the end, both patients got the care they needed, so, uh, yeah, it worked out okay"} />
                                         </Text>
                                     </Box>
                                 </Box>
@@ -135,7 +142,7 @@ export default function PracticeInterview() {
                                             <Text fontWeight="bold" fontSize="sm" color="brand.nightBlack">
                                                 Patient–Centered Care:
                                             </Text>
-                                            <Text fontSize="xs" color="brand.nightBlack" mb={3}>
+                                            <Text fontSize="xxs" color="brand.nightBlack" mb={3}>
                                                 Emphasize your ability to provide compassionate, personalized care that prioritizes the patient's needs, preferences, and well-being. Highlight any experiences where you went above and beyond for patients.
                                             </Text>
                                         </Box>
@@ -143,7 +150,7 @@ export default function PracticeInterview() {
                                             <Text fontWeight="bold" fontSize="sm" color="brand.nightBlack">
                                                 Telehealth and Technology Integration:
                                             </Text>
-                                            <Text fontSize="xs" color="brand.nightBlack" mb={3}>
+                                            <Text fontSize="xxs" color="brand.nightBlack" mb={3}>
                                                 With the rise of telemedicine, nurses should discuss their comfort and experience using technology to monitor patients remotely, manage electronic health records (EHR), or conduct virtual consultations.
                                             </Text>
                                         </Box>
@@ -151,7 +158,7 @@ export default function PracticeInterview() {
                                             <Text fontWeight="bold" fontSize="sm" color="brand.nightBlack">
                                                 Interdisciplinary Team Collaboration:
                                             </Text>
-                                            <Text fontSize="xs" color="brand.nightBlack" mb={3}>
+                                            <Text fontSize="xxs" color="brand.nightBlack" mb={3}>
                                                 Employers value nurses who can work effectively with physicians, social workers, and other healthcare professionals. Share examples of how you’ve successfully collaborated with different teams to ensure the best patient outcomes.
                                             </Text>
                                         </Box>
@@ -159,7 +166,7 @@ export default function PracticeInterview() {
                                             <Text fontWeight="bold" fontSize="sm" color="brand.nightBlack">
                                                 Cultural Competency and Diversity Awareness:
                                             </Text>
-                                            <Text fontSize="xs" color="brand.nightBlack">
+                                            <Text fontSize="xxs" color="brand.nightBlack">
                                                 Given the growing diversity of patients, demonstrate your ability to care for individuals from various backgrounds and address cultural and language differences in healthcare.
                                             </Text>
                                         </Box>
