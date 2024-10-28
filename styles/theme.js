@@ -1,6 +1,7 @@
 import { extendTheme } from "@chakra-ui/react";
 import { theme as chakraTheme } from "@chakra-ui/react";
-import Button from './components/Button.js';
+import Button from './components/Button';
+import { Stepper } from "@chakra-ui/react";
 
 const fonts = {
     ...chakraTheme.fonts,
@@ -22,6 +23,8 @@ const overrides = {
         bold: 700,
     },
     fontSizes: {
+        xxs: "14pt",
+        xs: "16pt",
         sm: "20pt",
         md: "24pt",
         lg: "32pt",
@@ -29,7 +32,7 @@ const overrides = {
     colors: {
        brand: { 
         blushPink: "#EA4A7D",
-        pastelBlue: "#CBD5FF",
+        pastelBlue: "#CBD5FF", 
         blueberryCreme: "#EBEFFF",
         frostWhite: "#FAFAFA",
         nightBlack: "#1f1f1f",

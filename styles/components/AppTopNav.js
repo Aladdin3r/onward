@@ -5,8 +5,8 @@ export default function AppTopNav({ title }) {
     return (
         <Box 
             id="app-top-nav" 
-            bg=""
-            px={4} 
+            px={4}
+            pl={"72px"} 
             borderBottom="1px solid #E6EAF2"
         >
             <Box color="brand.nightBlack" fontSize={{ base: 'md', md: 'lg' }} height={"4rem"}>

@@ -13,6 +13,7 @@ import { useRouter } from 'next/router'; // Import useRouter
 import UploadFile from "@/styles/components/UploadFile";
 import Layout from "@/styles/components/Layout";
 import QuestionType from "@/styles/components/QuestionType";
+import QuestionTime from "@/styles/components/QuestionTime";
 
 export default function PracticeInterview() {
     const router = useRouter();
@@ -35,19 +36,9 @@ export default function PracticeInterview() {
                         mx="auto"
                     >
                         <ProgressBar/>
-                        <Flex flexDirection={"row"} gap={60} align={"center"}>
-                            <Flex flexDirection={"column"}>
-                                <Heading as='h2' size='md'>
-                                    Upload Resume
-                                </Heading>
-                                <UploadFile/>
-                            </Flex>
-                            <Flex flexDirection={"column"}>
-                                <Heading as='h2' size='md'>
-                                    Upload Job Posting
-                                </Heading>
-                                <UploadFile/>
-                            </Flex>
+                        <Flex flexDirection={"row"} gap={10} align={"center"}>
+                            <QuestionTime/>
+                            <QuestionType/>
                         </Flex>
                     </Flex>
                 </div>
