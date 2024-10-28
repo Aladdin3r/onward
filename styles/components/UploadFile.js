@@ -26,9 +26,21 @@ export default function UploadFile({ fileType }) {
     // Need to figure out how to differentiate RESUME vs JOB POST
 
     return (
-        <Flex flexDirection={"column"} width={{ base: "100%", md: "47.5rem" }} height={"28rem"} bg={"brand.pureWhite"} p={9}>
-            <DragDrop id="drag-drop" height={"12rem"} width={"42rem"}
-                uppy={uppyRef.current} // Pass the Uppy instance from the ref
+        <Flex 
+            flexDirection="column" 
+            overflowX="hidden" 
+            maxW="50rem"  
+            mx="auto" 
+            bg="brand.pureWhite" 
+            p={6}
+            borderWidth="1px"
+            borderRadius="lg" 
+            boxShadow="md"
+        >
+            <DragDrop 
+                uppy={uppyRef.current} 
+                width="100%" 
+                height="12rem" // Adjust height to make the component more compact
                 locale={{
                     strings: {
                         dropHereOr: 'Drop here or %{browse}',
@@ -36,7 +48,7 @@ export default function UploadFile({ fileType }) {
                     },
                 }}
             />
-            <Flex flexDirection={"column"}>
+            <Flex flexDirection="column" mt={4}>
                 <Box>
                     <p>Default Resume</p>
                 </Box>

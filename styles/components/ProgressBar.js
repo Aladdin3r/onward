@@ -13,7 +13,7 @@ import {
     Flex
   } from '@chakra-ui/react'
   
-  export default function ProgressBar() {
+  export default function ProgressBar( { currentStep = 0 }) {
 
 
     const steps = [
@@ -23,41 +23,41 @@ import {
     ];
 
     const { activeStep } = useSteps({
-      index: 0,
+      index: 1,
       count: steps.length,
     })
   
     return (
       <>
-        <Box my={"1.25rem"} maxW={{ base: "100%", md: "800px", lg: "1200px" }}>
-            
+        <Box my={"1.25rem"} maxW="container.sm" mx="auto">
           {/* NEED TO figure out how to change color scheme to brand colours */}
-          <Stepper index={activeStep} size='xxs' colorScheme='pink'>
+
+          <Stepper index={activeStep} size='xxs'  colorScheme='pink'>
             {steps.map((step, index) => (
               <Step key={index}>
-                <Flex flexDirection="column" align="center">
+                <Flex flexDirection="column" align="center" width="100%">
                   <StepIndicator
                     sx={{
                       '[data-status=complete] &': {
                         background: 'brand.blushPink',
                         borderColor: 'brand.blushPink',
                         color: 'brand.pureWhite',
-                        width: "2.25rem",
-                        height: "2.25rem"
+                        width: { base: "1.5rem", md: "2.25rem" },
+                        height: { base: "1.5rem", md: "2.25rem" },
                       },
                       '[data-status=active] &': {
                         background: 'brand.purewhite',
                         borderColor: 'brand.blushPink',
                         color: 'brand.nightBlack',
-                        width: "2.25rem",
-                        height: "2.25rem"
+                        width: { base: "1.5rem", md: "2.25rem" },
+                        height: { base: "1.5rem", md: "2.25rem" },
                       },
                       '[data-status=incomplete] &': {
                         background: 'brand.pureWhite',
                         borderColor: 'brand.blushPink',
                         color: 'brand.nightBlack',
-                        width: "2.25rem",
-                        height: "2.25rem"
+                        width: { base: "1.5rem", md: "2.25rem" },
+                        height: { base: "1.5rem", md: "2.25rem" },
                       },
                     }}
                   >
@@ -73,11 +73,16 @@ import {
                   </Box>
 
                 </Flex>
-                <StepSeparator _horizontal={{ backgroundColor: 'red' }} />
+                  {index < steps.length - 1 && (
+                  <StepSeparator _horizontal={{ backgroundColor: 'pink' }} />
+                  )}
               </Step>
             ))}
           </Stepper>
         </Box>
+        
       </>
       )
     }
+
+    
