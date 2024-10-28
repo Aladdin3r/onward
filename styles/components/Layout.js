@@ -1,4 +1,4 @@
-// web-app layout with the sidebar and top bar layout
+// web-app layout with the option to toggle sidebar and top bar layout
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -49,6 +49,7 @@ export default function Layout({ children }) {
         {/* container for interview app content */}
         <Box 
           minH={"100vh"} 
+
           maxWidth={{ base: "100%", md: "1200px" }}
           mx="auto" // Center the content
           bg={"brand.frostWhite"}
