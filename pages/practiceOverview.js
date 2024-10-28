@@ -10,7 +10,7 @@ import TranscriptionComponent from "@/styles/components/FullTranscriptionCard";
 import ImprovementSteps from "@/styles/components/ImprovementSteps";
 import VideoWQuestionCard from "@/styles/components/VideoWQuestionCard";
 
-export default function PracticeInterview() {
+export default function PracticeInterviewOverview() {
     const router = useRouter();
 
     return (
