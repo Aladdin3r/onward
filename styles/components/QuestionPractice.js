@@ -15,7 +15,7 @@ import interviewQuestions from '@/data/interviewQuestions';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-export default function QuestionPractice() {
+export default function QuestionPractice({ borderRad }) {
 
     const router = useRouter();
     const [currentCategoryIndex] = useState(0);
@@ -33,22 +33,28 @@ export default function QuestionPractice() {
 
     return (
         <>
-            <Card width="70%" mx="auto">
+        <Box>
+            <Card borderRadius={borderRad}>
                 <CardBody textAlign={"left"}>
                     <Stack spacing='4' divider={<StackDivider />}>
                         <Box>
-                            <Heading size='xxs'>
-                                {interviewQuestions[currentCategoryIndex].category}
+                            <Heading size='md'>
+                                Situational Question
+                                {/* {interviewQuestions[currentCategoryIndex].category} */}
                             </Heading>
                         </Box>
                         <Box>
                             <Text pt='2' fontSize='xxs'>
-                                {currentQuestionText}
+                                {/* placeholder */}
+                                Can you describe a time when you were faced with an emergency situation and had to make a quick decision? 
+                                How did you prioritize tasks, and what steps did you take to ensure the best possible outcome for the patient?
+                                {/* {currentQuestionText} */}
                             </Text>
                         </Box>
                     </Stack>
                 </CardBody>
             </Card>
+        </Box>
         </>
     );
 }

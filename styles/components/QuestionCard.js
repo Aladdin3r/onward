@@ -21,7 +21,7 @@
     questionText = "Here is the question text from the interview",
   }) => {
     return (
-      <Box position="relative" width="100%" maxW="600px" mx="auto">
+      <Box position="relative" width="100%" maxW="600px">
         {/* Main Card Box */}
         <Box
           p={4}
@@ -48,8 +48,10 @@
           borderRadius="0 0 8px 8px"
           boxShadow="md"
           mt="-10px" 
+          mx="auto"
           zIndex={0} 
         />
+        
       </Box>
     );
   };
