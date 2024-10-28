@@ -3,7 +3,7 @@ import "@/styles/theme"
 import "@phosphor-icons/web/light";
 import "@phosphor-icons/web/bold";
 import { Text } from "@chakra-ui/react";
-import { Button as ChakraButton } from '@chakra-ui/react';
+// import { Button as ChakraButton } from '@chakra-ui/react';
 import TopNav from "@/styles/components/TopNav";
 
 export default function Settings() {
