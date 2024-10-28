@@ -5,6 +5,7 @@ import { Heading, Box, Text, VStack, Flex, Button, SimpleGrid, Tag, Divider, Con
 import TopNav from "@/styles/components/TopNav";
 import { useRouter } from 'next/router';
 import Image from "next/image";
+import VideoPLayer from "@/styles/components/VideoPlayer";
 
 export default function PracticeInterview() {
     const router = useRouter();
@@ -111,7 +112,7 @@ export default function PracticeInterview() {
                             {/* Right Column - Video and Suggested Topics */}
                             <VStack flex="0.45" spacing={4} alignItems="stretch">
                                 {/* Interview Playback */}
-                                <Box bg="gray.50" p={4} borderRadius="md" borderWidth="1px" boxShadow="sm" position="relative" textAlign="center" mb={5}>
+                                {/* <Box bg="gray.50" p={4} borderRadius="md" borderWidth="1px" boxShadow="sm" position="relative" textAlign="center" mb={5}>
                                     <Text fontWeight="bold" mb={2} fontSize="md">
                                         Interview Playback
                                     </Text>
@@ -137,7 +138,13 @@ export default function PracticeInterview() {
                                             0:00 - 1:14
                                         </Box>
                                     </Box>
-                                </Box>
+                                </Box> */}
+                                <VideoPLayer 
+                                    videoSrc=""
+                                    thumbnail="/practice-analysis-images/videoPlaceholder.jpg"
+                                    duration="0:00 - 2:14"
+                                    width="100%"
+                                    />
 
                                 {/* Suggested Topics */}
                                 <Box bg="white" p={4} borderRadius="lg" borderWidth="1px" boxShadow="sm" mb={5} pb={6}>
