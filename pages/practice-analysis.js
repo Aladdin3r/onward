@@ -12,7 +12,7 @@ import QuestionCard from "@/styles/components/QuestionCard";
 import HighlightFillerWords from "@/styles/components/HighlightFillerWords";
 import LanguageToggle from "@/styles/components/LanguageToggle";
 
-export default function PracticeInterview() {
+export default function PracticeAnalysis() {
     const router = useRouter();
 
     return (
