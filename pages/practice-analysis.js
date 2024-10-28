@@ -10,8 +10,9 @@ import ArrowControls from "@/styles/components/ArrowControls";
 import QuestionProgressIndicator from "@/styles/components/QuestionProgressIndicator";
 import QuestionCard from "@/styles/components/QuestionCard";
 import HighlightFillerWords from "@/styles/components/HighlightFillerWords";
+import LanguageToggle from "@/styles/components/LanguageToggle";
 
-export default function PracticeInterview() {
+export default function PracticeAnalysis() {
     const router = useRouter();
 
     return (
@@ -32,14 +33,7 @@ export default function PracticeInterview() {
                             <Heading fontSize="lg" fontWeight="bold" mb={8}>
                                 Response Analysis
                             </Heading>
-                            <Flex>
-                                <Button variant="ghost" size="sm">
-                                    English
-                                </Button>
-                                <Button variant="ghost" size="sm" ml={2}>
-                                    Tagalog
-                                </Button>
-                            </Flex>
+                            <LanguageToggle/>
                         </Flex>
 
                         <Flex gap="100px" alignItems="flex-start" px={4}>

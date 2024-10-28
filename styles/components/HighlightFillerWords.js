@@ -1,5 +1,7 @@
 // HighlightFillerWords.js
 
+// look on practice-analysis page lines 75-83 to see this in use
+
 import { Text } from "@chakra-ui/react";
 
 const HighlightFillerWords = ({ answer }) => {
