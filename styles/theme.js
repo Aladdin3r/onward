@@ -1,6 +1,7 @@
 import { extendTheme } from "@chakra-ui/react";
 import { theme as chakraTheme } from "@chakra-ui/react";
 import Button from './components/Button';
+import { Stepper } from "@chakra-ui/react";
 
 const fonts = {
     ...chakraTheme.fonts,

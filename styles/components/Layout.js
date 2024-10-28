@@ -30,14 +30,24 @@ export default function Layout({ children }) {
 
   return (
     <>
-   <Flex>
-      <SideNavBar activeVariant={activeVariant} />
-      <Flex direction="column" flex="1"> 
-        <Box>
-          <AppTopNav title="Practice Overview" />
-        </Box>
+   <Flex width="100vw" height="100vh"overflowX="hidden">
+
+    {/* Sidebar */}
+    <Box as="nav" width="72">      
+        <SideNavBar activeVariant={activeVariant} />
+    </Box>
+    
+    {/* Main content area */}
+    <Flex direction="column" flex="1"> 
+      <Box>
+        <AppTopNav title="Practice Overview" />
+      </Box>
+
+      {/* container for interview app content */}
+      <Box pl={"72px"} minH={"100vh"} bg={"brand.frostWhite"}>
         <main>{children}</main>
-      </Flex>
+      </Box>
+    </Flex>
     </Flex>
     </>
   );
