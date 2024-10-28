@@ -32,7 +32,7 @@ const overrides = {
     colors: {
        brand: { 
         blushPink: "#EA4A7D",
-        pastelBlue: "#CBD5FF",
+        pastelBlue: "#CBD5FF", 
         blueberryCreme: "#EBEFFF",
         frostWhite: "#FAFAFA",
         nightBlack: "#1f1f1f",

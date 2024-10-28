@@ -11,20 +11,17 @@ import ViewAllPopup from "@/styles/components/ViewAllPopup"; // Import the new V
 import { useDisclosure } from '@chakra-ui/react';
 import { useRouter } from 'next/router'; // Import useRouter
 import Layout from "@/styles/components/Layout";
-import QuestionPractice from "@/styles/components/QuestionPractice";
+import AnswerPractice from "@/styles/components/AnswerPractice"
+import VideoContainer from "@/styles/components/VideoContainer";
+import { useState } from "react";
+import interviewQuestions from '@/data/interviewQuestions'; 
 
-export default function PracticeInterview() {
+export default function PracticeAnswer() {
     const router = useRouter();
     const { question } = router.query;
 
-    const handleAnswerPage = () => {
-        router.push({
-            pathname: '/practice-interview-answer',
-            query: { question: question }, // Pass the current question to the answer page
-        });
-    };
-
-
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    
     return (
         <>
             <Head>
@@ -43,14 +40,12 @@ export default function PracticeInterview() {
                 py={"0"}
                 overflow="hidden"
             >
-                <Flex mt={"5rem"} flexDirection={"column"} >
-                    <QuestionPractice />
+                <Flex my={"2rem"} mx={"5rem"} gap={"5rem"} flexDirection={"row"}>
+                    <AnswerPractice question={interviewQuestions[currentQuestionIndex]}/>
                 </Flex>
-
-                {/* Buttons container */}
-                <Flex flexDirection={"row"} justify={"space-evenly"}>
+                <Flex flexDirection={"row"} justify={"space-between"} mx={"5rem"} my={"1rem"}>
                     <Button size="xxs">End</Button>
-                    <Button size="xxs" onClick={"handleAnswerPage"}>Answer</Button>
+                    <Button size="xxs">Next Question</Button>
                 </Flex>
             </Box>
             <Footer/>

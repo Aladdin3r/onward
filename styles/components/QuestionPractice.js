@@ -1,3 +1,4 @@
+"use client"
 import { 
     Box,
     Flex,
@@ -11,28 +12,30 @@ import {
     Button
 } from '@chakra-ui/react';
 import interviewQuestions from '@/data/interviewQuestions'; 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 export default function QuestionPractice() {
 
-    const [currentQuestion, setCurrentQuestion] = useState(0);
+    const router = useRouter();
+    const [currentCategoryIndex] = useState(0);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
-    const currentCategoryIndex = Math.floor(Math.random() * interviewQuestions.length);
-    const currentQuestionText = interviewQuestions[currentCategoryIndex].questions[currentQuestion];
+    // Function to get the current question
+    const currentQuestionText = interviewQuestions[currentCategoryIndex].questions[currentQuestionIndex];
 
-    // randomized question for now
-    const getRandomQuestion = () => {
-        const randomCategoryIndex = Math.floor(Math.random() * interviewQuestions.length);
-        const randomQuestionIndex = Math.floor(Math.random() * interviewQuestions[randomCategoryIndex].questions.length);
-        
-        setCurrentQuestion(randomQuestionIndex);
+    const handleNextQuestion = () => {
+        // Move to the next question, looping back to the first if at the end
+        setCurrentQuestionIndex((prevIndex) => 
+            (prevIndex + 1) % interviewQuestions[currentCategoryIndex].questions.length
+        );
     };
 
     return (
         <>
-            <Card width="100%" maxW="400px" mx="auto">
-                <CardBody>
-                    <Stack divider={<StackDivider />} spacing='4'>
+            <Card width="100%" mx="auto">
+                <CardBody textAlign={"left"}>
+                    <Stack spacing='4' divider={<StackDivider />}>
                         <Box>
                             <Heading size='xxs'>
                                 {interviewQuestions[currentCategoryIndex].category}
@@ -45,7 +48,6 @@ export default function QuestionPractice() {
                         </Box>
                     </Stack>
                 </CardBody>
-            <Button size="small" onClick={getRandomQuestion}>Next Question</Button>
             </Card>
         </>
     );
