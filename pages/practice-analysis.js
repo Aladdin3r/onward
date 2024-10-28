@@ -6,6 +6,8 @@ import TopNav from "@/styles/components/TopNav";
 import { useRouter } from 'next/router';
 import Image from "next/image";
 import VideoPLayer from "@/styles/components/VideoPlayer";
+import ArrowControls from "@/styles/components/ArrowControls";
+import QuestionProgressIndicator from "@/styles/components/QuestionProgressIndicator";
 
 export default function PracticeInterview() {
     const router = useRouter();
@@ -56,16 +58,15 @@ export default function PracticeInterview() {
                                 </Box>
 
                                 {/* Styled Blue Bottom Area Positioned as Layered Section */}
-                                <Box bg="brand.blueberryCreme" p={3} mt={-10} mb={50} borderRadius="lg" boxShadow="sm" zIndex="-1" height={100}>
+                                <Box bg="brand.blueberryCreme" p={3} mt={-10} borderRadius="lg" boxShadow="sm" zIndex="-1" height={100}>
                                     <Flex justifyContent="flex-end" gap={2}>
-                                        <Button variant="outline" size="sm" borderColor="brand.pastelBlue" borderWidth={2} mt={9}>
-                                            Previous
-                                        </Button>
-                                        <Button variant="solid" size="sm" bg="brand.pastelBlue" mt={9}>
-                                            Next
-                                        </Button>
+                                        <Box mt={5} mr={5}>
+                                            <ArrowControls/>
+                                        </Box>
                                     </Flex>
                                 </Box>
+
+                                <QuestionProgressIndicator totalSteps={5} currentStep={1} />
 
                                 {/* Your Response Box */}
                                 <Box bg="white" borderRadius="md" borderWidth="1px" boxShadow="sm" overflowX="auto" mb={50}>
@@ -112,33 +113,9 @@ export default function PracticeInterview() {
                             {/* Right Column - Video and Suggested Topics */}
                             <VStack flex="0.45" spacing={4} alignItems="stretch">
                                 {/* Interview Playback */}
-                                {/* <Box bg="gray.50" p={4} borderRadius="md" borderWidth="1px" boxShadow="sm" position="relative" textAlign="center" mb={5}>
-                                    <Text fontWeight="bold" mb={2} fontSize="md">
-                                        Interview Playback
-                                    </Text>
-                                    <Box height="400px" borderRadius="md" position="relative" overflow="hidden">
-                                        <Image 
-                                            src="/practice-analysis-images/videoPlaceholder.jpg" 
-                                            alt="Video Placeholder" 
-                                            layout="fill" 
-                                            objectFit="cover" 
-                                            style={{ borderRadius: '8px' }}
-                                        />
-                                        <Box
-                                            position="absolute"
-                                            bottom="2"
-                                            right="2"
-                                            bg="blackAlpha.700"
-                                            color="white"
-                                            px={2}
-                                            py={0.5}
-                                            borderRadius="sm"
-                                            fontSize="xs"
-                                        >
-                                            0:00 - 1:14
-                                        </Box>
-                                    </Box>
-                                </Box> */}
+                                <Text fontSize="sm" fontWeight="bold" color="nightBlack">
+                                    Interview Playback
+                                </Text>
                                 <VideoPLayer 
                                     videoSrc=""
                                     thumbnail="/practice-analysis-images/videoPlaceholder.jpg"
