@@ -106,7 +106,6 @@ export default function QuestionPractice() {
                     </Stack>
                 </CardBody>
             </Card>
-
         {showVideo && <VideoContainer />}
         </>
     );

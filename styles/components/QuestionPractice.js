@@ -33,7 +33,7 @@ export default function QuestionPractice() {
 
     return (
         <>
-            <Card width="100%" mx="auto">
+            <Card width="70%" mx="auto">
                 <CardBody textAlign={"left"}>
                     <Stack spacing='4' divider={<StackDivider />}>
                         <Box>

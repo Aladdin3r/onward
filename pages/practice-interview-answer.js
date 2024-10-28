@@ -20,8 +20,14 @@ export default function PracticeAnswer() {
     const router = useRouter();
     const { question } = router.query;
 
+    const handleEndClick = () => {
+        router.push({
+            pathname: '/',
+        });
+    };
+
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    
+
     return (
         <>
             <Head>
@@ -44,7 +50,7 @@ export default function PracticeAnswer() {
                     <AnswerPractice question={interviewQuestions[currentQuestionIndex]}/>
                 </Flex>
                 <Flex flexDirection={"row"} justify={"space-between"} mx={"5rem"} my={"1rem"}>
-                    <Button size="xxs">End</Button>
+                    <Button size="xxs" onClick={handleEndClick}>End</Button>
                     <Button size="xxs">Next Question</Button>
                 </Flex>
             </Box>
