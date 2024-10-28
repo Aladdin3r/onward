@@ -18,6 +18,14 @@ import QuestionTime from "@/styles/components/QuestionTime";
 export default function PracticeInterview() {
     const router = useRouter();
 
+    const handleNextClick= () => {
+        router.push({
+            pathname: '/practice-interview-questions'
+
+        });
+    };
+
+
     return (
         <>
              <Head>
