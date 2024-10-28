@@ -48,9 +48,10 @@ export default function PracticeInterview() {
                 </Flex>
 
                 {/* Buttons container */}
-                <Flex flexDirection={"row"} justify={"space-evenly"}>
+
+                <Flex flexDirection={"row"} justify={"space-between"} mx={"5rem"} my={"1rem"}>
                     <Button size="xxs">End</Button>
-                    <Button size="xxs" onClick={"handleAnswerPage"}>Answer</Button>
+                    <Button size="xxs" onClick={handleAnswerPage}>Answer</Button>
                 </Flex>
             </Box>
             <Footer/>

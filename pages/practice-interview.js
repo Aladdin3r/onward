@@ -1,7 +1,7 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import "@/styles/theme";
-import { Heading, Box, CardBody, Text, Stack, Card, Link, Flex } from "@chakra-ui/react";
+import { Heading, Box, CardBody, Text, Stack, Card, Link, Flex, Button } from "@chakra-ui/react";
 import TopNav from "@/styles/components/TopNav";
 import { SideNavBar } from "@/styles/components/SideNav";
 import ProgressBar from "@/styles/components/ProgressBar";
@@ -16,6 +16,12 @@ import QuestionType from "@/styles/components/QuestionType";
 
 export default function PracticeInterview() {
     const router = useRouter();
+
+    const handleNextClick = () => {
+        router.push({
+            pathname: '/practice-interview-questions'
+        });
+    };
 
     return (
         <>
@@ -49,7 +55,11 @@ export default function PracticeInterview() {
                                 <UploadFile/>
                             </Flex>
                         </Flex>
+                        <Flex flexDirection={"row"} justify={"space-between"} mx={"5rem"} my={"1rem"}>
+                            <Button size="xxs" onClick={handleNextClick}>Next</Button>
+                        </Flex>
                     </Flex>
+                    
                 </div>
             </Layout>
         </>
