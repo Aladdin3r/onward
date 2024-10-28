@@ -1,11 +1,8 @@
 // VideoPlayer component
-
 // import { Box, VStack } from "@chakra-ui/react";
 // import { useState } from "react";
-
 // const VideoPlayer = ({ videoSrc, thumbnail, duration }) => {
 //   const [isPlaying, setIsPlaying] = useState(false);
-
 //   return (
 //     <Box maxW="600px" mx="auto" p={4} borderRadius="lg" bg="white">
 //       <VStack align="start" spacing={2}>
@@ -26,17 +23,12 @@
 //     </Box>
 //   );
 // };
-
 // export default VideoPlayer;
-
 // VideoPlayer component
-
 import { Box, VStack } from "@chakra-ui/react";
 import { useState } from "react";
-
 const VideoPlayer = ({ videoSrc, thumbnail, duration }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-
   return (
     <Box maxW="600px" mx="auto" p={4} borderRadius="lg" bg="white">
       <VStack align="start" spacing={2}>
@@ -63,6 +55,4 @@ const VideoPlayer = ({ videoSrc, thumbnail, duration }) => {
     </Box>
   );
 };
-
 export default VideoPlayer;
-
