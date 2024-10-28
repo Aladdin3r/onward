@@ -45,7 +45,7 @@ export default function QuestionPractice() {
 
     return (
         <>
-            <Card maxW="100%" bg="brand.blueberryCreme"
+            <Card  bg="brand.blueberryCreme"
                 // changes width depends on if video shows or not
                 maxW={showVideo ? '60%' : '100%'} // Adjust width based on showVideo
                 transition="width 0.3s ease" // Optional transition for smoothness
