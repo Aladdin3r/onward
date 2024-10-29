@@ -4,7 +4,7 @@ import PDFCard from "@/styles/components/PDFCard";
 export default function MyResumesCard() {
     return (
         <Box bg="white" shadow="sm" borderRadius="lg" p={5} display="flex" flexDirection="column">
-                <Heading size="md" mb={3}>My Resumes</Heading>
+                <Heading size="sm" mb={3} >My Resumes</Heading>
                 <Text fontSize="xs" color="gray.500" mt="5">Default</Text>
                 <VStack align="start" spacing={3}>
                   <PDFCard size={"92kb of 92kb"} title={"Burnaby Hosp. Nurse"} />

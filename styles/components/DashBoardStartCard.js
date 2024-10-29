@@ -20,17 +20,16 @@ export default function Card() {
             height="230.42px"
           />
           <Button
-            mt="2"
+            mt="10"
             bg="#EA4A7D"
             color="#FFFFFF"
             width="100%"
             maxW="302px"
             fontWeight="semibold"
-            fontSize="16px"
+            fontSize="18px"
             borderRadius="full"
             px="6"
             mb="6"
-            mt="10"
           >
             Start Practicing
           </Button>

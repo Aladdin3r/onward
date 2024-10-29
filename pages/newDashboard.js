@@ -19,8 +19,8 @@ export default function Home() {
       <Layout showTopNav={false}>
         <Flex flexDirection="row" justifyContent="center" alignItems="center" width="100%">
           <main style={{ position: "relative", width: "100%" }}>
-            <Flex flexDirection="column" alignItems="center">
-              <Box mt={6} mr={300} width="100%" maxWidth="1200px">
+            <Flex flexDirection="column" alignItems="center" marginLeft="10">
+              <Box mt={6} mr={300} width="100%">
                 <Heading fontFamily="heading" color="black" fontWeight="bold" fontSize="32pt">
                   <span style={{ color: "#EA4A7D" }}>Welcome back,</span> Onwarder!
                 </Heading>

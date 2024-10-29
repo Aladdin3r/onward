@@ -4,7 +4,7 @@ const HistoryContainer = () => {
     return (
         <Flex flexDir="row" justify="center">
                             <Box
-                                width="90%"
+                                width="100%"
                                 height={{ base: "auto", md: "300px", lg: "400px" }}
                                 bg="white"
                                 boxShadow="0px 0px 10px rgba(0, 0, 0, 0.10)"
