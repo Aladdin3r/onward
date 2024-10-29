@@ -22,7 +22,7 @@ export default function Home() {
 
     // Button action function
     const handleSignUp = () => {
-        router.push('/signup'); // Navigate to the sign-up page
+        router.push('/sign-up'); // Navigate to the sign-up page
     };
 
     return (
