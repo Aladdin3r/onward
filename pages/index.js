@@ -1,7 +1,7 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import "@/styles/theme";
-import { Heading, Box, CardBody, Text, Stack, Card, Link } from "@chakra-ui/react";
+import { Heading, Box, CardBody, Text, Stack, Card, Link, Flex } from "@chakra-ui/react";
 import TopNav from "@/styles/components/TopNav";
 import { SideNavBar } from "@/styles/components/SideNav";
 import Footer from "@/styles/components/Footer";
@@ -35,11 +35,13 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className={`${styles.page}`}>
+      <Flex className={`${styles.page}`} flexDirection="row">
         <SideNavBar/>
-        <TopNav />
-        <main className={styles.main} style={{ position: "relative" }}>
-          <Box className="content" m={6}>
+        <main className={styles.main} style={{ position: "relative" }} >
+          
+          {/* flexbox for main content + footer, shifted right to account for sidebar */}
+          <Flex flexDir={"column"} ml={"280px"}> 
+          <Box className="content" m={6} >
             <Heading fontFamily="heading" color="black" fontWeight="bold" fontSize="32pt" zIndex={10} position="relative">
               <span style={{ color: "#EA4A7D" }}>Welcome back,</span> Onwarder!
             </Heading>
@@ -145,9 +147,10 @@ export default function Home() {
               </Card>
             </Box>
           </Box>
+          <Footer />
+          </Flex>
         </main>
-        <Footer />
-      </div>
+      </Flex>
     </>
   );
 }
