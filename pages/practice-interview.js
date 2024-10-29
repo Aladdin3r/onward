@@ -13,6 +13,7 @@ import { useRouter } from 'next/router'; // Import useRouter
 import UploadFile from "@/styles/components/UploadFile";
 import Layout from "@/styles/components/Layout";
 import QuestionType from "@/styles/components/QuestionType";
+import { useState } from "react";
 
 export default function PracticeInterview() {
     const router = useRouter();
@@ -22,6 +23,8 @@ export default function PracticeInterview() {
             pathname: '/practice-interview-filter'
         });
     };
+
+    const [currentStep, setCurrentStep] = useState(0);
 
     return (
         <>
@@ -36,31 +39,24 @@ export default function PracticeInterview() {
                     <Flex flexDirection={"column"} 
                         width="100%" 
                         height="100vh" 
-                        overflowX="hidden" 
                         maxW={{ base: "100%", md: "1200px", lg: "1920px" }} 
                         mx="auto"
                     >
-                        <ProgressBar/>
-                        <Flex flexDirection={"row"} gap={60} align={"center"}>
-                            <Flex flexDirection={"column"}>
-                                <Heading as='h2' size='md'>
-                                    Upload Resume
-                                </Heading>
-                                <UploadFile/>
-                            </Flex>
-                            <Flex flexDirection={"column"}>
-                                <Heading as='h2' size='md'>
-                                    Upload Job Posting
-                                </Heading>
-                                <UploadFile/>
-                            </Flex>
-                        </Flex>
-                        <Flex flexDirection={"row"} justify={"space-between"} mx={"5rem"} my={"1rem"}>
-                            <Button size="xxs" onClick={handleNextClick}>Next</Button>
+                        <ProgressBar currentStep={1}/>
+                        <UploadFile/>
+                        <Flex flexDirection={"row"} justify={"flex-end"} mt={"10px"}>
+                            <Button bg={"brand.blushPink"} size="xxs" width={"6rem"} color={"white"} p={2}
+                                onClick={handleNextClick}
+                                _hover={{
+                                    bg: "white",
+                                    color: "brand.blushPink"
+                                }}
+                            >
+                                Next
+                            </Button>
                         </Flex>
                     </Flex>
-                    
-                </div>
+                    </div>
             </Layout>
         </>
     )

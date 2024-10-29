@@ -1,7 +1,7 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import "@/styles/theme";
-import { Heading, Box, CardBody, Text, Stack, Card, Link, Flex } from "@chakra-ui/react";
+import { Heading, Box, CardBody, Text, Stack, Card, Link, Flex, Button } from "@chakra-ui/react";
 import TopNav from "@/styles/components/TopNav";
 import { SideNavBar } from "@/styles/components/SideNav";
 import ProgressBar from "@/styles/components/ProgressBar";
@@ -15,16 +15,20 @@ import Layout from "@/styles/components/Layout";
 import QuestionType from "@/styles/components/QuestionType";
 import QuestionTime from "@/styles/components/QuestionTime";
 
-export default function PracticeInterview() {
+export default function PracticeInterviewFilter() {
     const router = useRouter();
 
-    const handleNextClick= () => {
+        const handleStartClick = () => {
         router.push({
-            pathname: '/practice-interview-questions'
-
+            pathname: '/practice-interview-questions',
         });
     };
-
+     
+        const handleBackClick = () => {
+        router.push({
+            pathname: '/practice-interview',
+        });
+    };
 
     return (
         <>
@@ -36,6 +40,8 @@ export default function PracticeInterview() {
             </Head>
             <Layout>
                 <div className={styles.page} style={{ position: "relative" }}>
+                    <Flex>
+                        
                     <Flex flexDirection={"column"} 
                         width="100%" 
                         height="100vh" 
@@ -43,10 +49,31 @@ export default function PracticeInterview() {
                         maxW={{ base: "100%", md: "1200px", lg: "1920px" }} 
                         mx="auto"
                     >
-                        <ProgressBar/>
+                        <ProgressBar currentStep={1}/>
                         <Flex flexDirection={"row"} gap={10} align={"center"}>
                             <QuestionTime/>
                             <QuestionType/>
+                    </Flex>
+                            <Flex flexDirection={"row"} justify={"space-between"} mt={"300px"}>
+                                <Button bg={"brand.blushPink"} size="xxs" width={"10rem"} color={"white"} p={2}
+                                    onClick={handleBackClick}
+                                    _hover={{
+                                        bg: "white",
+                                        color: "brand.blushPink"
+                                    }}
+                                >
+                                        Back
+                                    </Button>
+                                <Button bg={"brand.blushPink"} size="xxs" width={"10rem"} color={"white"} p={2}
+                                    onClick={handleStartClick}
+                                    _hover={{
+                                        bg: "white",
+                                        color: "brand.blushPink"
+                                    }}
+                                >
+                                        Start Practice
+                                </Button>
+                            </Flex>
                         </Flex>
                     </Flex>
                 </div>

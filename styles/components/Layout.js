@@ -5,7 +5,7 @@ import AppTopNav from "@/styles/components/AppTopNav";
 import { Box, Flex } from "@chakra-ui/react";
 import { ChalkboardTeacher, ClockCounterClockwise, UserSound, Presentation, User, Gear  } from "@phosphor-icons/react";
 
-export default function Layout({ children, showTopNav = true }) {
+export default function Layout({ children, pageTitle, showTopNav}) {
   const router = useRouter(); 
   const [activeVariant, setActiveVariant] = useState("default");
 
@@ -34,6 +34,7 @@ export default function Layout({ children, showTopNav = true }) {
     }
   };
 
+
   // Update active link based on the URL
   useEffect(() => {
     const currentPath = router.pathname;
@@ -54,12 +55,12 @@ export default function Layout({ children, showTopNav = true }) {
         bg="white" 
         zIndex="1000"
       >      
-        <SideNavBar aactiveVariant={activeVariant} bottomVariants={bottomVariants}/>
+        <SideNavBar activeVariant={activeVariant} bottomVariants={bottomVariants}/>
       </Box>
       
       {/* main content area */}
       <Box flex="1" marginLeft="72">
-      {showTopNav && <AppTopNav  />}
+      {showTopNav && <AppTopNav title={pageTitle} />}
         
         {/* interview app content */}
         <Box 

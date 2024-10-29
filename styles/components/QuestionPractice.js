@@ -17,20 +17,6 @@ import { useRouter } from 'next/router';
 
 export default function QuestionPractice({ borderRad }) {
 
-    const router = useRouter();
-    const [currentCategoryIndex] = useState(0);
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-
-    // Function to get the current question
-    const currentQuestionText = interviewQuestions[currentCategoryIndex].questions[currentQuestionIndex];
-
-    const handleNextQuestion = () => {
-        // Move to the next question, looping back to the first if at the end
-        setCurrentQuestionIndex((prevIndex) => 
-            (prevIndex + 1) % interviewQuestions[currentCategoryIndex].questions.length
-        );
-    };
-
     return (
         <>
         <Box>

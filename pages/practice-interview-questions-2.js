@@ -1,7 +1,7 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import "@/styles/theme";
-import { Heading, Box, CardBody, Text, Stack, Card, Link, Flex, Button } from "@chakra-ui/react";
+import { Heading, Box, CardBody, Text, Stack, Card, Link, Flex, Button, borderRad, StackDivider } from "@chakra-ui/react";
 import TopNav from "@/styles/components/TopNav";
 import { SideNavBar } from "@/styles/components/SideNav";
 import ProgressBar from "@/styles/components/ProgressBar";
@@ -14,13 +14,13 @@ import Layout from "@/styles/components/Layout";
 import QuestionPractice from "@/styles/components/QuestionPractice";
 import VideoPlayer from '@/styles/components/VideoPlayer'
 
-export default function PracticeInterviewQuestion() {
+export default function PracticeInterviewQuestion2() {
     const router = useRouter();
     const { question } = router.query;
 
     const handleAnswerPage = () => {
         router.push({
-            pathname: '/practice-interview-answer',
+            pathname: '/practice-interview-answer-2',
             // query: { question: question }, // Pass the current question to the answer page
         });
     };
@@ -56,7 +56,27 @@ export default function PracticeInterviewQuestion() {
                     mb={0}
                     zIndex={1}    
                 >
-                    <QuestionPractice borderRad={15}/>
+                    <Box>
+                        <Card borderRadius={borderRad}>
+                            <CardBody textAlign={"left"}>
+                                <Stack spacing='4' divider={<StackDivider />}>
+                                    <Box>
+                                        <Heading size='md'>
+                                            Technical Question
+                                            {/* {interviewQuestions[currentCategoryIndex].category} */}
+                                        </Heading>
+                                    </Box>
+                                    <Box>
+                                        <Text pt='2' fontSize='xxs'>
+                                            {/* placeholder */}
+                                            Can you walk me through the steps you would take to perform a sterile dressing change?
+                                            {/* {currentQuestionText} */}
+                                        </Text>
+                                    </Box>
+                                </Stack>
+                            </CardBody>
+                        </Card>
+                    </Box>
                     <Box p={2}>1/2</Box>
                 </Flex>
 

@@ -5,10 +5,9 @@ import { Box, HStack, Stack } from "@chakra-ui/react";
 
 const QuestionProgressIndicator = ({ totalSteps = 5, currentStep = 0 }) => {
   return (
-
+    <HStack>
       {/* Wrapper for the white backdrop with shadow */}
       <Box
-        position="relative"
         width={`${(totalSteps * 24) + ((totalSteps - 1) * 18)}px`} // adjust width based on number of indicators and spacing
         height="20px"
         borderRadius="full"
