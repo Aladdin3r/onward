@@ -30,7 +30,7 @@ export default function Layout({ children, showTopNav = true }) {
     signOut: {
       label: "Sign Out",
       icon: null,
-      path: "/"
+      path: "/landing-page"
     }
   };
 
