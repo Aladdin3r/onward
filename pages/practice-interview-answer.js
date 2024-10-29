@@ -19,6 +19,11 @@ export default function PracticeAnswer() {
     const router = useRouter();
     // const { question } = router.query;
 
+    const handleOverviewClick = () => {
+        router.push({
+            pathname: '/practiceOverview',
+        });
+    };
     const handleEndClick = () => {
         router.push({
             pathname: '/',
@@ -50,7 +55,7 @@ export default function PracticeAnswer() {
                 </Flex>
                 <Flex flexDirection={"row"} justify={"space-between"} mx={"5rem"} my={"1rem"}>
                     <Button size="xxs" onClick={handleEndClick}>End</Button>
-                    <Button size="xxs">Next Question</Button>
+                    <Button size="xxs" onClick={handleOverviewClick}>Next Question</Button>
                 </Flex>
             </Box>
             <Footer/>

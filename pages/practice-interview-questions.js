@@ -16,14 +16,18 @@ import VideoPlayer from '@/styles/components/VideoPlayer'
 
 export default function PracticeInterview() {
     const router = useRouter();
-    const { question } = router.query;
 
-    const handleAnswerPage = () => {
+    const handleNextClick = () => {
         router.push({
-            pathname: '/practice-interview-answer',
-            // query: { question: question }, // Pass the current question to the answer page
+            pathname: '/practice-analysis'
         });
     };
+
+    const handleAnswer = () => {
+        router.push({
+            pathname: '/practice-interview-answer'
+        })
+    }
 
 
     return (
@@ -57,7 +61,7 @@ export default function PracticeInterview() {
 
                 <Flex flexDirection={"row"} justify={"space-between"} mx={"5rem"} my={"1rem"}>
                     <Button size="xxs">End</Button>
-                    <Button size="xxs" onClick={handleAnswerPage}>Answer</Button>
+                    <Button size="xxs" onClick={handleAnswer}>Answer</Button>
                 </Flex>
                 <Flex flexDirection={"row"} justify={"space-between"} mx={"5rem"} my={"1rem"}>
                         </Flex>

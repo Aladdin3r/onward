@@ -1,5 +1,7 @@
 import { Box, Text, VStack, Button, HStack } from "@chakra-ui/react";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { use } from "react";
 
 export default function ImprovementSteps() {
   const steps = [
@@ -19,6 +21,14 @@ export default function ImprovementSteps() {
       alert: false,
     },
   ];
+  const router = useRouter();
+
+  const handleAnalysisClick = () => {
+    router.push({
+        pathname: '/practice-analysis',
+    });
+};
+
 
   return (
     <Box
@@ -75,6 +85,7 @@ export default function ImprovementSteps() {
         fontWeight="semibold"
         fontSize={14}
         borderRadius="full"
+        onClick={handleAnalysisClick}
       >
         View Detailed Analysis
       </Button>

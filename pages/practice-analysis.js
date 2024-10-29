@@ -2,7 +2,7 @@ import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import "@/styles/theme";
 import { Heading, Box, Text, VStack, Flex, Button, SimpleGrid, Tag, Divider, Container } from "@chakra-ui/react";
-import TopNav from "@/styles/components/TopNav";
+import Layout from "@/styles/components/Layout";
 import { useRouter } from 'next/router';
 import Image from "next/image";
 import VideoPLayer from "@/styles/components/VideoPlayer";
@@ -23,8 +23,9 @@ export default function PracticeAnalysis() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
+            <Layout>
             <div className={`${styles.page}`}>
-                <TopNav />
+
                 <Box maxW="100vw" py={6} px={4} overflowX="hidden">
                     {/* Centered Container for the layout */}
                     <Container maxWidth="1920px" mx="auto">
@@ -171,6 +172,7 @@ export default function PracticeAnalysis() {
                     </Container>
                 </Box>
             </div>
+            </Layout>
         </>
     );
 }
