@@ -86,7 +86,7 @@ export default function Home() {
 
                 <Box width="95%" >
                     <Image
-                        src="/ipad-nurse.png"
+                        src="/images/ipad-nurse.png"
                         alt="IPad Nurse"
                         width="100%"
                         height="auto"
