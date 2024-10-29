@@ -20,7 +20,7 @@ export default function Layout({ children, showTopNav = true }) {
     account: {
       label: "Account",
       icon: <User size={18} />, // Ensure the icon is imported
-      path: "/account"
+      path: "/user"
     },
     settings: {
       label: "Settings",
