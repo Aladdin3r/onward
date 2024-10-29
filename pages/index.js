@@ -9,6 +9,7 @@ import ViewAllPopup from "@/styles/components/ViewAllPopup"; // Import the new V
 import { useDisclosure } from '@chakra-ui/react';
 import { useRouter } from 'next/router'; // Import useRouter
 import Layout from "@/styles/components/Layout";
+import DashboardCard from "@/styles/components/DashBoardStartCard";
 import { useState, useEffect } from "react";
 
 export default function Home() {
@@ -51,14 +52,8 @@ export default function Home() {
                 <Card width="50vw" borderRadius="15px" boxShadow="md">
                   <CardBody>
                     <Stack spacing={4} align="center">
-                      <Text fontFamily="heading" fontSize="sm" fontWeight="bold" textAlign="center">
-                        Ready to take the next step?
-                      </Text>
-                      <Text fontFamily="body" textAlign="center" maxW="50%" mb={4}>
-                        Whether you're preparing for your first interview or refining your skills, we're here to help you succeed. Your next opportunity is just a practice session away. Are you ready to start practicing for your upcoming nursing interview?
-                        <span style={{ fontWeight: "bold" }}><br />Let’s get you confident and prepared!</span>
-                      </Text>
-                      <Popup 
+                      <DashboardCard />
+                      {/* <Popup 
                         title="Start Practicing!" 
                         heading="Select an Interview Type:" 
                         content1="Practice a realistic interview scenario in a simulated environment."
@@ -70,7 +65,7 @@ export default function Home() {
                         isOpen={isStartPracticingOpen} 
                         onOpen={onStartPracticingOpen} 
                         onClose={onStartPracticingClose} 
-                      />
+                      /> */}
                     </Stack>
                   </CardBody>
                 </Card>
