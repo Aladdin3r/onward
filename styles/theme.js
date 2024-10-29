@@ -38,7 +38,7 @@ const overrides = {
         nightBlack: "#1f1f1f",
         platinum: "#e2e2e2",
         confirmationGreen: "#61CD3D",
-        imperialRed: "#EAE84A",
+        imperialRed: "EA4A4D",
         canaryYellow: "#EAE84A",
         oceanBlue: "#214DDF",
         pureWhite: "#FFFFFF"

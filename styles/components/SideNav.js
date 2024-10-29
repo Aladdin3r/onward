@@ -133,6 +133,7 @@ export const SideNavBar = ({ activeVariant, bottomVariants = defaultBottomVarian
                     transition: "background-color 0.3s, transform 0.3s",
                   }}
                 >
+                  
                   <Box mr={3}>
                     {bottomVariants[variant].icon}
                   </Box>
@@ -154,4 +155,8 @@ export const SideNavBar = ({ activeVariant, bottomVariants = defaultBottomVarian
 SideNavBar.propTypes = {
   activeVariant: PropTypes.oneOf(["variant4", "variant2", "variant3", "default"]),
   bottomVariants: PropTypes.object, // Define bottomVariants as an optional object
+};
+
+SideNavBar.defaultProps = {
+  bottomVariants: {},
 };
