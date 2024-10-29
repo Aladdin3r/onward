@@ -1,4 +1,4 @@
-import { Flex, Box, Heading, Text } from "@chakra-ui/react";
+import { Flex, Box, Heading, Text, Divider } from "@chakra-ui/react";
 
 const HistoryContainer = () => {
     return (

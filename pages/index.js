@@ -2,8 +2,7 @@ import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import "@/styles/theme";
 import { Heading, Box, CardBody, Text, Stack, Card, Link, Flex } from "@chakra-ui/react";
-import TopNav from "@/styles/components/TopNav";
-import { SideNavBar } from "@/styles/components/SideNav";
+import HistoryContainer from "@/styles/components/HistoryContainer";
 import Footer from "@/styles/components/Footer";
 import Popup from "@/styles/components/Popup.js";
 import ViewAllPopup from "@/styles/components/ViewAllPopup"; // Import the new ViewAllPopup component
@@ -125,7 +124,7 @@ export default function Home() {
                       <Text fontFamily="heading" fontSize="md" fontWeight="bold" textAlign="center">
                         Check out how much you've grown!
                       </Text>
-                      <Box bg="brand.platinum" p={4} height="500px" width="90%" overflowY="auto"></Box>
+                      <HistoryContainer />
                     </Stack>
                   </CardBody>
                 </Card>
