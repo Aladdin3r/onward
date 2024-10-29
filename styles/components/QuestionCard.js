@@ -5,7 +5,6 @@
 //       questionNumber={1}
 //       questionText="Can you walk me through a situation where you had to collaborate with the interdisciplinary team during a code blue to ensure timely administration of ACLS protocols and coordinate care post-resuscitation, including any challenges with the EMR documentation?"
 //     />
-
 //     <QuestionCard
 //       questionNumber={2}
 //       questionText="Can you describe a time when you were faced with an emergency situation and had to make a quick decision? How did you prioritize tasks, and what steps did you take to ensure the best possible outcome for the patient?"

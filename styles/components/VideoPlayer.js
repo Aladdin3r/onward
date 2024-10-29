@@ -25,12 +25,14 @@
 // };
 // export default VideoPlayer;
 // VideoPlayer component
+
 import { Box, VStack } from "@chakra-ui/react";
 import { useState } from "react";
-const VideoPlayer = ({ videoSrc, thumbnail, duration }) => {
+const VideoPlayer = ({ videoSrc, thumbnail, duration, width }) => {
+
   const [isPlaying, setIsPlaying] = useState(false);
   return (
-    <Box maxW="600px" mx="auto" p={4} borderRadius="lg" bg="white">
+    <Box width={width} mx="auto" p={4} borderRadius="lg" bg="white">
       <VStack align="start" spacing={2}>
         {/* Video Element with Custom Controls */}
         <Box position="relative" borderRadius="md" overflow="hidden">
