@@ -20,7 +20,7 @@ export default function DashboardCard() {
   };
   return (
     <Box>
-      <Flex bg="#F3F6FF" minW="750px" minH="435px" borderRadius="16" overflow="hidden">
+      <Flex bg="#F3F6FF" minW="75%" minH="435px" borderRadius="16" overflow="hidden">
         
         
         <Flex

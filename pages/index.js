@@ -91,7 +91,7 @@ export default function Home() {
                   </CardBody>
                 </Card> */}
 
-                <Card width="30vw" borderRadius="15px" boxShadow="md">
+                <Card width="28vw" borderRadius="15px" boxShadow="md">
                   <CardBody>
                   <MyResumesCard />
                       
@@ -101,7 +101,7 @@ export default function Home() {
 
               {/* New row for the last card */}
               <Box display="flex" justifyContent="space-between" mt={7}>
-                <Card width="80vw" borderRadius="15px" boxShadow="md">
+                <Card width="78vw" borderRadius="15px" boxShadow="md">
                       <HistoryContainer />
                   <CardBody>
                   </CardBody>
