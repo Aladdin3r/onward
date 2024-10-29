@@ -59,6 +59,9 @@ export default function PracticeInterview() {
                     <Button size="xxs">End</Button>
                     <Button size="xxs" onClick={handleAnswerPage}>Answer</Button>
                 </Flex>
+                <Flex flexDirection={"row"} justify={"space-between"} mx={"5rem"} my={"1rem"}>
+                        </Flex>
+                            <Button size="xxs" onClick={handleNextClick}>Next</Button>
             </Box>
             <Footer/>
         </>

@@ -14,7 +14,7 @@ import UploadFile from "@/styles/components/UploadFile";
 import Layout from "@/styles/components/Layout";
 import QuestionType from "@/styles/components/QuestionType";
 import QuestionTime from "@/styles/components/QuestionTime";
-import Button from "@/styles/components/Button";
+
 
 export default function PracticeInterview() {
     const router = useRouter();
@@ -51,7 +51,7 @@ export default function PracticeInterview() {
                         </Flex>
                     </Flex>
                 </div>
-                
+
             </Layout>
         </>
     )
