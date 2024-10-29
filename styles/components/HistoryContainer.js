@@ -1,3 +1,5 @@
+import { Flex, Box, Heading, Text } from "@chakra-ui/react";
+
 const HistoryContainer = () => {
     return (
         <Flex flexDir="row" justify="center">
