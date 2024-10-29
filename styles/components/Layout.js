@@ -59,8 +59,9 @@ export default function Layout({ children, pageTitle, showTopNav}) {
       </Box>
       
       {/* main content area */}
-      <Box flex="1" marginLeft="72">
-      {showTopNav && <AppTopNav title={pageTitle} />}
+      <Box flex="1" marginLeft="72" overflowY="auto">
+      {showTopNav && <AppTopNav  />}
+
         
         {/* interview app content */}
         <Box 
