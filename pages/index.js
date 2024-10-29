@@ -9,6 +9,7 @@ import Popup from "@/styles/components/Popup.js";
 import ViewAllPopup from "@/styles/components/ViewAllPopup"; // Import the new ViewAllPopup component
 import { useDisclosure } from '@chakra-ui/react';
 import { useRouter } from 'next/router'; // Import useRouter
+import Layout from "@/styles/components/Layout";
 
 export default function Home() {
   const { isOpen: isStartPracticingOpen, onOpen: onStartPracticingOpen, onClose: onStartPracticingClose } = useDisclosure();
@@ -35,9 +36,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={`${styles.page}`}>
+        <SideNavBar/>
         <TopNav />
         <main className={styles.main} style={{ position: "relative" }}>
-          <SideNavBar property1="default" activeVariant="default" />
           <Box className="content" m={6}>
             <Heading fontFamily="heading" color="black" fontWeight="bold" fontSize="32pt" zIndex={10} position="relative">
               <span style={{ color: "#EA4A7D" }}>Welcome back,</span> Onwarder!
