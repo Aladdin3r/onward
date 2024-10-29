@@ -7,10 +7,11 @@ const HistoryContainer = () => {
                                 width="90%"
                                 height={{ base: "auto", md: "300px", lg: "400px" }}
                                 bg="white"
-                                boxShadow="0px 0px 10px rgba(0, 0, 0, 0.10)"
-                                borderRadius="15px"
+                                // boxShadow="0px 0px 10px rgba(0, 0, 0, 0.10)"
+                                // borderRadius="15px"
                                 p={{ base: 4, md: 6 }}
                                 m="auto"
+                                mt={3}
                             >
                                 <Heading size="lg" mb={2}>
                                     Practice Interview
