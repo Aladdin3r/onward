@@ -91,7 +91,7 @@ export default function Home() {
                   </CardBody>
                 </Card> */}
 
-                <Card width="28vw" borderRadius="15px" boxShadow="md">
+                <Card width="26vw" borderRadius="15px" boxShadow="md">
                   <CardBody>
                   <MyResumesCard />
                       
