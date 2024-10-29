@@ -12,6 +12,7 @@ import { useDisclosure } from '@chakra-ui/react';
 import { useRouter } from 'next/router'; // Import useRouter
 import Layout from "@/styles/components/Layout";
 import QuestionPractice from "@/styles/components/QuestionPractice";
+import VideoPlayer from '@/styles/components/VideoPlayer'
 
 export default function PracticeInterview() {
     const router = useRouter();
@@ -20,7 +21,7 @@ export default function PracticeInterview() {
     const handleAnswerPage = () => {
         router.push({
             pathname: '/practice-interview-answer',
-            query: { question: question }, // Pass the current question to the answer page
+            // query: { question: question }, // Pass the current question to the answer page
         });
     };
 
@@ -43,8 +44,13 @@ export default function PracticeInterview() {
                 py={"0"}
                 overflow="hidden"
             >
-                <Flex mt={"5rem"} flexDirection={"column"} >
-                    <QuestionPractice />
+                <Flex mt={"5rem"} flexDirection={"column"}
+                    p={4}
+                    width="75%"
+                    mb={0}
+                    zIndex={1}    
+                >
+                    <QuestionPractice borderRad={15}/>
                 </Flex>
 
                 {/* Buttons container */}

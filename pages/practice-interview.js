@@ -19,7 +19,7 @@ export default function PracticeInterview() {
 
     const handleNextClick = () => {
         router.push({
-            pathname: '/practice-interview-questions'
+            pathname: '/practice-interview-filter'
         });
     };
 

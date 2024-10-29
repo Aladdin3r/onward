@@ -12,13 +12,12 @@ import { useDisclosure } from '@chakra-ui/react';
 import { useRouter } from 'next/router'; // Import useRouter
 import Layout from "@/styles/components/Layout";
 import AnswerPractice from "@/styles/components/AnswerPractice"
-import VideoContainer from "@/styles/components/VideoContainer";
 import { useState } from "react";
 import interviewQuestions from '@/data/interviewQuestions'; 
 
 export default function PracticeAnswer() {
     const router = useRouter();
-    const { question } = router.query;
+    // const { question } = router.query;
 
     const handleEndClick = () => {
         router.push({

@@ -48,8 +48,10 @@
           borderRadius="0 0 8px 8px"
           boxShadow="md"
           mt="-10px" 
+          mx="auto"
           zIndex={0} 
         />
+
       </Box>
     );
   };

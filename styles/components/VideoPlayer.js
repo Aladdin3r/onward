@@ -33,4 +33,5 @@ const VideoPlayer = ({ videoSrc, thumbnail, duration, width }) => {
   );
 };
 
+
 export default VideoPlayer;
