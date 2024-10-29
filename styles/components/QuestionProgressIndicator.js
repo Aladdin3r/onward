@@ -29,3 +29,4 @@ const QuestionProgressIndicator = ({ totalSteps = 5, currentStep = 0 }) => {
 };
 
 export default QuestionProgressIndicator;
+
