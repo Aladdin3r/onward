@@ -50,6 +50,26 @@ export default function PracticeInterview() {
                             <QuestionType/>
                         </Flex>
                     </Flex>
+                    <Flex flexDirection={"row"} justify={"space-between"} mt={"300px"}>
+                                <Button bg={"brand.blushPink"} size="xxs" width={"10rem"} color={"white"} p={2}
+                                    onClick={handleBackClick}
+                                    _hover={{
+                                        bg: "white",
+                                        color: "brand.blushPink"
+                                    }}
+                                >
+                                        Back
+                                    </Button>
+                                <Button bg={"brand.blushPink"} size="xxs" width={"10rem"} color={"white"} p={2}
+                                    onClick={handleStartClick}
+                                    _hover={{
+                                        bg: "white",
+                                        color: "brand.blushPink"
+                                    }}
+                                >
+                                        Start Practice
+                                </Button>
+                            </Flex>
                 </div>
 
             </Layout>
