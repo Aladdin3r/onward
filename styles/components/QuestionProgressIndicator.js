@@ -16,5 +16,6 @@ const QuestionProgressIndicator = ({ totalSteps = 5, currentStep = 0 }) => {
     </HStack>
   );
 };
+
 export default QuestionProgressIndicator;
 

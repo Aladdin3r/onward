@@ -58,7 +58,7 @@ export default function Layout({ children, showTopNav = true }) {
       </Box>
       
       {/* main content area */}
-      <Box flex="1" marginLeft="72">
+      <Box flex="1" marginLeft="72" overflowY="auto">
       {showTopNav && <AppTopNav  />}
         
         {/* interview app content */}
