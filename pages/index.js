@@ -3,6 +3,7 @@ import styles from "@/styles/Home.module.css";
 import "@/styles/theme";
 import { Heading, Box, CardBody, Text, Stack, Card, Link, Flex } from "@chakra-ui/react";
 import HistoryContainer from "@/styles/components/HistoryContainer";
+import MyResumesCard from "@/styles/components/MyResumesCard";
 import Footer from "@/styles/components/Footer";
 import Popup from "@/styles/components/Popup.js";
 import ViewAllPopup from "@/styles/components/ViewAllPopup"; // Import the new ViewAllPopup component
@@ -70,14 +71,14 @@ export default function Home() {
                   </CardBody>
                 </Card>
 
-                <Card width="15vw" borderRadius="15px" boxShadow="md">
+                {/* <Card width="15vw" borderRadius="15px" boxShadow="md">
                   <CardBody>
                     <Stack spacing={4} align="center">
                       <Text fontFamily="heading" fontSize="sm" fontWeight="bold" textAlign="center">
                         My Resumes
                       </Text>
                       <Box bg="brand.platinum" p={4} height="200px" overflowY="auto">
-                        {/* Placeholder content for resumes */}
+
                         <Text>This is a placeholder for Resume 1</Text>
                         <Text>This is a placeholder for Resume 2</Text>
                         <Text>This is a placeholder for Resume 3</Text>
@@ -88,42 +89,24 @@ export default function Home() {
                       <ViewAllPopup isOpen={isViewAllOpen} onClose={onViewAllClose} heading="All Resumes" />
                     </Stack>
                   </CardBody>
-                </Card>
+                </Card> */}
 
-                <Card width="15vw" borderRadius="15px" boxShadow="md">
+                <Card width="30vw" borderRadius="15px" boxShadow="md">
                   <CardBody>
-                    <Stack spacing={4} align="center">
-                      <Text fontFamily="heading" fontSize="sm" fontWeight="bold" textAlign="center">
-                        My Job Postings
-                      </Text>
-                      <Box bg="brand.platinum" p={4} height="200px" overflowY="auto">
-                        {/* Placeholder content for job postings */}
-                        <Text>This is a placeholder for Job Posting 1</Text>
-                        <Text>This is a placeholder for Job Posting 2</Text>
-                        <Text>This is a placeholder for Job Posting 3</Text>
-                        <Text>This is a placeholder for Job Posting 4</Text>
-                        <Text>This is a placeholder for Job Posting 5</Text>
-                      </Box>
-                      <Link variant="underline" color="brand.blushPink" onClick={onViewAllOpen} cursor="pointer">View All</Link>
-                      <ViewAllPopup isOpen={isViewAllOpen} onClose={onViewAllClose} heading="All Job Postings" />
-                    </Stack>
+                  <MyResumesCard />
+                      
                   </CardBody>
                 </Card>
               </Box>
 
               {/* New row for the last card */}
-              <Box display="flex" justifyContent="space-between" gap={6} mt={7}>
-                <Card width="40vw" borderRadius="15px" boxShadow="md">
-                  <CardBody>
-                    <Stack spacing={4} align="center">
-                      <Text fontFamily="heading" fontSize="md" fontWeight="bold" textAlign="center">
-                        Check out how much you've grown!
-                      </Text>
+              <Box display="flex" justifyContent="space-between" mt={7}>
+                <Card width="80vw" borderRadius="15px" boxShadow="md">
                       <HistoryContainer />
-                    </Stack>
+                  <CardBody>
                   </CardBody>
                 </Card>
-                <Card width="40vw" borderRadius="15px" boxShadow="md">
+                {/* <Card width="40vw" borderRadius="15px" boxShadow="md">
                   <CardBody>
                     <Stack spacing={4} align="center">
                       <Text fontFamily="heading" fontSize="sm" fontWeight="bold" textAlign="center">
@@ -140,7 +123,7 @@ export default function Home() {
                       <ViewAllPopup isOpen={isViewAllOpen} onClose={onViewAllClose} heading="All Job Postings" />
                     </Stack>
                   </CardBody>
-                </Card>
+                </Card> */}
               </Box>
             </Box>
             <Footer />
