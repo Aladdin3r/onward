@@ -40,7 +40,7 @@ export default function AnswerPractice() {
 
     return (
         <>
-            <Flex mx="auto" flexDirection="row" gap="2rem">
+            <Flex flexDirection="row" gap="2rem" mx={"auto"}>
                 <Box maxW={showVideo ? '60%' : '100%'} transition="width 0.3s ease" borderRadiusTop={15} mx="auto">
                     <QuestionPractice />
                     <Flex 
