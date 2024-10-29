@@ -75,6 +75,7 @@ export default function Home() {
                             borderRadius="full"
                             px="6"
                             mb="6"
+                            onClick={handleSignUp}
                         >
                             Sign Up
                         </Button>
