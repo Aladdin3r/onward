@@ -1,8 +1,6 @@
 // QuestionProgressIndicator component
 
 import { Box, HStack, Stack } from "@chakra-ui/react";
-
-
 const QuestionProgressIndicator = ({ totalSteps = 5, currentStep = 0 }) => {
   return (
 
@@ -31,5 +29,4 @@ const QuestionProgressIndicator = ({ totalSteps = 5, currentStep = 0 }) => {
     </HStack>
   );
 };
-
 export default QuestionProgressIndicator;
