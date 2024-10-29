@@ -17,7 +17,7 @@ const MenuItem = ({ icon, label, isActive, onClick }) => (
   >
     <HStack spacing={3} w="100%" whiteSpace="nowrap">
       {icon}
-      <Text fontWeight={isActive ? "bold" : "normal"} fontSize="sm">{label}</Text>
+      <Text fontWeight={isActive ? "bold" : "normal"} fontSize="16pt">{label}</Text>
       {isActive && <Box w="8px" h="8px" bg="pink.500" borderRadius="full" ml="auto" />}
     </HStack>
     <Divider />
@@ -107,7 +107,7 @@ const SettingsMenu = () => {
         </Box>
 
         {/* Vertical divider line in brand.pastelBlue */}
-        <Divider orientation="vertical" borderColor="brand.pastelBlue" borderWidth="2px" mx={6} height="650px" />
+        <Divider orientation="vertical" borderColor="brand.pastelBlue" borderWidth="2px" mx={6} height="550px" />
 
         {/* Right-side content area */}
         <Box w="55%" p={5}>
