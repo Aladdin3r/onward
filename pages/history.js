@@ -29,11 +29,6 @@ export default function PracticeInterview() {
                         ml="20px" // Offset from sidebar
                         gap={2}
                     >
-                        <Flex flexDir="row" mb={4}>
-                            <Heading as="h2" size="md">
-                                History
-                            </Heading>
-                        </Flex>
                         
                         <Flex flexDir="row" justify="center">
                             <Box

@@ -63,13 +63,13 @@ export default function Layout({ children, showTopNav = true, title = "" }) {
         
         {/* Page Title */}
         {title && (
-          <Box position="absolute" top="16px" left="0" right="0" textAlign="center" zIndex="1">
+          <Box position="absolute" top="35px" left="5" right="0" textAlign="left" zIndex="1">
             <Heading size="lg">{title}</Heading>
           </Box>
         )}
 
         {/* Top Navigation Bar */}
-        {showTopNav && <AppTopNav mt="56px" />} {/* Add margin-top to offset for the title */}
+        {showTopNav && <AppTopNav mt="50px" />} {/* Add margin-top to offset for the title */}
         
         {/* Main content */}
         <Box 
