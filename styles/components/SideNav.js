@@ -2,6 +2,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import Link from "next/link";
 import { Box, Flex, Text, VStack, Image } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { ChalkboardTeacher, ClockCounterClockwise, UserSound, Presentation, User, Gear } from "@phosphor-icons/react";
 
 // Define each variant and associated icon, label, and path(s)
@@ -49,12 +50,22 @@ const defaultBottomVariants = {
   signOut: {
     label: "Sign Out",
     icon: null,
-    path: "/"
+    path: "/landing-page"
   }
 };
 
 // Main SideNavBar component
 export const SideNavBar = ({ activeVariant, bottomVariants = defaultBottomVariants }) => {
+  const router = useRouter();
+  
+  // Helper function to check if the path is active
+  const isPathActive = (paths) => {
+    if (Array.isArray(paths)) {
+      return paths.includes(router.pathname);
+    }
+    return paths === router.pathname;
+  };
+
   return (
     <Flex
       bg="brand.blueberryCreme"
@@ -74,7 +85,7 @@ export const SideNavBar = ({ activeVariant, bottomVariants = defaultBottomVarian
       <Box mt="1.5rem" overflow="hidden">
         <VStack align="flex-start" spacing={2} width="100%" ml="10%">
           {variants && Object.keys(variants).map((variant) => {
-            const isActive = activeVariant === variant;
+            const isActive = isPathActive(variants[variant].path);
             return (
               <Link href={Array.isArray(variants[variant].path) ? variants[variant].path[0] : variants[variant].path} key={variant} passHref>
                 <Flex
@@ -93,7 +104,7 @@ export const SideNavBar = ({ activeVariant, bottomVariants = defaultBottomVarian
                     transition: "background-color 0.3s, transform 0.3s",
                   }}
                 >
-                  <Box pl={isActive ? "5rem" : 0} mr={4}>
+                  <Box mr={4}>
                     {variants[variant].icon}
                   </Box>
                   <Text fontFamily="body" fontSize="18px" fontWeight="bold">
@@ -107,10 +118,10 @@ export const SideNavBar = ({ activeVariant, bottomVariants = defaultBottomVarian
       </Box>
 
       {/* Bottom Section for Account, Settings, and Sign Out Links */}
-      <Box mb={2} mt="13rem" width="100%">
-        <VStack width="100%" align="flex-end">
+      <Box mb={2} mt="30rem" width="100%">
+        <VStack width="100%" align="flex-start" ml={10}>
           {bottomVariants && Object.keys(bottomVariants).map((variant) => {
-            const isActive = activeVariant === variant;
+            const isActive = isPathActive(bottomVariants[variant].path);
             return (
               <Link
                 href={bottomVariants[variant].path}
@@ -121,7 +132,7 @@ export const SideNavBar = ({ activeVariant, bottomVariants = defaultBottomVarian
                   align="center"
                   cursor="pointer"
                   width="100%"
-                  height="1.3rem"
+                  height="1.5rem"
                   bg={isActive ? "brand.blushPink" : "none"} // Active background
                   color={isActive ? "brand.frostWhite" : "initial"} // Active text color
                   borderRadius="md"
@@ -136,7 +147,7 @@ export const SideNavBar = ({ activeVariant, bottomVariants = defaultBottomVarian
                   <Box mr={3}>
                     {bottomVariants[variant].icon}
                   </Box>
-                  <Text fontFamily="body" fontSize="18px" fontWeight="regular" textAlign="left"
+                  <Text fontFamily="body" fontSize="20px" fontWeight="bold" textAlign="left"
                     textDecoration={variant === 'signOut' ? 'underline' : 'none'}
                   >
                     {bottomVariants[variant].label}
