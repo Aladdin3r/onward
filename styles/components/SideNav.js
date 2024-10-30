@@ -118,7 +118,7 @@ export const SideNavBar = ({ activeVariant, bottomVariants = defaultBottomVarian
       </Box>
 
       {/* Bottom Section for Account, Settings, and Sign Out Links */}
-      <Box mb={2} mt="30rem" width="100%">
+      <Box mb={2} mt="20rem" width="100%">
         <VStack width="100%" align="flex-start" ml={10}>
           {bottomVariants && Object.keys(bottomVariants).map((variant) => {
             const isActive = isPathActive(bottomVariants[variant].path);
@@ -131,8 +131,9 @@ export const SideNavBar = ({ activeVariant, bottomVariants = defaultBottomVarian
                 <Flex
                   align="center"
                   cursor="pointer"
-                  width="100%"
+                  width="150%"
                   height="2.5rem"
+                  pl="1rem"
                   bg={isActive ? "brand.pastelBlue" : "none"} // Active background
                   color={isActive ? "brand.nightBlack" : "initial"} // Active text color
                   borderRadius="sm"
@@ -140,6 +141,7 @@ export const SideNavBar = ({ activeVariant, bottomVariants = defaultBottomVarian
                   transition="transform 0.3s ease-in-out, background-color 0.3s, color 0.3s"
                   _hover={{
                     color: "brand.nightBlack",
+                    textDecoration: 'underline',
                     transition: "background-color 0.3s, transform 0.3s",
                   }}
                 >
