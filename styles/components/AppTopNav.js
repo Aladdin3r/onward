@@ -8,7 +8,7 @@ export default function AppTopNav({ title, logo }) {
             pl={"72px"} 
             borderBottom="1px solid #E6EAF2"
         >
-        <Box color="brand.nightBlack" fontSize={{ base: 'md', md: 'lg' }} height={"4rem"} display="flex" alignItems="center">
+        <Box color="brand.nightBlack" fontSize={{ base: 'md', md: 'lg' }} height={"2.5rem"} display="flex" alignItems="center">
             {logo && (
                 <Image src={logo} alt="Logo" boxSize="2rem" mr={2} />
             )}

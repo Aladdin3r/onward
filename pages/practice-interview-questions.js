@@ -54,7 +54,7 @@ export default function PracticeInterview() {
                     mb={0}
                     zIndex={1}    
                 >
-                    <QuestionPractice borderRad={15}/>
+                    <QuestionPractice borderRadius={15}/>
                 </Flex>
 
                 {/* Buttons container */}

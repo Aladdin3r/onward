@@ -16,7 +16,7 @@ export default function PracticeInterview() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Layout showTopNav={true}>
+            <Layout showTopNav={true} title={"History"}>
                 <div className={`${styles.page}`}>
                     <Flex 
                         flexDirection="column" 
@@ -29,11 +29,6 @@ export default function PracticeInterview() {
                         ml="20px" // Offset from sidebar
                         gap={2}
                     >
-                        <Flex flexDir="row" mb={4}>
-                            <Heading as="h2" size="md">
-                                History
-                            </Heading>
-                        </Flex>
                         
                         <Flex flexDir="row" justify="center">
                             <Box

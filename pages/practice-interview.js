@@ -31,7 +31,7 @@ export default function PracticeInterview() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Layout>
+            <Layout showTopNav={true} title="Practice Interview">
                 <div className={styles.page} style={{ position: "relative" }}>
                     <Flex flexDirection={"column"} 
                         width="100%" 
@@ -41,15 +41,15 @@ export default function PracticeInterview() {
                         mx="auto"
                     >
                         <ProgressBar/>
-                        <Flex flexDirection={"row"} gap={60} align={"center"}>
+                        <Flex flexDirection={"row"} gap={50} align={"center"}>
                             <Flex flexDirection={"column"}>
-                                <Heading as='h2' size='md'>
+                                <Heading as='h2' size='md' mb={3}>
                                     Upload Resume
                                 </Heading>
                                 <UploadFile/>
                             </Flex>
                             <Flex flexDirection={"column"}>
-                                <Heading as='h2' size='md'>
+                                <Heading as='h2' size='md' mb={3}>
                                     Upload Job Posting
                                 </Heading>
                                 <UploadFile/>
