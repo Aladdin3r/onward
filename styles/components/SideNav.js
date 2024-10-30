@@ -132,15 +132,14 @@ export const SideNavBar = ({ activeVariant, bottomVariants = defaultBottomVarian
                   align="center"
                   cursor="pointer"
                   width="100%"
-                  height="1.5rem"
-                  bg={isActive ? "brand.blushPink" : "none"} // Active background
-                  color={isActive ? "brand.frostWhite" : "initial"} // Active text color
-                  borderRadius="md"
+                  height="2.5rem"
+                  bg={isActive ? "brand.pastelBlue" : "none"} // Active background
+                  color={isActive ? "brand.nightBlack" : "initial"} // Active text color
+                  borderRadius="sm"
                   pr="1.5rem"
                   transition="transform 0.3s ease-in-out, background-color 0.3s, color 0.3s"
                   _hover={{
-                    color: "brand.blushPink",
-                    borderRadius: "26px 0 0 26px",
+                    color: "brand.nightBlack",
                     transition: "background-color 0.3s, transform 0.3s",
                   }}
                 >
