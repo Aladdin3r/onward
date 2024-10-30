@@ -16,7 +16,7 @@ export default function PracticeInterview() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Layout showTopNav={true}>
+            <Layout showTopNav={true} title={"History"}>
                 <div className={`${styles.page}`}>
                     <Flex 
                         flexDirection="column" 
