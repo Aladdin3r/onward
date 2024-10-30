@@ -61,7 +61,7 @@ export default function UploadFile({ fileType }) {
                     {selectedFile ? (
                         <Text>{selectedFile}</Text> // Display selected file name here
                     ) : (
-                        <Text color="gray.500">Resume list</Text> // Placeholder text when no file is selected
+                        <Text color="gray.500">No file chosen</Text> // Placeholder text when no file is selected
                     )}
                 </Box>
             </Flex>
