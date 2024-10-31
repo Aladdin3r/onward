@@ -67,13 +67,6 @@ export default function Home() {
                     <HistoryContainer />
                   </Card>
                 </Box>
-
-                {/* Render the PracticeInterview component, passing the necessary props */}
-                <PracticeInterview 
-                  uploadedFiles={uploadedFiles}
-                  setUploadedFiles={setUploadedFiles}
-                  onFileUpload={handleFileUpload}
-                />
               </Box>
               <Footer />
             </Flex>
