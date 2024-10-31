@@ -1,32 +1,32 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import "@/styles/theme";
-import { Heading, Box, CardBody, Text, Stack, Card, Link, Flex } from "@chakra-ui/react";
+import { Heading, Box, CardBody, Stack, Card, Flex } from "@chakra-ui/react";
 import HistoryContainer from "@/styles/components/HistoryContainer";
 import MyResumesCard from "@/styles/components/MyResumesCard";
 import Footer from "@/styles/components/Footer";
-import Popup from "@/styles/components/Popup.js";
-import ViewAllPopup from "@/styles/components/ViewAllPopup"; // Import the new ViewAllPopup component
-import { useDisclosure } from '@chakra-ui/react';
-import { useRouter } from 'next/router'; // Import useRouter
 import Layout from "@/styles/components/Layout";
 import DashboardCard from "@/styles/components/DashBoardStartCard";
-import { useState, useEffect } from "react";
+import { useDisclosure } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
+import { useState } from "react";
+import PracticeInterview from "./practice-interview";
 
 export default function Home() {
+  const [uploadedFiles, setUploadedFiles] = useState([]); // State to manage uploaded files
   const { isOpen: isStartPracticingOpen, onOpen: onStartPracticingOpen, onClose: onStartPracticingClose } = useDisclosure();
   const { isOpen: isViewAllOpen, onOpen: onViewAllOpen, onClose: onViewAllClose } = useDisclosure();
-  const router = useRouter(); // Initialize the router
+  const router = useRouter();
 
-  // Button action functions
-  const handleMockInterview = () => {
-    router.push('/mock-interview'); // Navigate to the mock interview page
-    onStartPracticingClose(); // Close the popup after action
-  };
-
-  const handlePracticeInterview = () => {
-    router.push('/practice-interview'); // Navigate to the practice interview page
-    onStartPracticingClose(); // Close the popup after action
+  const handleFileUpload = (file) => {
+    setUploadedFiles((prevFiles) => {
+      // Check if the file is already in the array
+      const isFileExist = prevFiles.some(uploadedFile => uploadedFile.name === file.name);
+      if (!isFileExist) {
+        return [...prevFiles, file]; // Only add if it doesn't exist
+      }
+      return prevFiles; // Return existing state if file already exists
+    });
   };
 
   return (
@@ -38,95 +38,44 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout showTopNav={false}>
-
         <Flex className={`${styles.page}`} flexDirection="row">
-          <main className={styles.main} style={{ position: "relative" }} >
-
-            {/* flexbox for main content + footer, shifted right to account for sidebar */}
+          <main className={styles.main} style={{ position: "relative" }}>
             <Flex flexDir={"column"}> 
-            <Box className="content" m={6} >
-              <Heading fontFamily="heading" color="black" fontWeight="bold" fontSize="32pt" zIndex={10} position="relative">
-                <span style={{ color: "#EA4A7D" }}>Welcome back,</span> Onwarder!
-              </Heading>
+              <Box className="content" m={6} >
+                <Heading fontFamily="heading" color="black" fontWeight="bold" fontSize="32pt" zIndex={10} position="relative">
+                  <span style={{ color: "#EA4A7D" }}>Welcome back,</span> Onwarder!
+                </Heading>
 
-              <Box display="flex" justifyContent="space-between" gap={6} mt={7}>
-                <Card width="50vw" borderRadius="15px" boxShadow="md">
-                  <CardBody>
-                    <Stack spacing={4} align="center">
-                      <DashboardCard />
-                      {/* <Popup 
-                        title="Start Practicing!" 
-                        heading="Select an Interview Type:" 
-                        content1="Practice a realistic interview scenario in a simulated environment."
-                        button1Text="Mock Interview" 
-                        button1Action={handleMockInterview}  // Navigate to the mock interview page
-                        content2="Focus on refining your answers and building confidence" 
-                        button2Text="Practice Interview" 
-                        button2Action={handlePracticeInterview} // Navigate to the practice interview page
-                        isOpen={isStartPracticingOpen} 
-                        onOpen={onStartPracticingOpen} 
-                        onClose={onStartPracticingClose} 
-                      /> */}
-                    </Stack>
-                  </CardBody>
-                </Card>
+                <Box display="flex" justifyContent="space-between" gap={6} mt={7}>
+                  <Card width="50vw" borderRadius="15px" boxShadow="md">
+                    <CardBody>
+                      <Stack spacing={4} align="center">
+                        <DashboardCard />
+                      </Stack>
+                    </CardBody>
+                  </Card>
 
-                {/* <Card width="15vw" borderRadius="15px" boxShadow="md">
-                  <CardBody>
-                    <Stack spacing={4} align="center">
-                      <Text fontFamily="heading" fontSize="sm" fontWeight="bold" textAlign="center">
-                        My Resumes
-                      </Text>
-                      <Box bg="brand.platinum" p={4} height="200px" overflowY="auto">
+                  <Card width="26vw" borderRadius="15px" boxShadow="md">
+                    <CardBody>
+                      <MyResumesCard uploadedFiles={uploadedFiles} /> {/* Pass uploaded files to MyResumesCard */}
+                    </CardBody>
+                  </Card>
+                </Box>
 
-                        <Text>This is a placeholder for Resume 1</Text>
-                        <Text>This is a placeholder for Resume 2</Text>
-                        <Text>This is a placeholder for Resume 3</Text>
-                        <Text>This is a placeholder for Resume 4</Text>
-                        <Text>This is a placeholder for Resume 5</Text>
-                      </Box>
-                      <Link variant="underline" color="brand.blushPink" onClick={onViewAllOpen} cursor="pointer">View All</Link>
-                      <ViewAllPopup isOpen={isViewAllOpen} onClose={onViewAllClose} heading="All Resumes" />
-                    </Stack>
-                  </CardBody>
-                </Card> */}
+                <Box display="flex" justifyContent="space-between" mt={7}>
+                  <Card width="78vw" borderRadius="15px" boxShadow="md">
+                    <HistoryContainer />
+                  </Card>
+                </Box>
 
-                <Card width="26vw" borderRadius="15px" boxShadow="md">
-                  <CardBody>
-                  <MyResumesCard />
-                      
-                  </CardBody>
-                </Card>
+                {/* Render the PracticeInterview component, passing the necessary props */}
+                <PracticeInterview 
+                  uploadedFiles={uploadedFiles}
+                  setUploadedFiles={setUploadedFiles}
+                  onFileUpload={handleFileUpload}
+                />
               </Box>
-
-              {/* New row for the last card */}
-              <Box display="flex" justifyContent="space-between" mt={7}>
-                <Card width="78vw" borderRadius="15px" boxShadow="md">
-                      <HistoryContainer />
-                  <CardBody>
-                  </CardBody>
-                </Card>
-                {/* <Card width="40vw" borderRadius="15px" boxShadow="md">
-                  <CardBody>
-                    <Stack spacing={4} align="center">
-                      <Text fontFamily="heading" fontSize="sm" fontWeight="bold" textAlign="center">
-                        Ready to take the next step?
-                      </Text>
-                      <Box bg="brand.platinum" p={4} height="500px" width="90%" overflowY="auto">
-                        <Text>This is a placeholder for Job Posting 1</Text>
-                        <Text>This is a placeholder for Job Posting 2</Text>
-                        <Text>This is a placeholder for Job Posting 3</Text>
-                        <Text>This is a placeholder for Job Posting 4</Text>
-                        <Text>This is a placeholder for Job Posting 5</Text>
-                      </Box>
-                      <Link variant="underline" color="brand.blushPink" onClick={onViewAllOpen} cursor="pointer">View All</Link>
-                      <ViewAllPopup isOpen={isViewAllOpen} onClose={onViewAllClose} heading="All Job Postings" />
-                    </Stack>
-                  </CardBody>
-                </Card> */}
-              </Box>
-            </Box>
-            <Footer />
+              <Footer />
             </Flex>
           </main>
         </Flex>

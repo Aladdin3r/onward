@@ -1,15 +1,28 @@
 import Head from "next/head";
+import { useState } from "react";
 import "@/styles/theme";
 import "@phosphor-icons/web/light";
 import "@phosphor-icons/web/bold";
 import { Box, Avatar, Text, VStack, HStack, Button, Heading, Divider, Link, SimpleGrid } from "@chakra-ui/react";
 import TopNav from "@/styles/components/TopNav";
 import Layout from "@/styles/components/Layout";
+import MyResumesCard from "@/styles/components/MyResumesCard";
 import Footer from "@/styles/components/Footer";
 import { SideNavBar } from "@/styles/components/SideNav";
 import PDFCard from "@/styles/components/PDFCard";
 
 export default function User() {
+  const [uploadedFiles, setUploadedFiles] = useState([]); // State to manage uploaded files
+  const handleFileUpload = (file) => {
+    setUploadedFiles((prevFiles) => {
+      // Check if the file is already in the array
+      const isFileExist = prevFiles.some(uploadedFile => uploadedFile.name === file.name);
+      if (!isFileExist) {
+        return [...prevFiles, file]; // Only add if it doesn't exist
+      }
+      return prevFiles; // Return existing state if file already exists
+    });
+  };
   return (
     <>
       <Head>
@@ -83,17 +96,8 @@ export default function User() {
             <SimpleGrid columns={{ base: 1, md: 2 }} spacing={5}>
               {/* My Resumes Section */}
               <Box bg="white" shadow="sm" borderRadius="lg" p={5} display="flex" flexDirection="column">
-                <Heading size="md" mb={3}>My Resumes</Heading>
-                <Text fontSize="xs" color="gray.500" mt="5">Default</Text>
-                <VStack align="start" spacing={3}>
-                  <PDFCard size={"92kb of 92kb"} title={"Burnaby Hosp. Nurse"} />
-                  <Text fontSize="xs" color="gray.500">Recently Added</Text>
-                  <PDFCard size={"99kb of 99kb"} title={"Nurse Aide Resume"} />
-                  <PDFCard size={"66kb of 66kb"} title={"NewWest Hosp. Nurse"} />
-                </VStack>
-                <Link color="pink.500" fontSize="sm" mt="auto" display="inline-block">View All</Link>
+                <MyResumesCard uploadedFiles={uploadedFiles} /> {/* Pass uploaded files to MyResumesCard */}
               </Box>
-
               {/* My Job Postings Section */}
               <Box bg="white" shadow="sm" borderRadius="lg" p={5} display="flex" flexDirection="column">
                 <Heading size="md" mb={3}>My Job Postings</Heading>
