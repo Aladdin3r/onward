@@ -18,12 +18,12 @@ export default function MockInterviewQuestionPage() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Layout>
+            <Layout showTopNav={true} title="Mock Interview">
                 <Box className={styles.page} bg="gray.50" minH="100vh" py={8} display="flex" flexDirection="column" alignItems="center">
                     
                     {/* Question Prompt */}
                     <Center>
-                        <Box bg="white" mt={20} px={6} py={4} borderRadius="md" boxShadow="sm" width="70%">
+                        <Box bg="white" mt={5} px={6} py={4} borderRadius="md" boxShadow="sm" width="70%">
                             <Text fontSize="sm" fontWeight="semibold" textAlign="center">
                                 Can you describe a time when you were faced with an emergency situation and had to make a quick decision? How did you prioritize tasks, and what steps did you take to ensure the best possible outcome for the patient?
                             </Text>
