@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box, Text } from '@chakra-ui/react';
-import PDFCard from './PDFCard'; // Ensure correct path to PDFCard
+import PDFCard from './PDFCard'; 
 
-export default function MyResumesCard({ uploadedFiles }) {
+export default function MyResumesCard({ uploadedFiles = [] }) { // Default to an empty array
     return (
         <Box>
             <Text fontWeight="bold" mb={2}>My Resumes:</Text>
@@ -11,11 +11,11 @@ export default function MyResumesCard({ uploadedFiles }) {
                     <PDFCard 
                         key={index} 
                         title={file.name} 
-                        size={`${(file.size / 1024).toFixed(2)} KB`} // Convert size to KB
+                        size={`${(file.size / 1024).toFixed(2)} KB`} 
                     />
                 ))
             ) : (
-                <Text color="gray.500">No resumes uploaded</Text> // Placeholder when no files are uploaded
+                <Text color="gray.500">No resumes uploaded</Text>
             )}
         </Box>
     );
