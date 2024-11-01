@@ -91,7 +91,7 @@ export default function PracticeInterviewQuestion() {
                 </Flex>
                 <Flex flexDirection={"row"} justify={"space-between"} mx={"5rem"} my={"1rem"}>
                         </Flex>
-                            <Button size="xxs" onClick={handleNextClick}>Next</Button>
+                            <Button size="xxs" onClick={handleAnswerPage}>Next</Button>
             </Box>
             <Footer/>
         </>

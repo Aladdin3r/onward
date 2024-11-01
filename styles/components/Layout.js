@@ -71,7 +71,7 @@ export default function Layout({ children, pageTitle, showTopNav}) {
           mx="auto"
           bg="brand.frostWhite"
           px={4}
-          pt={title ? "72px" : "0"} 
+          pt={pageTitle ? "72px" : "0"} 
         >
           <Flex justify="center">
             <main>{children}</main>

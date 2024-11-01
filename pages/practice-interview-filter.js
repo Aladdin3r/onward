@@ -10,7 +10,7 @@ import Popup from "@/styles/components/Popup.js";
 import ViewAllPopup from "@/styles/components/ViewAllPopup"; // Import the new ViewAllPopup component
 import { useDisclosure } from '@chakra-ui/react';
 import { useRouter } from 'next/router'; // Import useRouter
-import UploadFile from "@/styles/components/UploadFile";
+import UploadFile from "@/styles/components/FileUpload";
 import Layout from "@/styles/components/Layout";
 import QuestionType from "@/styles/components/QuestionType";
 import QuestionTime from "@/styles/components/QuestionTime";
@@ -79,7 +79,7 @@ export default function PracticeInterviewFilter() {
 
                         {/* Separate row for the Next button */}
                         <Flex justifyContent="flex-end" mx="5rem" my="1rem">
-                            <Button size="sm" onClick={handleNextClick}>Next</Button>
+                            <Button size="sm" onClick={handleStartClick}>Next</Button>
                         </Flex>
                     </Flex>
                 </div>
