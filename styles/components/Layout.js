@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { SideNavBar } from "@/styles/components/SideNav"; 
 import AppTopNav from "@/styles/components/AppTopNav";
-import { Box, Flex, Heading } from "@chakra-ui/react";
-import { ChalkboardTeacher, ClockCounterClockwise, UserSound, Presentation, User, Gear } from "@phosphor-icons/react";
+import { Box, Flex } from "@chakra-ui/react";
+import { User, Gear } from "@phosphor-icons/react";
 
-export default function Layout({ children, pageTitle, showTopNav}) {
+export default function Layout({ children, pageTitle, showTopNav }) {
   const router = useRouter(); 
   const [activeVariant, setActiveVariant] = useState("default");
 
@@ -34,7 +34,6 @@ export default function Layout({ children, pageTitle, showTopNav}) {
     }
   };
 
-
   // Update active link based on the URL
   useEffect(() => {
     const currentPath = router.pathname;
@@ -57,24 +56,25 @@ export default function Layout({ children, pageTitle, showTopNav}) {
         zIndex="1000"
         overflowY="auto"
       >      
-        <SideNavBar activeVariant={activeVariant} bottomVariants={bottomVariants}/>
+        <SideNavBar activeVariant={activeVariant} bottomVariants={bottomVariants} />
       </Box>
       
-      {/* main content area */}
-      <Box flex="1" marginLeft="72">
-      {showTopNav && <AppTopNav title={pageTitle} />}
+      {/* Main content area */}
+      <Box flex="1" marginLeft="200px"> {/* Match sidebar width */}
+        {showTopNav && <AppTopNav title={pageTitle} />}
         
         {/* Main content */}
         <Box 
           minH="100vh" 
-          maxWidth={{ base: "100%", md: "1200px" }}
-          mx="auto"
+          maxWidth="100%" // Allow full width
           bg="brand.frostWhite"
-          px={4}
           pt={pageTitle ? "72px" : "0"} 
+          overflowY="auto"
         >
           <Flex justify="center">
-            <main>{children}</main>
+            <Box width="100%" maxWidth="1200px" marginX="auto"> {/* Centered box for content */}
+              <main>{children}</main>
+            </Box>
           </Flex>
         </Box>
       </Box>
