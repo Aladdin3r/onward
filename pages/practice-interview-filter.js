@@ -39,7 +39,9 @@ export default function PracticeInterviewFilter() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Layout showTopNav={false} title="Practice Interview">
+
+            <Layout showTopNav={true} pageTitle="Practice Interview">
+
                 <div className={styles.page} style={{ position: "relative" }}>
                     <Flex 
                         flexDirection={"column"} 
