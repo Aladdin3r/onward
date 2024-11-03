@@ -20,21 +20,24 @@ export default function DashboardCard() {
   };
   return (
     <Box>
-      <Flex bg="#F3F6FF" minW="75%" minH="435px" borderRadius="16" overflow="hidden">
-        
+      <Flex 
+        bg="#F3F6FF" 
+        maxWidth={{ md: "60%", lg: "80%", xl:"90%", "2xl": "100%" }} 
+        h="auto" 
+        borderRadius="16" 
+        overflow="hidden">
         
         <Flex
           flexDirection="column"
           alignItems="center"
           justifyContent="center"
           p="6"
-          width="60%"
         >
           <Image
             src="/images/dashboard-img.png"
             alt="Dashboard Start Card"
-            width="411.47px"
-            height="230.42px"
+            maxW="100%"
+            height="auto"
           />
           {/* <Button
             mt="2"
@@ -51,32 +54,32 @@ export default function DashboardCard() {
             Start Practicing
           </Button> */}
           <Popup 
-                        title="Start Practicing!" 
-                        heading="Select an Interview Type:" 
-                        content1="Practice a realistic interview scenario in a simulated environment."
-                        button1Text="Mock Interview" 
-                        button1Action={handleMockInterview}  // Navigate to the mock interview page
-                        content2="Focus on refining your answers and building confidence" 
-                        button2Text="Practice Interview" 
-                        button2Action={handlePracticeInterview} // Navigate to the practice interview page
-                        isOpen={isStartPracticingOpen} 
-                        onOpen={onStartPracticingOpen} 
-                        onClose={onStartPracticingClose} 
-                      />
+            title="Start Practicing!" 
+            heading="Select an Interview Type:" 
+            content1="Practice a realistic interview scenario in a simulated environment."
+            button1Text="Mock Interview" 
+            button1Action={handleMockInterview}  // Navigate to the mock interview page
+            content2="Focus on refining your answers and building confidence" 
+            button2Text="Practice Interview" 
+            button2Action={handlePracticeInterview} // Navigate to the practice interview page
+            isOpen={isStartPracticingOpen} 
+            onOpen={onStartPracticingOpen} 
+            onClose={onStartPracticingClose} 
+          />
         </Flex>
 
        
         <Flex
           alignItems="flex-end"  
           justifyContent="center"
-          width="40%"
+          width="60%"
           // p="6"
         >
           <Image
             src="/images/nurse-img.png"
             alt="Nurse Image"
-            width="300px"
-            height="328px"
+            maxW="100%"
+            height="auto"
             objectFit="cover"
           />
         </Flex>

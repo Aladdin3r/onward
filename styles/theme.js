@@ -3,6 +3,7 @@ import { theme as chakraTheme } from "@chakra-ui/react";
 import ChakraButton from './components/Button';
 import { Stepper } from "@chakra-ui/react";
 
+
 const fonts = {
     ...chakraTheme.fonts,
     body: "DM Sans",
@@ -12,6 +13,21 @@ const fonts = {
 const overrides = {
     ...chakraTheme,
     fonts,
+    breakpoints: {
+        sm: "320px",    // mobile
+        md: "768px",    // tablet
+        lg: "1024px",   // laptop
+        xl: "1280px",   // desktop (smaller screens)
+        "2xl": "1920px" // desktop (larger screens)
+    },
+    containerSize: {
+        // base: "100%",      // For mobile/small screens
+        sm: "320px",        // Small screens
+        md: "768px",         // Medium screens (tablets)
+        lg: "1024px",         // Large screens (laptops)
+        xl: "2180px",         // Extra large screens (desktops)
+        "2xl": "1920px",   // Extra extra large (full desktop)
+      },
     components: {
         Button: ChakraButton,
     },
@@ -21,11 +37,14 @@ const overrides = {
         bold: 700,
     },
     fontSizes: {
+        xxxs: "12pt",
         xxs: "14pt",
         xs: "16pt",
         sm: "20pt",
         md: "24pt",
-        lg: "32pt",
+        lg: "28pt",
+        xl: "32pt",
+        "2xl": "48pt"
     },
     colors: {
        brand: { 

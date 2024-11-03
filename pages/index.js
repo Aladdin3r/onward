@@ -39,24 +39,39 @@ export default function Home() {
       </Head>
       <Layout showTopNav={false} title={''}>
 
-        <Flex className={`${styles.page}`} flexDirection="row">
+        <Flex className={`${styles.page}`} flexDirection="row" maxWidth={{ md: "container.md", lg: "container.lg", xl:"container.xl", "2xl": "container.2xl" }}>
           <main className={styles.main} style={{ position: "relative" }}>
-            <Flex flexDir={"column"}> 
+            <Flex 
+              flexDir={"column"} 
+            > 
               <Box className="content" m={6} >
                 <Heading fontFamily="heading" color="black" fontWeight="bold" fontSize="32pt" zIndex={10} position="relative">
                   <span style={{ color: "#EA4A7D" }}>Welcome back,</span> Onwarder!
                 </Heading>
 
-                <Box display="flex" justifyContent="space-between" gap={6} mt={7}>
-                  <Card width="50vw" borderRadius="15px" boxShadow="md">
+                {/* Left Card */}
+                <Box 
+                  display="flex" 
+                  justifyContent="space-between" 
+                  gap={6} mt={7}
+                >
+                  <Card 
+                    borderRadius="15px" 
+                    boxShadow="md"
+                  >
                     <CardBody>
                       <Stack spacing={4} align="center">
-                        <DashboardCard />
+                        <DashboardCard 
+                        />
                       </Stack>
                     </CardBody>
                   </Card>
 
-                  <Card width="26vw" borderRadius="15px" boxShadow="md">
+                  <Card 
+                    maxWidth={{ md: "60%", lg: "70%", xl:"100%", "2xl": "100%" }} 
+                    borderRadius="15px" 
+                    boxShadow="md"
+                  >
                     <CardBody>
                       <MyResumesCard uploadedFiles={uploadedFiles} /> {/* Pass uploaded files to MyResumesCard */}
                     </CardBody>
@@ -64,7 +79,10 @@ export default function Home() {
                 </Box>
 
                 <Box display="flex" justifyContent="space-between" mt={7}>
-                  <Card width="78vw" borderRadius="15px" boxShadow="md">
+                  <Card width="78vw" 
+                    borderRadius="15px" 
+                    boxShadow="md"
+                  >
                     <HistoryContainer />
                   </Card>
                 </Box>
