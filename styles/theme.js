@@ -25,7 +25,7 @@ const overrides = {
         sm: "320px",        // Small screens
         md: "768px",         // Medium screens (tablets)
         lg: "1024px",         // Large screens (laptops)
-        xl: "2180px",         // Extra large screens (desktops)
+        xl: "1280px",         // Extra large screens (desktops)
         "2xl": "1920px",   // Extra extra large (full desktop)
       },
     components: {

@@ -39,20 +39,8 @@ export default function DashboardCard() {
             maxW="100%"
             height="auto"
           />
-          {/* <Button
-            mt="2"
-            bg="#EA4A7D"
-            color="#FFFFFF"
-            width="100%"
-            maxW="302px"
-            fontWeight="semibold"
-            fontSize="16px"
-            borderRadius="full"
-            px="6"
-            mb="6"
-          >
-            Start Practicing
-          </Button> */}
+
+          {/* not sure how to change this size */}
           <Popup 
             title="Start Practicing!" 
             heading="Select an Interview Type:" 
