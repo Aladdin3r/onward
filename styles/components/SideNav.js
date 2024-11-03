@@ -118,10 +118,10 @@ export const SideNavBar = ({ activeVariant, bottomVariants = defaultBottomVarian
       </Box>
 
       {/* Bottom Section for Account, Settings, and Sign Out Links */}
-      <Box mb={2} mt="20rem" width="100%">
-        <VStack width="100%" align="flex-start" ml={10}>
-          {bottomVariants && Object.keys(bottomVariants).map((variant) => {
-            const isActive = isPathActive(bottomVariants[variant].path);
+      <Box mb={2} mt={"13rem"} width="100%">
+        <VStack width="100%" align="flex-end" >
+        {Object.keys(bottomVariants).map((variant) => {
+            const isActive = activeVariant === variant;
             return (
               <Link
                 href={bottomVariants[variant].path}
@@ -145,6 +145,7 @@ export const SideNavBar = ({ activeVariant, bottomVariants = defaultBottomVarian
                     transition: "background-color 0.3s, transform 0.3s",
                   }}
                 >
+                  
                   <Box mr={3}>
                     {bottomVariants[variant].icon}
                   </Box>
@@ -165,5 +166,8 @@ export const SideNavBar = ({ activeVariant, bottomVariants = defaultBottomVarian
 
 SideNavBar.propTypes = {
   activeVariant: PropTypes.oneOf(["variant4", "variant2", "variant3", "default"]),
-  bottomVariants: PropTypes.object, // Define bottomVariants as an optional object
+};
+
+SideNavBar.defaultProps = {
+  bottomVariants: {},
 };

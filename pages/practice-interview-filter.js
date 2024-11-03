@@ -10,17 +10,22 @@ import Popup from "@/styles/components/Popup.js";
 import ViewAllPopup from "@/styles/components/ViewAllPopup"; // Import the new ViewAllPopup component
 import { useDisclosure } from '@chakra-ui/react';
 import { useRouter } from 'next/router'; // Import useRouter
-import UploadFile from "@/styles/components/UploadFile";
+import UploadFile from "@/styles/components/FileUpload";
 import Layout from "@/styles/components/Layout";
 import QuestionType from "@/styles/components/QuestionType";
 import QuestionTime from "@/styles/components/QuestionTime";
 
-export default function PracticeInterview() {
+export default function PracticeInterviewFilter() {
     const router = useRouter();
 
-    const handleNextClick = () => {
+        const handleStartClick  = () => {
         router.push({
-            pathname: '/practice-interview-questions'
+            pathname: '/practice-interview-questions',
+        });
+    };
+             const handleBackClick = () => {
+        router.push({
+            pathname: '/practice-interview',
         });
     };
 
@@ -34,6 +39,8 @@ export default function PracticeInterview() {
             </Head>
             <Layout showTopNav={true} title="Practice Interview">
                 <div className={styles.page} style={{ position: "relative" }}>
+                    <Flex>
+                        
                     <Flex 
                         flexDirection="column"
                         width="100%" 
@@ -42,16 +49,37 @@ export default function PracticeInterview() {
                         maxW={{ base: "100%", md: "1200px", lg: "1920px" }} 
                         mx="auto"
                     >
-                        <ProgressBar />
+                        <ProgressBar currentStep={1} />
 
                         <Flex flexDirection="row" gap={10} align="center" mx="5rem" my="1rem">
                             <QuestionTime />
                             <QuestionType />
+                    </Flex>
+                            <Flex flexDirection={"row"} justify={"space-between"} mt={"300px"}>
+                                <Button bg={"brand.blushPink"} size="xxs" width={"10rem"} color={"white"} p={2}
+                                    onClick={handleBackClick}
+                                    _hover={{
+                                        bg: "white",
+                                        color: "brand.blushPink"
+                                    }}
+                                >
+                                        Back
+                                    </Button>
+                                <Button bg={"brand.blushPink"} size="xxs" width={"10rem"} color={"white"} p={2}
+                                    onClick={handleStartClick}
+                                    _hover={{
+                                        bg: "white",
+                                        color: "brand.blushPink"
+                                    }}
+                                >
+                                        Start Practice
+                                </Button>
+                            </Flex>
                         </Flex>
 
                         {/* Separate row for the Next button */}
                         <Flex justifyContent="flex-end" mx="5rem" my="1rem">
-                            <Button size="sm" onClick={handleNextClick}>Next</Button>
+                            <Button size="sm" onClick={handleStartClick}>Next</Button>
                         </Flex>
                     </Flex>
                 </div>

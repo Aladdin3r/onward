@@ -5,7 +5,7 @@ import AppTopNav from "@/styles/components/AppTopNav";
 import { Box, Flex, Heading } from "@chakra-ui/react";
 import { ChalkboardTeacher, ClockCounterClockwise, UserSound, Presentation, User, Gear } from "@phosphor-icons/react";
 
-export default function Layout({ children, showTopNav = true, title = "" }) {
+export default function Layout({ children, pageTitle, showTopNav}) {
   const router = useRouter(); 
   const [activeVariant, setActiveVariant] = useState("default");
 
@@ -34,6 +34,8 @@ export default function Layout({ children, showTopNav = true, title = "" }) {
     }
   };
 
+
+  // Update active link based on the URL
   useEffect(() => {
     const currentPath = router.pathname;
     const foundVariant = Object.keys(variants).find(
@@ -55,21 +57,12 @@ export default function Layout({ children, showTopNav = true, title = "" }) {
         zIndex="1000"
         overflowY="auto"
       >      
-        <SideNavBar activeVariant={activeVariant} bottomVariants={bottomVariants} />
+        <SideNavBar activeVariant={activeVariant} bottomVariants={bottomVariants}/>
       </Box>
       
-      {/* Main content area */}
-      <Box flex="1" ml="280px" overflowY="auto" height="100vh" position="relative">
-        
-        {/* Page Title */}
-        {title && (
-          <Box position="absolute" top="35px" left="5" right="0" textAlign="left" zIndex="1">
-            <Heading size="lg">{title}</Heading>
-          </Box>
-        )}
-
-        {/* Top Navigation Bar */}
-        {showTopNav && <AppTopNav mt="50px" />} {/* Add margin-top to offset for the title */}
+      {/* main content area */}
+      <Box flex="1" marginLeft="72">
+      {showTopNav && <AppTopNav title={pageTitle} />}
         
         {/* Main content */}
         <Box 
@@ -78,7 +71,7 @@ export default function Layout({ children, showTopNav = true, title = "" }) {
           mx="auto"
           bg="brand.frostWhite"
           px={4}
-          pt={title ? "72px" : "0"} 
+          pt={pageTitle ? "72px" : "0"} 
         >
           <Flex justify="center">
             <main>{children}</main>
