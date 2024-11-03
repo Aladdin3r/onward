@@ -4,13 +4,13 @@ import "@/styles/theme";
 import { Heading, Box, Flex, Button, Text } from "@chakra-ui/react";
 import ProgressBar from "@/styles/components/ProgressBar";
 import Footer from "@/styles/components/Footer";
-import { useRouter } from "next/router"; // Import useRouter
+import { useRouter } from "next/router"; 
 import Layout from "@/styles/components/Layout";
-import ResumeUpload from "@/styles/components/ResumeUpload"
-import JobPostUpload from "@/styles/components/JobPostUpload"
-import UploadedFiles from "@/styles/components/UploadedFiles";
+import FileUpload from "@/styles/components/FileUpload";
 import { useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
+
+// uploads & deletes fine, but currently can't upload same file again, need to fix same file checking logic 
 
 export default function PracticeInterview() {
     const [uploadedResumeFiles, setUploadedResumeFiles] = useState([]);
@@ -23,7 +23,7 @@ export default function PracticeInterview() {
         router.push('/practice-interview-filter');
     };
 
-    const handleResumeUpload = (file) => {
+    const handleResumeUpload = async (file) => {
         console.log("Resume file uploaded:", file);
         const uniqueId = uuidv4(); 
         const fileWithId = { id: uniqueId, name: file.name }; // Create an object with id and name
@@ -35,9 +35,11 @@ export default function PracticeInterview() {
             }
             return prevFiles;
         });
+        const extractedText = await extractDataFromFile(file);
+        console.log("Extracted Resume Text:", extractedText);
     };
 
-    const handleJobPostUpload = (file) => {
+    const handleJobPostUpload = async (file) => {
         console.log("Job post file uploaded:", file);
 
         const uniqueId = uuidv4();
@@ -50,6 +52,37 @@ export default function PracticeInterview() {
             }
             return prevFiles; 
         });
+
+        const extractedText = await extractDataFromFile(file); 
+        console.log("Extracted Job Posting Text:", extractedText);
+    };
+
+    const extractDataFromFile = async (file) => {
+        try {
+            const response = await fetch('/api/parse-pdf', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    file: {
+                        data: await file.arrayBuffer(),
+                        name: file.name,
+                    },
+                }),
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const result = await response.json();
+            return result.text; // return the extracted text
+        } catch (error) {
+            console.error("Error extracting data from file:", error);
+        }
+    };
+
+    const handleDeleteFile = (fileName) => {
+        setUploadedFiles((prevFiles) => prevFiles.filter(file => file.name !== fileName));
     };
 
     const handleDeleteResumeFile = (fileId) => {
@@ -79,22 +112,24 @@ export default function PracticeInterview() {
                         mx="auto"
                     >
                         <ProgressBar currentStep={1}/>
-                        {/* resume section */}
-                        <ResumeUpload 
-                            onFileUpload={handleResumeUpload} 
-                            uploadedFiles={uploadedResumeFiles} 
+                        {/* Resume Upload */}
+                        <FileUpload 
+                            title="Upload Resume"
+                            fileType="resume"
+                            uploadedFiles={uploadedResumeFiles}
                             setUploadedFiles={setUploadedResumeFiles}
-                            key={uploadedResumeFiles.length} // adding unique key 
+                            onFileUpload={handleResumeUpload}
+                            bucketName="onward-resume"
                         />
-                        <UploadedFiles files={uploadedResumeFiles} onDeleteFile={handleDeleteResumeFile} />
                         
-
-                        {/* job posting section */}
-                        <JobPostUpload 
-                            onFileUpload={handleJobPostUpload} 
-                            uploadedFiles={uploadedJobPostFiles} 
-                            setUploadedFiles={setUploadedJobPostFiles} 
-                            key={uploadedJobPostFiles.length} // adding unique key 
+                        {/* Job Posting upload */}
+                        <FileUpload 
+                            title="Upload Job Posting"
+                            fileType="job-posting"
+                            uploadedFiles={uploadedJobPostFiles}
+                            setUploadedFiles={setUploadedJobPostFiles}
+                            onFileUpload={handleJobPostUpload}
+                            bucketName="onward-job-posting"
                         />
 
                         <Flex flexDirection={"row"} justify={"flex-end"} mt={"10px"}>

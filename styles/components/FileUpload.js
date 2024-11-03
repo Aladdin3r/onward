@@ -1,14 +1,16 @@
-// components/FileUpload.js
-import React, { useEffect, useRef } from 'react';
-import { Flex, Box, Heading } from "@chakra-ui/react";
+import React, { useEffect, useRef, useState } from 'react';
+import { Flex, Box, Heading, useToast } from "@chakra-ui/react";
 import { DragDrop } from '@uppy/react';
 import '@uppy/core/dist/style.min.css';
 import '@uppy/drag-drop/dist/style.min.css';
 import UploadedFiles from './UploadedFiles';
 import Uppy from '@uppy/core';
 import { supabase } from '@/lib/supabaseClient';
+import { v4 as uuidv4 } from 'uuid'; // to assign unique id to files
 
-export default function FileUpload({ title, fileType, uploadedFiles, setUploadedFiles, onFileUpload, bucketName }) {
+export default function FileUpload({ title, fileType, initialUploadedFiles, setUploadedFiles, onFileUpload, bucketName }) {
+    const [uploadedFiles, setUploadedFilesState] = useState(initialUploadedFiles || []);
+    const toast = useToast();
     const uppyRef = useRef(new Uppy({
         restrictions: {
             maxNumberOfFiles: 3,
@@ -17,50 +19,107 @@ export default function FileUpload({ title, fileType, uploadedFiles, setUploaded
     }));
 
     useEffect(() => {
-        const handleFileAdded = async (file) => {
-            if (!Array.isArray(uploadedFiles)) {
-                console.error("uploadedFiles should be an array");
-                return;
-            }
+        const fetchUploadedFiles = async () => {
+            const { data, error } = await supabase.storage.from(bucketName).list('uploads/');
 
-            // Check if the file is already uploaded
+            if (error) {
+                console.error('Error fetching files:', error.message);
+            } else {
+                const files = data.map(file => ({
+                    id: uuidv4(),
+                    name: file.name,
+                }));
+                setUploadedFilesState(files);
+            }
+        };
+
+        fetchUploadedFiles();
+    }, [bucketName]);
+
+    useEffect(() => {
+        const handleFileAdded = async (file) => {
             const isFileAlreadyUploaded = uploadedFiles.some((uploadedFile) => uploadedFile.name === file.name);
             if (!isFileAlreadyUploaded) {
-                const newFile = { name: file.name, size: file.size };
-                setUploadedFiles((prevFiles) => [...prevFiles, newFile]); 
+                const newFile = { id: uuidv4(), name: file.name, size: file.size };
+                setUploadedFilesState((prevFiles) => [...prevFiles, newFile]);
                 onFileUpload(newFile);
 
-                // Upload file to Supabase
-                const { data, error } = await supabase.storage
-                    .from(bucketName) 
-                    .upload(`uploads/${file.name}`, file.data, { // Ensure you're using file.data here
+                const { data: uploadData, error: uploadError } = await supabase.storage
+                    .from(bucketName)
+                    .upload(`uploads/${file.name}`, file.data, {
                         cacheControl: '3600',
                         upsert: true,
                     });
 
-                if (error) {
-                    console.error('Error uploading file:', error.message);
+                if (uploadError) {
+                    console.error('Error uploading file:', uploadError.message);
+                    toast({
+                        title: 'Upload Failed.',
+                        description: uploadError.message,
+                        status: 'error',
+                        duration: 3000,
+                        isClosable: true,
+                    });
                 } else {
-                    console.log('File uploaded successfully:', data);
+                    console.log('File uploaded successfully:', uploadData);
+                    toast({
+                        title: 'Upload Successful.',
+                        description: `${file.name} has been uploaded.`,
+                        status: 'success',
+                        duration: 3000,
+                        isClosable: true,
+                    });
                 }
             } else {
                 console.log(`${file.name} is already uploaded.`);
+                toast({
+                    title: 'File Already Uploaded.',
+                    description: `${file.name} has already been uploaded.`,
+                    status: 'info',
+                    duration: 3000,
+                    isClosable: true,
+                });
             }
         };
 
         uppyRef.current.on('file-added', handleFileAdded);
 
-        // Cleanup function
         return () => {
             uppyRef.current.off('file-added', handleFileAdded);
             if (uppyRef.current && typeof uppyRef.current.close === 'function') {
                 uppyRef.current.close();
             }
         };
-    }, [uploadedFiles, onFileUpload]); 
+    }, [uploadedFiles, onFileUpload]);
 
-    const handleDeleteFile = (fileName) => {
-        setUploadedFiles(uploadedFiles.filter(file => file.name !== fileName));
+    
+
+    const handleDeleteFile = async (fileName) => {
+        const { data: deleteData, error: deleteError } = await supabase.storage
+            .from(bucketName)
+            .remove([`uploads/${fileName}`]);
+
+        if (deleteError) {
+            console.error('Error deleting file:', deleteError.message);
+            toast({
+                title: 'Deletion Failed.',
+                description: deleteError.message,
+                status: 'error',
+                duration: 3000,
+                isClosable: true,
+            });
+            return;
+        }
+
+        setUploadedFilesState((prevFiles) => prevFiles.filter(file => file.name !== fileName));
+        console.log('File deleted successfully:', deleteData);
+        toast({
+            title: 'File Deleted.',
+            description: `${fileName} has been deleted.`,
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+        });
     };
 
     return (
@@ -90,8 +149,7 @@ export default function FileUpload({ title, fileType, uploadedFiles, setUploaded
                             },
                         }}
                     />
-                    <UploadedFiles files={uploadedResumeFiles} onDeleteFile={handleDeleteResumeFile} />
-                    <UploadedFiles files={uploadedJobPostFiles} onDeleteFile={handleDeleteJobPostFile} />
+                    <UploadedFiles files={uploadedFiles} handleDeleteFile={handleDeleteFile} />
                 </Flex>
             </Box>
         </Flex>
