@@ -123,8 +123,8 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
     };
 
     return (
-        <Flex flexDir={"row"} width={'50rem'} justifyContent={"space-between"} mb={6}>
-            <Box width={"48rem"} height={"30rem"}>
+        <Flex flexDir={"row"} width={'100%'} alignItems={"space-between"} mb={6} >
+            <Box width={"40rem"} height={"30rem"}>
                 <Heading as='h2' size='md' padding={4}>{title}</Heading>
                 <Flex 
                     flexDirection="column" 
@@ -144,7 +144,7 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
                         height="8rem" 
                         locale={{
                             strings: {
-                                dropHereOr: 'Drop here or %{browse}',
+                                dropHereOr: 'Drop file here or %{browse}',
                                 browse: 'browse',
                             },
                         }}

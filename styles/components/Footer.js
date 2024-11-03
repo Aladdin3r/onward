@@ -11,7 +11,7 @@ export default function Footer() {
     const textColor = useColorModeValue('gray.800', 'gray.200');
 
     return (
-        <Box bg={bgColor} py={1} position="relative" bottom={0} width="100%">
+        <Box bg={"bgColor"} py={1} position="relative" bottom={0} width="100%" height={"3rem"}>
             <Flex alignItems={'center'} justifyContent="center">
                 <Text color={textColor}>© Onward 2024</Text>
             </Flex>

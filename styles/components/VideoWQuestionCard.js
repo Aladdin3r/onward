@@ -41,10 +41,6 @@ const VideoWQuestionCard = ({
         />
         {/* Question Card */}
         <QuestionCard questionNumber={questionNumber} questionText={questionText} />
-        {/* Progress Indicator */}
-        <QuestionProgressIndicator totalSteps={totalSteps} currentStep={currentStep} />
-        {/* Arrow Controls */}
-        <ArrowControls onPrev={onPrev} onNext={onNext} onExpand={onExpand} />
       </VStack>
     </Box>
   );

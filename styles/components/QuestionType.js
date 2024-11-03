@@ -13,10 +13,10 @@ import {
 export default function QuestionType() {
     return(
         <>
-        <Card width="45vw" borderRadius="15px" boxShadow="md">
+        <Card width="40vw" borderRadius="15px" boxShadow="md">
             <CardBody>
                 <Flex direction={"column"}>
-                    <Text fontFamily="heading" fontSize="x" fontWeight="bold" textAlign="left">
+                    <Text fontFamily="heading" fontWeight="bold" fontSize={"sm"} textAlign="left">
                         Type of Questions
                     </Text>
                     <Flex 
@@ -25,31 +25,30 @@ export default function QuestionType() {
                         gap={4} 
                         justify={"center"}
                     >
-                        <Box flex="1">
-                            <Checkbox size={"sm"}>
-                                <Text fontSize={"xxs"}>Behavioural Questions</Text>
+                        <Box flex="1" >
+                            <Checkbox size={"lg"} my={3}>
+                                <Text fontSize={"xs"}>Behavioural Questions</Text>
                             </Checkbox>
-                            <Checkbox size={"sm"}>
-                                <Text fontSize={"xxs"}>Situational Questions</Text>
+                            <Checkbox size={"lg"} my={3}>
+                                <Text fontSize={"xs"}>Situational Questions</Text>
                             </Checkbox>
-                            <Checkbox size={"sm"}>
-                                <Text fontSize={"xxs"}>Technical Questions</Text>
+                            <Checkbox size={"lg"} my={3}>
+                                <Text fontSize={"xs"}>Technical Questions</Text>
                             </Checkbox>
-                            <Checkbox size={"sm"}>
-                                <Text fontSize={"xxs"}>Competency Questions</Text>
+                            <Checkbox size={"lg"} my={3}>
+                                <Text fontSize={"xs"}>Competency Questions</Text>
                             </Checkbox>
                         </Box>
                         <Box flex="1">
-                            <Checkbox size={"sm"}>
-                                <Text fontSize={"xxs"}>Cultural Questions</Text>
+                            <Checkbox size={"lg"} my={3}>
+                                <Text fontSize={"xs"}>Cultural Questions</Text>
                             </Checkbox>
-                            <Checkbox size={"sm"}>
-                                <Text fontSize={"xxs"}>Career Goals Questions</Text>
+                            <Checkbox size={"lg"} my={3}>
+                                <Text fontSize={"xs"}>Career Goals Questions</Text>
                             </Checkbox>
-                            <Checkbox size={"sm"}>
-                                <Text fontSize={"xxs"}>Legal / Regulation Questions</Text>
+                            <Checkbox size={"lg"} my={3}>
+                                <Text fontSize={"xs"}>Legal / Regulation Questions</Text>
                             </Checkbox>
-
                         </Box>
                     </Flex>
                 </Flex>

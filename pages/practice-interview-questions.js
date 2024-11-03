@@ -21,7 +21,6 @@ export default function PracticeInterviewQuestion() {
     const handleAnswerPage = () => {
         router.push({
             pathname: '/practice-interview-answer',
-            // query: { question: question }, // Pass the current question to the answer page
         });
     };
    
@@ -31,7 +30,7 @@ export default function PracticeInterviewQuestion() {
         });
     };
 
-    const handleAnswer = () => {
+    const handleSimulation = () => {
         router.push({
             pathname: '/practice-interview-answer'
         })
@@ -47,53 +46,45 @@ export default function PracticeInterviewQuestion() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <TopNav/>
-            <Box 
-                minH={"100vh"}
-                bg="brand.frostWhite"
-                justify="center"
-                align="center"
-                px={"0"}
-                py={"0"}
-                overflow="hidden"
-            >
-                <Flex mt={"5rem"} flexDirection={"column"}
-                    p={4}
-                    width="75%"
-                    mb={0}
-                    zIndex={1}    
-                >
-                    <QuestionPractice borderRad={15}/>
-                    <Box p={2}>1/2</Box>
-                </Flex>
+            <div className={styles.page} style={{ position: "relative" }}>
+                <Flex 
+                    flexDirection={"column"}
+                    height="calc(100vh - 9rem)"
+                    width="100%"
+                    maxW={{ base: "100%", md: "1200px", lg: "1920px" }} 
+                >   
+                    <Box justifyContent={"center"} alignItems={"center"} mt={"15rem"} mb={"20rem"}>
+                        <QuestionPractice 
+                        showArrows={"true"} 
+                        borderRadius={"15"}
+                        questionWidth={"60%"}/>
+                    </Box>
 
-                {/* Buttons container */}
-
-                <Flex flexDirection={"row"} justify={"space-between"} mt={"50px"} mx={"13%"}>
-                    <Button bg={"brand.pureWhite"} size="xxs" width={"6rem"} p={2} border={"1px"} borderColor={"red"}
+                    {/* bottom buttons */}
+                    <Flex flexDirection="row" justifyContent="space-between" mb={"3rem"} mx={"3rem"}>
+                        <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"}
                             onClick={handleEndClick}
                             _hover={{
-                                bg: "brand.pureWhite",
-                                color: "red",
-                                border:"1px",
-                                borderColor:"red"
-                        }}>End</Button>
-                    <Button bg={"brand.blushPink"} size="xxs" width={"10rem"} color={"white"} p={2}
-                        onClick={handleAnswerPage}
-                        _hover={{
-                            bg: "white",
-                            color: "brand.blushPink",
-                            border: "1px",
-                            borderColor: "brand.blushPink"
-                        }}
-                    >
-                            Answer
-                    </Button>
+                                bg: "white",
+                                color: "brand.blushPink"
+                            }}
+                        >
+                                Back
+                            </Button>
+                        <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"}
+                            onClick={handleSimulation}
+                            _hover={{
+                                bg: "white",
+                                color: "brand.blushPink"
+                            }}
+                        >
+                                Start Simulation
+                        </Button>
+                    </Flex>
                 </Flex>
-                <Flex flexDirection={"row"} justify={"space-between"} mx={"5rem"} my={"1rem"}>
-                        </Flex>
-                            <Button size="xxs" onClick={handleAnswerPage}>Next</Button>
-            </Box>
-            <Footer/>
+                <Footer/>
+            </div>
+           
         </>
     )
 }

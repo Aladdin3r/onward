@@ -34,47 +34,50 @@ export default function Layout({ children, pageTitle, showTopNav }) {
     }
   };
 
-  // Update active link based on the URL
   useEffect(() => {
     const currentPath = router.pathname;
     const foundVariant = Object.keys(variants).find(
-      (key) => variants[key] === currentPath || 
-                (Array.isArray(variants[key]) && variants[key].some(p => currentPath.startsWith(p)))
+      (key) =>
+        variants[key] === currentPath ||
+        (Array.isArray(variants[key]) && variants[key].some((p) => currentPath.startsWith(p)))
     );
     setActiveVariant(foundVariant || "default");
   }, [router.pathname]);
 
   return (
-    <Flex maxW="1920px" height="100vh" overflow="hidden" bg="brand.frostWhite">
+    <Flex width="100vw" bg="brand.frostWhite">
       {/* Sidebar */}
-      <Box 
-        as="nav" 
-        position="fixed" 
-        height="100vh" 
-        width="280px"
-        bg="white" 
+      <Box
+        as="nav"
+        position="fixed"
+        height="100vh"
+        bg="white"
         zIndex="1000"
-        overflowY="auto"
-      >      
+
+        width={{ base: "18rem", xl: "18rem", "2xl": "0" }}
+      >
         <SideNavBar activeVariant={activeVariant} bottomVariants={bottomVariants} />
       </Box>
-      
-      {/* Main content area */}
-      <Box flex="1" marginLeft="200px"> {/* Match sidebar width */}
+
+      {/* Main Content Area */}
+      <Box
+        flex="1"
+        ml={{ base: "18rem", xl: "19rem", "2xl": "0" }}
+        overflowX="hidden"
+      >
         {showTopNav && <AppTopNav title={pageTitle} />}
         
         {/* Main content */}
-        <Box 
-          minH="100vh" 
-          maxWidth="100%" // Allow full width
+        <Box
+          minH="100vh"
+          width={{ base: "calc(100vw - 18rem)", "2xl": "100vw" }}
           bg="brand.frostWhite"
-          pt={pageTitle ? "72px" : "0"} 
-          overflowY="auto"
+          pt={pageTitle ? "72px" : "0"}
+          overflowX="hidden"
         >
-          <Flex justify="center">
-            <Box width="100%" maxWidth="1200px" marginX="auto"> {/* Centered box for content */}
-              <main>{children}</main>
-            </Box>
+          <Flex justifyContent="center">
+            <main>{children}</main>
+
           </Flex>
         </Box>
       </Box>

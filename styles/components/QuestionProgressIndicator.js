@@ -2,16 +2,16 @@ import { Box, HStack } from "@chakra-ui/react";
 
 const QuestionProgressIndicator = ({ totalSteps = 5, currentStep = 0 }) => {
   return (
-    <HStack>
+    <>
       {/* Wrapper for the white backdrop with shadow */}
       <Box
-        width={`${(totalSteps * 24) + ((totalSteps - 1) * 18)}px`} // adjust width based on number of indicators and spacing
+        width={`${totalSteps * 24 + (totalSteps - 1) * 8}px`} // adjust width based on number of indicators and spacing
         height="20px"
-        borderRadius="full"
         bg="white"
         boxShadow="md"
+        position="relative"
       >
-        <HStack spacing={2} align="center" justify="center" position="absolute" top="50%" left="50%" transform="translate(-50%, -50%)">
+        <HStack spacing={2} align="center" justify="center" position="absolute" top="50%" left="50%" transform="translate(-50%, -50%) ">
           {Array.from({ length: totalSteps }).map((_, index) => (
             <Box
               key={index}
@@ -24,9 +24,8 @@ const QuestionProgressIndicator = ({ totalSteps = 5, currentStep = 0 }) => {
           ))}
         </HStack>
       </Box>
-    </HStack>
+    </>
   );
 };
 
 export default QuestionProgressIndicator;
-
