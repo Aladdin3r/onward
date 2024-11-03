@@ -1,4 +1,3 @@
-"use client";
 import { 
     Box,
     Flex,
@@ -7,18 +6,19 @@ import {
     CardBody, 
     Stack,
     StackDivider,
+    Divider,
     Heading,
     Button
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import interviewQuestions from '@/data/interviewQuestions'; 
 import VideoPlayer from './VideoPlayer';
 import QuestionPractice from './QuestionPractice';
+import { Stop, Record, Pause } from '@phosphor-icons/react';
 
-export default function AnswerPractice() {
+export default function AnswerPractice({ videoSrc, thumbnail}) {
     const router = useRouter();
-    const [showVideo, setShowVideo] = useState(false); // Default is text
+    const [showVideo, setShowVideo] = useState(false); // default is text
     const [activeButton, setActiveButton] = useState('');
 
     const handleVoiceClick = () => {
@@ -31,18 +31,33 @@ export default function AnswerPractice() {
         setActiveButton('text');
     };
 
-    // const handleNextQuestion = () => {
-    //     // Move to the next question, looping back to the first if at the end
-    //     setCurrentQuestionIndex((prevIndex) => 
-    //         (prevIndex + 1) % interviewQuestions[currentCategoryIndex].questions.length
-    //     );
-    // };
-
     return (
         <>
-            <Flex flexDirection="row" gap="2rem" mx={"auto"}>
-                <Box maxW={showVideo ? '60%' : '100%'} transition="width 0.3s ease" borderRadiusTop={15} mx="auto">
-                    <QuestionPractice />
+            <Flex 
+                flexDirection="row" 
+                gap="2rem" 
+                mx="auto" 
+                maxH={"80%"}
+                justifyContent="center" 
+                alignItems="flex-start" 
+                width="100%"
+                maxWidth={showVideo ? "100%" : "60%"} 
+            >
+                {/* question and answer section */}
+                <Box 
+                    width="100%"
+                    maxW={showVideo ? '60%' : '100%'} 
+                    transition="width 0.3s ease"
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                >
+                    <QuestionPractice 
+                        showArrows={false}
+                        borderTopRadius={15}
+                        borderBottomRadius={0}
+                        width="100%"
+                    />
                     <Flex 
                         gap="1.1rem" 
                         p="4" 
@@ -52,10 +67,14 @@ export default function AnswerPractice() {
                         mb={0} 
                         position="relative" 
                         zIndex={1}
-                        flexDirection={"column"}
+                        flexDirection="column"
+                        divider={<StackDivider />}
+                        width={"100%"}
                     >
-                        <Heading size="md" textAlign={"left"}>Response Type:</Heading>
-                        <Flex flexDirection={"row"} gap="2rem">
+                        <Heading size="md" textAlign="left">Response Type:</Heading>
+                        <Divider orientation="horizontal" mb={4} />
+                        
+                        <Flex flexDirection="row" gap="2rem">
                             <Button 
                                 width="7rem" 
                                 onClick={handleVoiceClick}
@@ -89,7 +108,8 @@ export default function AnswerPractice() {
                         position="relative"
                         zIndex={1}
                         borderBottomRadius={15}
-                        maxH="15rem"
+                        maxH="35rem"
+                        width="100%"
                     >
                         {/* Answer section */}
                         <Card borderRadius="15" textAlign="left">
@@ -100,12 +120,13 @@ export default function AnswerPractice() {
                                     </Box>
                                     
                                     {/* Answer Box */}
-                                    <Box overflowY="auto" maxH="5rem" w="100%">
-                                        <Text pt="2" fontSize="xxs">
+                                    <Box overflowY="auto" height="10rem" w="100%">
+                                        <Text pt="2" fontSize="xs">
                                             Um, in my previous role as a nurse in the ER, there was this one time when, 
                                             like, a patient came in with chest pain, and we thought it might be a heart attack. 
                                             At the same time, uh, another patient had a severe allergic reaction. So, I had to, like, 
                                             figure out who needed help faster.
+                                            <br/>
                                             I quickly checked the chest pain patient and told the doctor to start treatment while I, uh,
                                             helped the allergic reaction patient by giving them epinephrine and, like, monitoring their breathing. 
                                             I stayed with them until they were stable.
@@ -120,9 +141,28 @@ export default function AnswerPractice() {
                     </Box>
                 </Box>
                 
-                <Box width="45%">
-                    {showVideo && <VideoPlayer />}
-                </Box>
+                {/* video Section */}
+                {showVideo && (
+                    <Flex 
+                        flexDirection={"column"}
+                        width="40%" 
+                        py={"2rem"}
+                        boxShadow="md" 
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                        borderRadius={15}
+                    >
+                        <VideoPlayer 
+                            videoSrc={videoSrc} 
+                            thumbnail="/images/smiling-girl.png" 
+                        />
+                        <Flex>
+                            <Button><Record size={24} /></Button>
+                            <Button><Stop size={24} /></Button>
+                            <Button><Pause size={24} /></Button>
+                        </Flex>
+                    </Flex>
+                )}
             </Flex>
         </>
     );

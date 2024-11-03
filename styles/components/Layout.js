@@ -40,40 +40,47 @@ export default function Layout({ children, pageTitle, showTopNav}) {
     const currentPath = router.pathname;
     const foundVariant = Object.keys(variants).find(
       (key) => variants[key] === currentPath || 
-                (Array.isArray(variants[key]) && variants[key].some(p => currentPath.startsWith(p)))
+        (Array.isArray(variants[key]) && variants[key].some(p => currentPath.startsWith(p)))
     );
     setActiveVariant(foundVariant || "default");
   }, [router.pathname]);
 
   return (
-    <Flex maxW="1920px" height="100vh" overflow="hidden" bg="brand.frostWhite">
+    <Flex 
+      width="100vw"
+      bg="brand.frostWhite"
+    >
       {/* Sidebar */}
       <Box 
         as="nav" 
         position="fixed" 
         height="100vh" 
-        width="280px"
         bg="white" 
         zIndex="1000"
-        overflowY="auto"
       >      
         <SideNavBar activeVariant={activeVariant} bottomVariants={bottomVariants}/>
       </Box>
       
       {/* main content area */}
-      <Box flex="1" marginLeft="72">
+      <Box 
+        flex="1"
+        marginLeft={{ base: "25rem", sm: "24rem", md: "23rem", lg: "22rem", xl:"19rem", "2xl": "0" }}
+        overflowX="hidden"
+        >
       {showTopNav && <AppTopNav title={pageTitle} />}
         
         {/* Main content */}
         <Box 
           minH="100vh" 
-          maxWidth={{ base: "100%", md: "1200px" }}
-          mx="auto"
+          width={{ base: "calc(100vw-18rem)", sm: "calc(100vw-18rem", md: "calc(100vw-18rem)", lg: "calc(100vw-18rem)", xl:"calc(100vw-18rem)", "2xl": "calc(100vw-18rem)" }}
+          overflowX="hidden"
           bg="brand.frostWhite"
-          px={4}
           pt={pageTitle ? "72px" : "0"} 
         >
-          <Flex justify="center">
+          <Flex 
+            justifyContent={"center"} 
+            overflowX="hidden"
+            >
             <main>{children}</main>
           </Flex>
         </Box>
