@@ -105,35 +105,39 @@ export default function PracticeInterview() {
             </Head>
             <Layout>
                 <div className={styles.page} style={{ position: "relative" }}>
-                    <Flex flexDirection={"column"} 
+                    <Flex 
+                        flexDirection={"column"} 
                         width="100%" 
                         height="100vh" 
                         maxW={{ base: "100%", md: "1200px", lg: "1920px" }} 
                         mx="auto"
                     >
                         <ProgressBar currentStep={1}/>
-                        {/* Resume Upload */}
-                        <FileUpload 
-                            title="Upload Resume"
-                            fileType="resume"
-                            uploadedFiles={uploadedResumeFiles}
-                            setUploadedFiles={setUploadedResumeFiles}
-                            onFileUpload={handleResumeUpload}
-                            bucketName="onward-resume"
-                        />
-                        
-                        {/* Job Posting upload */}
-                        <FileUpload 
-                            title="Upload Job Posting"
-                            fileType="job-posting"
-                            uploadedFiles={uploadedJobPostFiles}
-                            setUploadedFiles={setUploadedJobPostFiles}
-                            onFileUpload={handleJobPostUpload}
-                            bucketName="onward-job-posting"
-                        />
+                        <Flex gap={"5rem"} mt={"3rem"}>
+                            {/* Resume Upload */}
+                            <FileUpload 
+                                title="Upload Resume"
+                                fileType="resume"
+                                uploadedFiles={uploadedResumeFiles}
+                                setUploadedFiles={setUploadedResumeFiles}
+                                onFileUpload={handleResumeUpload}
+                                bucketName="onward-resume"
+                            />
+                            
+                            {/* Job Posting upload */}
+                            <FileUpload 
+                                title="Upload Job Posting"
+                                fileType="job-posting"
+                                uploadedFiles={uploadedJobPostFiles}
+                                setUploadedFiles={setUploadedJobPostFiles}
+                                onFileUpload={handleJobPostUpload}
+                                bucketName="onward-job-posting"
+                            />
+                        </Flex>
 
-                        <Flex flexDirection={"row"} justify={"flex-end"} mt={"10px"}>
-                            <Button bg={"brand.blushPink"} size="xxs" width={"6rem"} color={"white"} p={2}
+                        {/* bottom buttons */}
+                        <Flex flexDirection={"row"} justify={"flex-end"} mt={"auto"} mb={"3rem"}>
+                            <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"} 
                                 onClick={handleNextClick}
                                 _hover={{
                                     bg: "white",

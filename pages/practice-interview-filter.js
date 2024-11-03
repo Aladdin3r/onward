@@ -15,6 +15,8 @@ import Layout from "@/styles/components/Layout";
 import QuestionType from "@/styles/components/QuestionType";
 import QuestionTime from "@/styles/components/QuestionTime";
 
+// right now using drop down for question number and length of interview
+
 export default function PracticeInterviewFilter() {
     const router = useRouter();
 
@@ -37,49 +39,43 @@ export default function PracticeInterviewFilter() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Layout showTopNav={true} title="Practice Interview">
+            <Layout showTopNav={false} title="Practice Interview">
                 <div className={styles.page} style={{ position: "relative" }}>
-                    <Flex>
-                        
                     <Flex 
-                        flexDirection="column"
-                        width="100%" 
+                        flexDirection={"column"} 
                         height="100vh" 
-                        overflowX="hidden" 
+                        width={"100%"}
                         maxW={{ base: "100%", md: "1200px", lg: "1920px" }} 
                         mx="auto"
                     >
                         <ProgressBar currentStep={1} />
 
-                        <Flex flexDirection="row" gap={10} align="center" mx="5rem" my="1rem">
+                        {/* section for the question time & type cards */}
+                        <Flex flexDirection="row" gap={"10rem"} mt={"3rem"}>
                             <QuestionTime />
                             <QuestionType />
-                    </Flex>
-                            <Flex flexDirection={"row"} justify={"space-between"} mt={"300px"}>
-                                <Button bg={"brand.blushPink"} size="xxs" width={"10rem"} color={"white"} p={2}
-                                    onClick={handleBackClick}
-                                    _hover={{
-                                        bg: "white",
-                                        color: "brand.blushPink"
-                                    }}
-                                >
-                                        Back
-                                    </Button>
-                                <Button bg={"brand.blushPink"} size="xxs" width={"10rem"} color={"white"} p={2}
-                                    onClick={handleStartClick}
-                                    _hover={{
-                                        bg: "white",
-                                        color: "brand.blushPink"
-                                    }}
-                                >
-                                        Start Practice
-                                </Button>
-                            </Flex>
                         </Flex>
 
-                        {/* Separate row for the Next button */}
-                        <Flex justifyContent="flex-end" mx="5rem" my="1rem">
-                            <Button size="sm" onClick={handleStartClick}>Next</Button>
+                        {/* bottom buttons */}
+                        <Flex flexDirection="row" justifyContent="space-between" mt="auto" mb="3rem">
+                            <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"}
+                                onClick={handleBackClick}
+                                _hover={{
+                                    bg: "white",
+                                    color: "brand.blushPink"
+                                }}
+                            >
+                                    Back
+                                </Button>
+                            <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"}
+                                onClick={handleStartClick}
+                                _hover={{
+                                    bg: "white",
+                                    color: "brand.blushPink"
+                                }}
+                            >
+                                    Start Practice
+                            </Button>
                         </Flex>
                     </Flex>
                 </div>

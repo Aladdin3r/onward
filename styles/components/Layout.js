@@ -73,7 +73,7 @@ export default function Layout({ children, pageTitle, showTopNav}) {
           px={4}
           pt={pageTitle ? "72px" : "0"} 
         >
-          <Flex justify="center">
+          <Flex justifyContent={"center"} mx={"3rem"}>
             <main>{children}</main>
           </Flex>
         </Box>

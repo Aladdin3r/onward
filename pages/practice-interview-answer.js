@@ -47,27 +47,32 @@ export default function PracticeAnswer() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <TopNav/>
-            <Flex flexDir={"column"} maxH={"100vh"} bg="brand.frostWhite" justifyContent={"center"} >
-                    <Flex flexDirection={"row"} ml={"5rem"} my={3}>
-                        <AnswerPractice question={interviewQuestions[currentQuestionIndex]}/>
-                    </Flex>
-                    <Flex flexDirection={"row"} justify={"space-between"} mt={"50px"} mx={"13%"}>
-                        <Button bg={"brand.pureWhite"} size="xxs" width={"6rem"} p={2} border={"1px"} borderColor={"red"}
-                                onClick={handleEndClick}
-                                _hover={{
-                                    bg: "brand.pureWhite",
-                                    color: "red",
-                                    border:"1px",
-                                    borderColor:"red"
-                                }}>End</Button>
-                        <Button bg={"brand.blushPink"} size="xxs" onClick={handleOverviewClick} width={"10rem"} color={"white"} p={2}
-                                _hover={{
-                                    bg: "white",
-                                    color: "brand.blushPink",
-                                    border: "1px",
-                                    borderColor: "brand.blushPink"
-                                }}>Next Question</Button>
-                    </Flex>
+            <Flex 
+                flexDirection={"column"}
+                height="calc(100vh - 9rem)"
+                width="100%"
+                maxW={{ base: "100%", md: "1200px", lg: "1920px" }} 
+                >
+                <Flex flexDirection={"row"} ml={"5rem"} mt={"6rem"}>
+                    <AnswerPractice question={interviewQuestions[currentQuestionIndex]}/>
+                </Flex>
+                <Flex flexDirection={"row"} justify={"space-between"} mt={"50px"} mx={"13%"}>
+                    <Button bg={"brand.pureWhite"} size="xxs" width={"6rem"} p={2} border={"1px"} borderColor={"red"}
+                            onClick={handleEndClick}
+                            _hover={{
+                                bg: "brand.pureWhite",
+                                color: "red",
+                                border:"1px",
+                                borderColor:"red"
+                            }}>End</Button>
+                    <Button bg={"brand.blushPink"} size="xxs" onClick={handleOverviewClick} width={"10rem"} color={"white"} p={2}
+                            _hover={{
+                                bg: "white",
+                                color: "brand.blushPink",
+                                border: "1px",
+                                borderColor: "brand.blushPink"
+                            }}>Next Question</Button>
+                </Flex>
             </Flex>
             <Footer/>
         </>
