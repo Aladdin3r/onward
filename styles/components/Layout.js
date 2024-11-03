@@ -53,6 +53,7 @@ export default function Layout({ children, pageTitle, showTopNav }) {
         height="100vh"
         bg="white"
         zIndex="1000"
+
         width={{ base: "18rem", xl: "18rem", "2xl": "0" }}
       >
         <SideNavBar activeVariant={activeVariant} bottomVariants={bottomVariants} />
@@ -76,6 +77,7 @@ export default function Layout({ children, pageTitle, showTopNav }) {
         >
           <Flex justifyContent="center">
             <main>{children}</main>
+
           </Flex>
         </Box>
       </Box>

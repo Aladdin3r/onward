@@ -135,9 +135,10 @@ export default function PracticeInterview() {
                             />
                         </Flex>
 
-                        {/* bottom buttons */}
-                        <Flex flexDirection={"row"} justify={"flex-end"} mt={"auto"} mb={"3rem"}>
-                            <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"} 
+
+                        <Flex flexDirection={"row"} justify={"flex-end"} mt={"10px"}>
+                            <Button bg={"brand.blushPink"} size="xxs" width={"6rem"} color={"white"} p={2} 
+
                                 onClick={handleNextClick}
                                 _hover={{
                                     bg: "white",
