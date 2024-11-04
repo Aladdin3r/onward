@@ -6,7 +6,7 @@ export default function AppTopNav({ title, logo }) {
         <Box 
             id="app-top-nav" 
             px={4}
-            pl={"72px"} 
+            pl={"90px"} 
             borderBottom="1px solid #E6EAF2"
         >
         <Box color="brand.nightBlack" fontSize={{ base: 'md', md: 'lg' }} height={"1.6rem"} display="flex" alignItems="center">

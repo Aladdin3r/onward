@@ -31,8 +31,8 @@ const SettingsMenu = () => {
     <Box display="flex" justifyContent="center" p={10} bg="gray.50" minH="100vh">
       {/* Outer background container */}
       <Box
-        w="90%"
-        minW="1500px"
+        w="60%"
+        minW="1200px"
         display="flex"
         justifyContent="space-between"
         p={8}
