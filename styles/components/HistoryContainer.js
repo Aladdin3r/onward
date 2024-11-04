@@ -36,7 +36,8 @@ const HistoryContainer = () => {
                                 height: "100%", 
                                 position: 'absolute', 
                                 left: 0, 
-                                top: 0 
+                                top: 0, 
+                                objectFit: "cover"
                             }} 
                             src="video-picture.png" 
                             alt="Placeholder" 
@@ -121,7 +122,8 @@ const HistoryContainer = () => {
                                 height: "100%", 
                                 position: 'absolute', 
                                 left: 0, 
-                                top: 0 
+                                top: 0, 
+                                objectFit: "cover"
                             }} 
                             src="video-picture.png" 
                             alt="Placeholder" 

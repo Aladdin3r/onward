@@ -32,7 +32,7 @@ export default function DashboardCard() {
           alignItems="center"
           justifyContent="center"
           p={{ base: 2, md: 6 }}
-          width={{ base: "60%", md: "50%", lg: "50%", xl: "130%", "2xl":"140%" }}
+          width={{ base: "60%", md: "50%", lg: "50%", xl: "60%", "2xl":"140%" }}
         >
           <Image
             src="/images/dashboard-img.png"
@@ -60,7 +60,7 @@ export default function DashboardCard() {
         <Flex
           alignItems="flex-end"  
           justifyContent="center"
-          width={{ base: "60%", md: "70%", lg: "120%", xl: "130%", "2xl":"100%" }}
+          width={{ base: "60%", md: "70%", lg: "120%", xl: "150%", "2xl":"100%" }}
           height="auto" 
         >
           <Image
@@ -68,6 +68,7 @@ export default function DashboardCard() {
             alt="Nurse Image"
             width="100%"
             height="auto"
+            z-index="999"
           />
         </Flex>
       </Flex>

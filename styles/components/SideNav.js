@@ -69,7 +69,7 @@ export const SideNavBar = ({ activeVariant, bottomVariants = defaultBottomVarian
     <Flex
       bg="brand.blueberryCreme"
       height="100vh"
-      width="18rem"
+      width={{ md: "18rem", "2xl": "19rem" }}
       position="fixed"
       flexDir="column"
       overflow="hidden"
@@ -101,13 +101,14 @@ export const SideNavBar = ({ activeVariant, bottomVariants = defaultBottomVarian
                   bg={isActive ? "brand.blushPink" : "none"} // Active background
                   color={isActive ? "brand.frostWhite" : "initial"} // Active text color
                   p={3}
+                  ml={isActive ? "5%" : "initial"}
                   borderLeftRadius="26px"
                   transition="transform 0.5s ease-in-out, background-color 0.4s, color 0.4s"
                   _hover={{
                     bg: "brand.blushPink",
                     color: "brand.frostWhite",
                     borderRadius: "26px 0 0 26px",
-                    transition: "background-color 0.3s, transform 0.3s",
+                    transition: "background-color 0.5s, transform 0.3s",
                   }}
                 >
                   <Box mr={4}>
