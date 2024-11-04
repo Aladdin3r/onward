@@ -1,7 +1,5 @@
 import Head from "next/head";
-import styles from "@/styles/Home.module.css";
-import "@/styles/theme";
-import { Heading, Box, CardBody, Stack, Card, Flex } from "@chakra-ui/react";
+import { Heading, Box, Flex } from "@chakra-ui/react";
 import HistoryContainer from "@/styles/components/HistoryContainer";
 import MyResumesCard from "@/styles/components/MyResumesCard";
 import Footer from "@/styles/components/Footer";
@@ -11,10 +9,9 @@ import { useDisclosure } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useState } from "react";
 
+
 export default function Home() {
-  const [uploadedFiles, setUploadedFiles] = useState([]); // State to manage uploaded files
-  const { isOpen: isStartPracticingOpen, onOpen: onStartPracticingOpen, onClose: onStartPracticingClose } = useDisclosure();
-  const { isOpen: isViewAllOpen, onOpen: onViewAllOpen, onClose: onViewAllClose } = useDisclosure();
+  const [uploadedFiles, setUploadedFiles] = useState([]); 
   const router = useRouter();
 
   const handleFileUpload = (file) => {
@@ -35,61 +32,48 @@ export default function Home() {
       
       <Layout showTopNav={false} title="">
         <Flex 
-          className={styles.page}
-          flexDirection="row"
-          maxWidth={{ base: "container.sm", md: "container.md", lg: "container.lg", xl: "container.xl", "2xl": "container.2xl" }}
-          mx="auto"
-          px={{ base: 4, md: 6 }}
+          flexDirection="column" 
+          minH="100%" 
+          p={3} 
+          mt={3}
         >
-          <main className={styles.main}>
-            <Flex flexDir="column">
-              
-              <Box mt={9} mx={3}>
-                <Heading 
-                  fontFamily="heading"
-                  color="black"
-                  fontWeight="bold"
-                  fontSize={{ base: "md", md: "md", lg: "lg", "2xl": "xl" }}
-                  zIndex={10}
-                >
-                  <span style={{ color: "#EA4A7D" }}>Welcome back,</span> Onwarder!
-                </Heading>
+          <Heading 
+            fontFamily="heading"
+            color="black"
+            fontWeight="bold"
+            fontSize={{ base: "md", md: "md", lg: "lg", "2xl": "xl" }}
+            zIndex={10}
+            mb={4}
+          >
+            <span style={{ color: "#EA4A7D" }}>Welcome back,</span> Onwarder!
+          </Heading>
 
-                {/* Cards Row */}
-                <Flex justifyContent="space-between" gap={6} mt={7} flexWrap="wrap">
-                  <Card borderRadius="15px" boxShadow="md" flex="1" minW="250px">
-                    <CardBody>
-                      <Stack spacing={4} align="center">
-                        <DashboardCard />
-                      </Stack>
-                    </CardBody>
-                  </Card>
+          {/* Cards Row */}
+          <Flex 
+            flexDirection={{ base: "column", lg: "row"}}
+            justifyContent={"space-between"}
+            flex="1" mt={3} 
+            alignItems="stretch"
+            gap={3}
+          >
+            {/* Left Card */}
+            <Box>
+              <DashboardCard />
+            </Box>
 
-                  <Card borderRadius="15px" boxShadow="md" flex="1" minW="250px">
-                    <CardBody>
-                      <MyResumesCard uploadedFiles={uploadedFiles} />
-                    </CardBody>
-                  </Card>
-                </Flex>
+            {/* Right Card */}
+            <Box>
+              <MyResumesCard uploadedFiles={uploadedFiles} />
+            </Box>
+          </Flex>
 
-                {/* History Container */}
-                <Box mt={7}>
-                  <Card 
-                    width="100%" 
-                    maxW="78vw"
-                    borderRadius="15px" 
-                    boxShadow="md"
-                  >
-                    <CardBody>
-                      <HistoryContainer />
-                    </CardBody>
-                  </Card>
-                </Box>
-
-              </Box>
-              <Footer />
-            </Flex>
-          </main>
+          {/* History Container */}
+          <Box 
+            flex="0 0 90%"
+            mt={3} 
+          >
+            <HistoryContainer />
+          </Box>
         </Flex>
       </Layout>
     </>

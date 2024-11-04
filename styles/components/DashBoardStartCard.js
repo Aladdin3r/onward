@@ -1,46 +1,47 @@
-import { Box, Image, Flex, Button } from "@chakra-ui/react";
+import { Box, Image, Flex } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import Popup from "./Popup";
 
 export default function DashboardCard() {
   const { isOpen: isStartPracticingOpen, onOpen: onStartPracticingOpen, onClose: onStartPracticingClose } = useDisclosure();
-  const { isOpen: isViewAllOpen, onOpen: onViewAllOpen, onClose: onViewAllClose } = useDisclosure();
   const router = useRouter(); // Initialize the router
 
   // Button action functions
   const handleMockInterview = () => {
-    router.push('/mock-interview'); // Navigate to the mock interview page
-    onStartPracticingClose(); // Close the popup after action
+    router.push('/mock-interview'); 
+    onStartPracticingClose(); 
   };
 
   const handlePracticeInterview = () => {
-    router.push('/practice-interview'); // Navigate to the practice interview page
-    onStartPracticingClose(); // Close the popup after action
+    router.push('/practice-interview'); 
+    onStartPracticingClose(); 
   };
+
   return (
-    <Box>
       <Flex 
-        bg="#F3F6FF" 
-        maxWidth={{ md: "60%", lg: "80%", xl:"90%", "2xl": "100%" }} 
-        h="auto" 
-        borderRadius="16" 
-        overflow="hidden">
-        
+        bg="brand.blueberryCreme" 
+        w={{ base: "30.5rem", lg:"25rem", xl: "33rem", "2xl":"53rem" }}
+        h={{ base: "60%", lg: "100%", xl: "18rem", "2xl":"24rem" }}
+        borderRadius="15px" 
+        overflow="hidden"
+        boxShadow="md"
+      >
         <Flex
           flexDirection="column"
           alignItems="center"
           justifyContent="center"
-          p="6"
+          p={{ base: 2, md: 6 }}
+          width={{ base: "60%", md: "50%", lg: "50%", xl: "130%", "2xl":"140%" }}
         >
           <Image
             src="/images/dashboard-img.png"
             alt="Dashboard Start Card"
-            maxW="100%"
+            width="100%"
             height="auto"
+            objectFit="contain" 
           />
 
-          {/* not sure how to change this size */}
           <Popup 
             title="Start Practicing!" 
             heading="Select an Interview Type:" 
@@ -53,25 +54,22 @@ export default function DashboardCard() {
             isOpen={isStartPracticingOpen} 
             onOpen={onStartPracticingOpen} 
             onClose={onStartPracticingClose} 
+            popupSize={{ base: "90%", md: "70%", lg: "50%" }}
           />
         </Flex>
-
-       
         <Flex
           alignItems="flex-end"  
           justifyContent="center"
-          width="60%"
-          // p="6"
+          width={{ base: "60%", md: "70%", lg: "120%", xl: "130%", "2xl":"100%" }}
+          height="auto" 
         >
           <Image
             src="/images/nurse-img.png"
             alt="Nurse Image"
-            maxW="100%"
+            width="100%"
             height="auto"
-            objectFit="cover"
           />
         </Flex>
       </Flex>
-    </Box>
   );
 }

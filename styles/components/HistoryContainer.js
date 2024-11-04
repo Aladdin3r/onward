@@ -4,10 +4,11 @@ const HistoryContainer = () => {
     return (
         <Flex flexDir="row" justify="center" height={{ base: "auto", md: "300px", lg: "400px", xl:"70%", "2xl":"100%" }}>
             <Box
-                width="78vw"
+                width={{ base: "30rem", md: "50rem", xl:"78rem", "2xl":"96rem" }}
+                height={"auto"}
                 bg="white"
-                // boxShadow="0px 0px 10px rgba(0, 0, 0, 0.10)"
-                // borderRadius="15px"
+                boxShadow="md"
+                borderRadius={15}
                 p={{ base: 4, md: 6 }}
                 m="auto"
                 mt={3}
@@ -21,8 +22,8 @@ const HistoryContainer = () => {
                     width="100%"
                     justifyContent="flex-start"
                     alignItems="center"
-                    gap={4} // Spacing between items
-                    mt={4} // Margin top for spacing
+                    gap={4}
+                    mt={4} 
                 >
                     <Box 
                         width="200px" 
@@ -45,7 +46,6 @@ const HistoryContainer = () => {
                             height="100%" 
                             position="absolute" 
                             background="rgba(0, 0, 0, 0.40)" 
-                            borderRadius="15px" // Optional: to match the style
                         />
                         <Box 
                             width="30px" 
@@ -59,7 +59,6 @@ const HistoryContainer = () => {
                                 height="100%" 
                                 background="black" 
                                 opacity="0.60" 
-                                borderRadius="9999px" // Circle shape
                             />
                         </Box>
                     </Box>
@@ -68,7 +67,7 @@ const HistoryContainer = () => {
                         flexDirection="column" 
                         justifyContent="flex-start" 
                         alignItems="flex-start" 
-                        gap={2} // Space between text elements
+                        gap={2}
                     >
                         <Text 
                             fontSize="20px" 

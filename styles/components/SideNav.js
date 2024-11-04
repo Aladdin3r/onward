@@ -58,7 +58,6 @@ const defaultBottomVariants = {
 export const SideNavBar = ({ activeVariant, bottomVariants = defaultBottomVariants }) => {
   const router = useRouter();
   
-  // Helper function to check if the path is active
   const isPathActive = (paths) => {
     if (Array.isArray(paths)) {
       return paths.includes(router.pathname);
@@ -89,7 +88,7 @@ export const SideNavBar = ({ activeVariant, bottomVariants = defaultBottomVarian
       </Box>
 
       {/* nav menu */}
-      <Box mt="1.5rem" flex="1" overflow="hidden">
+      <Box mt="3rem" flex="1" overflow="hidden">
         <VStack align="flex-start" spacing={2} width="100%" ml={{ base: "0", md: "8%", lg: "10%", xl:"10%", "2xl":"10%" }}>
           {variants && Object.keys(variants).map((variant) => {
             const isActive = isPathActive(variants[variant].path);
@@ -127,8 +126,8 @@ export const SideNavBar = ({ activeVariant, bottomVariants = defaultBottomVarian
         </VStack>
       </Box>
 
-      {/* Bottom Section for Account, Settings, and Sign Out Links */}
-      <Box mb={2} mt={"auto"} width="100%">
+      {/* bottom section for account, settings, and sign Out Links */}
+      <Box mb={3} width="100%">
         <VStack width="100%" align="flex-start" ml={7}>
         {Object.keys(bottomVariants).map((variant) => {
             const isActive = activeVariant === variant;
