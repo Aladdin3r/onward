@@ -58,7 +58,9 @@ const overrides = {
         imperialRed: "EA4A4D",
         canaryYellow: "#EAE84A",
         oceanBlue: "#214DDF",
-        pureWhite: "#FFFFFF"
+        pureWhite: "#FFFFFF",
+        footerGrey: "E6EAF2",
+        lightGrey: "AAAAAA",
         }
     },
     styles: {

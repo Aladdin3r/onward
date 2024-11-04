@@ -4,6 +4,7 @@ import { SideNavBar } from "@/styles/components/SideNav";
 import AppTopNav from "@/styles/components/AppTopNav";
 import { Box, Flex } from "@chakra-ui/react";
 import { User, Gear } from "@phosphor-icons/react";
+import Footer from "./Footer";
 
 export default function Layout({ children, pageTitle, showTopNav }) {
   const router = useRouter(); 
@@ -45,7 +46,13 @@ export default function Layout({ children, pageTitle, showTopNav }) {
   }, [router.pathname]);
 
   return (
-    <Flex width="100vw" bg="brand.frostWhite">
+    <Flex 
+      maxW="1920px"
+      mx="auto"
+      minHeight="100vh"
+      flexDirection="column"
+      bg="brand.frostWhite"
+    >
       {/* Sidebar */}
       <Box
         as="nav"
@@ -53,31 +60,33 @@ export default function Layout({ children, pageTitle, showTopNav }) {
         height="100vh"
         bg="white"
         zIndex="1000"
-        width={{ base: "18rem", xl: "18rem", "2xl": "0" }}
+        width={{ base: "18rem", xl: "18rem", "2xl": "18rem" }}
       >
-        <SideNavBar activeVariant={activeVariant} bottomVariants={bottomVariants} />
+        <SideNavBar activeVariant={activeVariant} bottomVariants={bottomVariants}/>
       </Box>
 
       {/* Main Content Area */}
       <Box
         flex="1"
-        ml={{ base: "18rem", xl: "19rem", "2xl": "0" }}
+        ml={{ base: "18rem", lg: "18rem", xl: "19rem", "2xl": "20rem" }}
+        pt={pageTitle ? "72px" : "0"}
         overflowX="hidden"
+        display="flex"
+        flexDirection="column"
       >
         {showTopNav && <AppTopNav title={pageTitle} />}
         
         {/* Main content */}
         <Box
-          minH="100vh"
-          width={{ base: "calc(100vw - 18rem)", "2xl": "100vw" }}
+          flex="1"
           bg="brand.frostWhite"
-          pt={pageTitle ? "72px" : "0"}
-          overflowX="hidden"
+          pr={{ base: "5", lg: "3", xl: "6", "2xl": "10" }}
         >
-          <Flex justifyContent="center">
-            <main>{children}</main>
-          </Flex>
+          {children}
         </Box>
+
+        {/* Footer */}
+        <Footer />
       </Box>
     </Flex>
   );
