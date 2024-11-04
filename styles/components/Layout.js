@@ -58,9 +58,8 @@ export default function Layout({ children, pageTitle, showTopNav }) {
         as="nav"
         position="fixed"
         height="100vh"
-        bg="white"
         zIndex="1000"
-        width={{ base: "18rem", xl: "18rem", "2xl": "18rem" }}
+        width={{ base: "14rem", sm: "14rem", xl: "18rem", "2xl": "18rem" }}
       >
         <SideNavBar activeVariant={activeVariant} bottomVariants={bottomVariants}/>
       </Box>
@@ -68,8 +67,7 @@ export default function Layout({ children, pageTitle, showTopNav }) {
       {/* Main Content Area */}
       <Box
         flex="1"
-        ml={{ base: "18rem", lg: "18rem", xl: "19rem", "2xl": "20rem" }}
-        pt={pageTitle ? "72px" : "0"}
+        ml={{md: "14rem", lg:"19rem"}}
         overflowX="hidden"
         display="flex"
         flexDirection="column"
@@ -80,7 +78,7 @@ export default function Layout({ children, pageTitle, showTopNav }) {
         <Box
           flex="1"
           bg="brand.frostWhite"
-          pr={{ base: "5", lg: "3", xl: "6", "2xl": "10" }}
+          px={{ base: "7", xl: "8", "2xl": "16" }}
         >
           {children}
         </Box>

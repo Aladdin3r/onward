@@ -13,6 +13,7 @@ import { useRouter } from 'next/router'; // Import useRouter
 import Layout from "@/styles/components/Layout";
 import QuestionPractice from "@/styles/components/QuestionPractice";
 import VideoPlayer from '@/styles/components/VideoPlayer'
+import LayoutSim from "@/styles/components/LayoutSim";
 
 export default function PracticeInterviewQuestion() {
     const router = useRouter();
@@ -45,45 +46,50 @@ export default function PracticeInterviewQuestion() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <TopNav/>
-            <div className={styles.page} style={{ position: "relative" }}>
-                <Flex 
-                    flexDirection={"column"}
-                    height="calc(100vh - 9rem)"
-                    width="100%"
-                    maxW={{ base: "100%", md: "1200px", lg: "1920px" }} 
-                >   
-                    <Box justifyContent={"center"} alignItems={"center"} mt={"15rem"} mb={"20rem"}>
-                        <QuestionPractice 
-                        showArrows={"true"} 
-                        borderRadius={"15"}
-                        questionWidth={"60%"}/>
-                    </Box>
+            <LayoutSim>
+                    <div className={styles.page} style={{ position: "relative" }}>
+                    <Flex 
+                        flexDirection={"column"}
+                        height={{ base: "75%", md: "80%", lg: "100%" }} 
+                        width={{ base: "85%", md: "85%", lg: "100%" }} 
+                        mt={"5rem"}
+                    >   
+                        <Box justifyContent={"center"} alignItems={"center"}>
+                            <QuestionPractice 
+                            showArrows={"true"} 
+                            borderRadius={"15"}
+                            questionWidth={"60%"}/>
+                        </Box>
 
-                    {/* bottom buttons */}
-                    <Flex flexDirection="row" justifyContent="space-between" mb={"3rem"} mx={"3rem"}>
-                        <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"}
-                            onClick={handleEndClick}
-                            _hover={{
-                                bg: "white",
-                                color: "brand.blushPink"
-                            }}
-                        >
-                                Back
+                        {/* bottom buttons */}
+                        <Flex flexDirection="row" justifyContent="space-between" mx={"3rem"} mt={{ base: "5rem", xl: "3rem", "2xl":"5rem"}}>
+                            <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"} boxShadow={"md"}
+                                onClick={handleEndClick}
+                                _hover={{
+                                    bg: "white",
+                                    color: "brand.blushPink",
+                                    border: "1px",
+                                    boxShadow:"md"
+                                }}
+                            >
+                                    Back
+                                </Button>
+                            <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"} boxShadow={"md"}
+                                onClick={handleSimulation}
+                                _hover={{
+                                    bg: "white",
+                                    color: "brand.blushPink",
+                                    border: "1px",
+                                    boxShadow:"md"
+                                }}
+                            >
+                                    Start Simulation
                             </Button>
-                        <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"}
-                            onClick={handleSimulation}
-                            _hover={{
-                                bg: "white",
-                                color: "brand.blushPink"
-                            }}
-                        >
-                                Start Simulation
-                        </Button>
+                        </Flex>
                     </Flex>
-                </Flex>
-                <Footer/>
-            </div>
+                </div>
+            </LayoutSim>
+            
            
         </>
     )

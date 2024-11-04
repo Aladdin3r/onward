@@ -51,12 +51,12 @@ export default function QuestionPractice({ showArrows, borderTopRadius, borderBo
                     <CardBody textAlign={"left"}>
                         <Stack spacing='4' divider={<StackDivider />}>
                             <Box>
-                                <Heading size='md'>
+                                <Heading size='18pt'>
                                     {questionType[currentQuestionIndex % questionType.length]} 
                                 </Heading>
                             </Box>
                             <Box>
-                                <Text pt='2' fontSize='sm'>
+                                <Text pt='2' fontSize='18pt'>
                                     {questions[currentQuestionIndex]}
                                 </Text>
                             </Box>
