@@ -50,30 +50,38 @@ export default function PracticeInterviewFilter() {
                         maxW={{ base: "100%", md: "1200px", lg: "1920px" }} 
                         mx="auto"
                     >
-                        <ProgressBar currentStep={1} />
+                        <ProgressBar currentStep={2} />
 
                         {/* section for the question time & type cards */}
-                        <Flex flexDirection="row" gap={"10rem"} mt={"3rem"}>
+                        <Flex 
+                            flexDirection={{ base: "column", xl: "row" }} 
+                            justifyContent={"space-evenly"}
+                            rowGap={5}
+                        >
                             <QuestionTime />
                             <QuestionType />
                         </Flex>
 
                         {/* bottom buttons */}
-                        <Flex flexDirection="row" justifyContent="space-between" mt="auto" mb="3rem">
-                            <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"}
+                        <Flex flexDirection="row" justifyContent="space-between" mt={{ base: "5rem", xl: "3rem", "2xl":"5rem"}} mb="3rem">
+                            <Button bg={"brand.blushPink"} color={"white"} py={"1.5rem"} px={"4rem"} size={{ base: "xxs", "2xl":"sm"}} width={{ base: "1rem", "2xl":"10rem"}} height={{ base: "2rem", "2xl":"2.5rem"}}
                                 onClick={handleBackClick}
                                 _hover={{
                                     bg: "white",
-                                    color: "brand.blushPink"
+                                    color: "brand.blushPink",
+                                    border: "1px",
+                                    boxShadow:"md"
                                 }}
                             >
                                     Back
                                 </Button>
-                            <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"}
+                            <Button bg={"brand.blushPink"} color={"white"} py={"1.5rem"} px={"8rem"} size={{ base: "xxs", "2xl":"sm"}} width={{ base: "8rem", "2xl":"17rem"}} height={{ base: "2rem", "2xl":"2.5rem"}}
                                 onClick={handleStartClick}
                                 _hover={{
                                     bg: "white",
-                                    color: "brand.blushPink"
+                                    color: "brand.blushPink",
+                                    border: "1px",
+                                    boxShadow:"md"
                                 }}
                             >
                                     Start Practice

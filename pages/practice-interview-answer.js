@@ -53,7 +53,7 @@ export default function PracticeAnswer() {
                 width="100%"
                 maxW={{ base: "100%", md: "1200px", lg: "1920px" }} 
                 >
-                <Flex flexDirection={"row"} ml={"5rem"} mt={"6rem"}>
+                <Flex flexDirection={"row"} ml={"5rem"} mt={"3rem"}>
                     <AnswerPractice question={interviewQuestions[currentQuestionIndex]}/>
                 </Flex>
                 <Flex flexDirection={"row"} justify={"space-between"} mt={"50px"} mx={"13%"}>

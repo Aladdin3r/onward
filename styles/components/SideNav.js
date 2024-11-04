@@ -69,14 +69,14 @@ export const SideNavBar = ({ activeVariant, bottomVariants = defaultBottomVarian
     <Flex
       bg="brand.blueberryCreme"
       height="100vh"
-      width={{ md: "18rem", "2xl": "19rem" }}
+      width={{ sm: "14rem", lg: "19rem", "2xl": "19rem" }}
       position="fixed"
       flexDir="column"
       overflow="hidden"
     >
       {/* logo box */}
       <Box
-        width={{ md: "60%", lg: "70%", xl:"85%", "2xl": "90%" }}
+        width={{ md: "75%", xl:"85%", "2xl": "90%" }}
         fontSize={{ base: 'sm', md: 'md' }}  
         align="center"
         mx="auto"

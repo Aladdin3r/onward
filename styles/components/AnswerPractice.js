@@ -71,7 +71,7 @@ export default function AnswerPractice({ videoSrc, thumbnail}) {
                         divider={<StackDivider />}
                         width={"100%"}
                     >
-                        <Heading size="md" textAlign="left">Response Type:</Heading>
+                        <Heading size="18pt" textAlign="left">Response Type:</Heading>
                         <Divider orientation="horizontal" mb={4} />
                         
                         <Flex flexDirection="row" gap="2rem">
@@ -116,12 +116,12 @@ export default function AnswerPractice({ videoSrc, thumbnail}) {
                             <CardBody>
                                 <Stack spacing="4" divider={<StackDivider />}>
                                     <Box>
-                                        <Heading size="md" height="2rem">Transcript:</Heading>
+                                        <Heading size="18pt" height="2rem">Transcript:</Heading>
                                     </Box>
                                     
                                     {/* Answer Box */}
                                     <Box overflowY="auto" height="10rem" w="100%">
-                                        <Text pt="2" fontSize="xs">
+                                        <Text pt="2" fontSize="14pt">
                                             Um, in my previous role as a nurse in the ER, there was this one time when, 
                                             like, a patient came in with chest pain, and we thought it might be a heart attack. 
                                             At the same time, uh, another patient had a severe allergic reaction. So, I had to, like, 

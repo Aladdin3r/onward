@@ -103,17 +103,20 @@ export default function PracticeInterview() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Layout>
+            <Layout showTopNav={true} pageTitle="Practice Interview">
                 <div className={styles.page} style={{ position: "relative" }}>
                     <Flex 
                         flexDirection={"column"} 
                         width="100%" 
-                        height="100vh" 
                         maxW={{ base: "100%", md: "1200px", lg: "1920px" }} 
                         mx="auto"
                     >
                         <ProgressBar currentStep={1}/>
-                        <Flex gap={"5rem"} mt={"3rem"}>
+                        <Flex 
+                            ml={{ base: "3", lg: "5", xl: "8", "2xl": "10" }}
+                            columnGap={{lg: "3rem", "2xl": "5rem" }}
+                            flexDirection={{ base: "column", xl: "row" }} 
+                        >
                             {/* Resume Upload */}
                             <FileUpload 
                                 title="Upload Resume"
@@ -136,13 +139,18 @@ export default function PracticeInterview() {
                         </Flex>
 
 
-                        <Flex flexDirection={"row"} justify={"flex-end"} mt={"10px"}>
-                            <Button bg={"brand.blushPink"} size="xxs" width={"6rem"} color={"white"} p={2} 
+                        <Flex 
+                            flexDirection={"row"} 
+                            justify={"flex-end"} 
+                            mt={{ base: "5rem", xl: "3rem", "2xl":"5rem"}}  >
+                            <Button bg={"brand.blushPink"} size={{ base: "xxs", "2xl":"sm"}} py={"1.5rem"} px={"4rem"} width={{ base: "8rem", "2xl":"12rem"}} height={{ base: "2rem", "2xl":"2.5rem"}} color={"white"} boxShadow={"md"} 
 
                                 onClick={handleNextClick}
                                 _hover={{
                                     bg: "white",
-                                    color: "brand.blushPink"
+                                    color: "brand.blushPink",
+                                    border: "1px",
+                                    boxShadow:"md"
                                 }}
                             >
                                 Next

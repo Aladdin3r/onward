@@ -20,8 +20,11 @@ export default function ProgressBar({ currentStep }) {
   ];
 
   return (
-      <Box my="1.25rem" maxW="container.lg" mx="auto">
-          <Stepper index={currentStep} size='xxs' colorScheme='pink'>
+      <Box 
+        my="1rem" 
+        maxW={{ base: "30rem", xl:"35rem", "2xl": "50rem" }}
+        mx="auto">
+          <Stepper index={currentStep} size='xxxs' colorScheme='pink'>
               {steps.map((step, index) => (
                   <Step key={index}>
                       <Flex flexDirection="column" align="center" width="100%">
@@ -31,22 +34,22 @@ export default function ProgressBar({ currentStep }) {
                                       background: 'brand.blushPink',
                                       borderColor: 'brand.blushPink',
                                       color: 'brand.pureWhite',
-                                      width: { base: "1.5rem", md: "2.25rem" },
-                                      height: { base: "1.5rem", md: "2.25rem" },
+                                      width: { base: "1.5rem", "2xl": "2.25rem" },
+                                      height: { base: "1.5rem", "2xl": "2.25rem" },
                                   },
                                   '[data-status=active] &': {
                                       background: 'brand.pureWhite',
                                       borderColor: 'brand.blushPink',
                                       color: 'brand.nightBlack',
-                                      width: { base: "1.5rem", md: "2.25rem" },
-                                      height: { base: "1.5rem", md: "2.25rem" },
+                                      width: { base: "1.5rem", "2xl": "2.25rem" },
+                                      height: { base: "1.5rem", "2xl": "2.25rem" },
                                   },
                                   '[data-status=incomplete] &': {
                                       background: 'brand.pureWhite',
                                       borderColor: 'brand.blushPink',
                                       color: 'brand.nightBlack',
-                                      width: { base: "1.5rem", md: "2.25rem" },
-                                      height: { base: "1.5rem", md: "2.25rem" },
+                                      width: { base: "1.5rem", "2xl": "2.25rem" },
+                                      height: { base: "1.5rem", "2xl": "2.25rem" },
                                   },
                               }}
                           >
@@ -58,7 +61,7 @@ export default function ProgressBar({ currentStep }) {
                           </StepIndicator>
 
                           <Box flexShrink='0'>
-                              <StepDescription mt="0.5rem" textAlign="center">
+                              <StepDescription mt="0.5rem" textAlign="center" fontSize={{ base: "0.9rem", "2xl": "1.1rem" }}>
                                   {step.description}
                               </StepDescription>
                           </Box>
