@@ -54,7 +54,7 @@ export default function PracticeAnalysis() {
                                 <Text fontSize={{base: "xxs", lg:"xs", "2xl":"sm" }} color="nightBlack">
                                     Overview
                                 </Text>
-                                <Box bg="white" p={4} borderRadius="md" borderWidth="1px" w="100%" boxShadow="sm" position="relative">
+                                <Box bg="white" p={4} borderRadius="15"w="100%" boxShadow="md" position="relative">
                                     <Text fontWeight="bold" mb={2} fontSize={{base: "xxs", lg:"xs", "2xl":"sm" }} color="brand.nightBlack">
                                         QUESTION 1
                                     </Text>
@@ -72,9 +72,8 @@ export default function PracticeAnalysis() {
                                 {/* Your Response Box */}
                                 <Box 
                                     bg="white" 
-                                    borderRadius="md" 
-                                    borderWidth="1px" 
-                                    boxShadow="sm" 
+                                    borderRadius="15" 
+                                    boxShadow="md" 
                                     mb={50}
                                 >
                                     <Box p={4} borderBottomWidth="1px">
@@ -96,7 +95,7 @@ export default function PracticeAnalysis() {
 
                                 {/* Filler and Relevant Words */}
                                 <SimpleGrid columns={2} spacing={4}>
-                                    <Box bg="brand.frostWhite" p={4} borderRadius="md" borderWidth="1px" boxShadow="sm">
+                                    <Box bg="brand.frostWhite" p={4} borderRadius="15" boxShadow="md">
                                         <Text fontWeight="bold" mb={2} fontSize={{base: "xxs", lg:"xs", "2xl":"sm" }}>
                                             Filler Words <Tag colorScheme="red" ml={1} mt={2}>!</Tag>
                                         </Text>
@@ -104,7 +103,7 @@ export default function PracticeAnalysis() {
                                         <Text fontSize="xxs" color="brand.nightBlack">Like - used 3 times in your response</Text>
                                     </Box>
 
-                                    <Box bg="gray.50" p={4} borderRadius="md" borderWidth="1px" boxShadow="sm">
+                                    <Box bg="gray.50" p={4} borderRadius="15" boxShadow="md">
                                         <Text fontWeight="bold" mb={2} fontSize={{base: "xxs", lg:"xs", "2xl":"sm" }}>Relevant Words</Text>
                                         <Text fontSize="xxs" color="brand.nightBlack" mb={5}>
                                             <strong>Heart Attack</strong> - empathy, bedside manner, patient safety, patient-centered approach
@@ -136,7 +135,7 @@ export default function PracticeAnalysis() {
                                     />
 
                                 {/* Suggested Topics */}
-                                <Box bg="white" p={4} borderRadius="lg" borderWidth="1px" boxShadow="sm" mb={5} pb={6}>
+                                <Box bg="white" p={4} borderRadius="15" boxShadow="md" mb={5} pb={6}>
                                     <Text fontWeight="bold" mb={4} fontSize={{base: "xxs", lg:"xs", "2xl":"sm" }}>
                                         Suggested Topics
                                     </Text>

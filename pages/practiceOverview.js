@@ -33,14 +33,15 @@ export default function PracticeInterviewOverview() {
                         <Flex 
                             justifyContent={"flex-start"}
                             alignItems="flex-start"
-                            mb={6} 
+                            mb={8} 
+                            flexDirection={{base: "column", xl: "row"}}
                         >
                             <Flex mx={0} flexDirection={"column"} alignItems="center" justifyContent="center" gap={"0.5rem"}>
                                 <VideoWQuestionCard />
                                 <QuestionProgressIndicator/>
                                 <ArrowControls/>
                             </Flex>
-                            <Box mx={4} flex="1" display="flex" alignItems="center" justifyContent="center">
+                            <Box mx={4} display="flex" alignItems="center" justifyContent="center" my={{base: "5", xl:0}}>
                                 <ImprovementSteps />
                             </Box>
                         </Flex>

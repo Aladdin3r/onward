@@ -27,7 +27,7 @@ const VideoWQuestionCard = ({
       borderColor="#E6EAF2" 
       bg="white"
       overflow="hidden" // Prevent overflow
-      width={"600px"}
+      width={{base:"80%", xl:"600px"}}
     >
       <VStack
         spacing={2} // Reduced spacing for a more compact look

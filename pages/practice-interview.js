@@ -27,7 +27,7 @@ export default function PracticeInterview() {
     const handleResumeUpload = async (file) => {
         console.log("Resume file uploaded:", file);
         const uniqueId = uuidv4(); 
-        const fileWithId = { id: uniqueId, name: file.name }; // Create an object with id and name
+        const fileWithId = { id: uniqueId, name: file.name };
     
         setUploadedResumeFiles((prevFiles) => {
            

@@ -20,7 +20,7 @@ export default function TopNav() {
                         <Image src="logo.svg" boxSize="253px" alt="Onward Logo" style={{ padding: "30px" }} />
                     </Link>
                 </Box>
-                <Flex alignItems={'center'}>
+                {/* <Flex alignItems={'center'}>
                     <Link href="/user">
                         <IconButton 
                             aria-label="User settings" 
@@ -36,7 +36,7 @@ export default function TopNav() {
                             variant="ghost" 
                         />
                     </Link>
-                </Flex>
+                </Flex> */}
             </Flex>
         </Box>
     );
