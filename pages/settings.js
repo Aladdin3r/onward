@@ -16,7 +16,7 @@ export default function Settings() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        <Layout>
+        <Layout showTopNav={true} pageTitle="Settings">
             <SettingsMenu />
         </Layout>
       </div>

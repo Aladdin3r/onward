@@ -5,7 +5,7 @@ import { Box, Flex, Text, Button, IconButton, Stack, Center } from "@chakra-ui/r
 import { Waveform, Microphone, VideoCamera } from "@phosphor-icons/react";
 import VideoPlayer from "@/styles/components/VideoPlayer";
 import { useRouter } from "next/router";
-import Layout from "@/styles/components/Layout";
+import Layout from "@/styles/components/LayoutSim";
 import { useState, useEffect } from "react";
 import nursingInterviewQuestions from "@/data/interviewQuestions";
 
