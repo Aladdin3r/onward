@@ -50,19 +50,25 @@ export default function PracticeInterviewQuestion() {
                     <div className={styles.page} style={{ position: "relative" }}>
                     <Flex 
                         flexDirection={"column"}
-                        height={{ base: "75%", md: "80%", lg: "100%" }} 
+                        minH={{ base: "60vh", md: "65vh", xl: "60vh", "2xl":"90vh" }} 
                         width={{ base: "85%", md: "85%", lg: "100%" }} 
-                        mt={"5rem"}
+                        mt={"2rem"}
                     >   
-                        <Box justifyContent={"center"} alignItems={"center"}>
+                        <Box mx="auto">
                             <QuestionPractice 
                             showArrows={"true"} 
                             borderRadius={"15"}
-                            questionWidth={"60%"}/>
+                            questionWidth={"80%"}/>
                         </Box>
 
                         {/* bottom buttons */}
-                        <Flex flexDirection="row" justifyContent="space-between" mx={"3rem"} mt={{ base: "5rem", xl: "3rem", "2xl":"5rem"}}>
+                        <Flex 
+                            flexDirection="row" 
+                            justifyContent="space-between" 
+                            // mx={"2rem"} 
+                            // mt={{ base: "5rem", xl: "3rem", "2xl":"5rem"}}
+                            mt="auto"
+                        >
                             <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"} boxShadow={"md"}
                                 onClick={handleEndClick}
                                 _hover={{

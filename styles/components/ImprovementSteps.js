@@ -35,12 +35,10 @@ export default function ImprovementSteps() {
       p="6"
       bg="white"
       boxShadow="md"
-      maxW="lg" // Adjusted to a valid value
       minH="450px"
-      mt=""
       border="1px"
       borderColor="#E6EAF2"
-      borderRadius="24"
+      borderRadius="15"
       display="flex" // Added flex display
       flexDirection="column" // Ensure content stacks vertically
       alignItems="center" // Center items horizontally

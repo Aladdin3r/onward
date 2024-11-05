@@ -10,16 +10,23 @@ import { useRouter } from 'next/router';
 import { useState } from "react";
 
 
-export default function Home() {
-  const [uploadedFiles, setUploadedFiles] = useState([]); 
+export default function Home({ uploadedResumeFiles }) {
+
   const router = useRouter();
 
-  const handleFileUpload = (file) => {
-    setUploadedFiles((prevFiles) => {
-      const isFileExist = prevFiles.some(uploadedFile => uploadedFile.name === file.name);
-      return isFileExist ? prevFiles : [...prevFiles, file];
-    });
-  };
+  // const handleFileUpload = (file) => {
+  //   setUploadedFiles((prevFiles) => {
+  //     const isFileExist = prevFiles.some(uploadedFile => uploadedFile.name === file.name);
+  //     return isFileExist ? prevFiles : [...prevFiles, file];
+  //   });
+  // };
+
+  // const handleDeleteFile = (fileToDelete) => {
+  //   setUploadedFiles((prevFiles) => prevFiles.filter(file => file !== fileToDelete));
+  // };
+
+  console.log(uploadedResumeFiles);
+
 
   return (
     <>
@@ -63,7 +70,7 @@ export default function Home() {
 
             {/* Right Card */}
             <Box>
-              <MyResumesCard uploadedFiles={uploadedFiles} />
+              <MyResumesCard uploadedFiles={uploadedResumeFiles}/>
             </Box>
           </Flex>
 

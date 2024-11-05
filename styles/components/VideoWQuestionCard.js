@@ -18,17 +18,16 @@ const VideoWQuestionCard = ({
 }) => {
   return (
     <Box
-      transform="scale(0.86)" // Scale down the entire component
-      transformOrigin="bottom" // Scale from the top
-      maxW="734px"
-      mx="auto"
+      // transform="scale(0.86)" // Scale down the entire component
+      // transformOrigin="bottom" // Scale from the top
       p={2} // Reduced padding for smaller size
       boxShadow="md"
-      borderRadius="24"      
+      borderRadius="15"      
       border="1px" 
       borderColor="#E6EAF2" 
       bg="white"
       overflow="hidden" // Prevent overflow
+      width={{base:"80%", xl:"600px"}}
     >
       <VStack
         spacing={2} // Reduced spacing for a more compact look
@@ -40,7 +39,7 @@ const VideoWQuestionCard = ({
           thumbnail="/images/smiling-girl.png" 
         />
         {/* Question Card */}
-        <QuestionCard questionNumber={questionNumber} questionText={questionText} />
+        <QuestionCard questionNumber={questionNumber} questionText={questionText} width/>
       </VStack>
     </Box>
   );

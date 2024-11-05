@@ -11,6 +11,10 @@ import ImprovementSteps from "@/styles/components/ImprovementSteps";
 import VideoWQuestionCard from "@/styles/components/VideoWQuestionCard";
 import Layout from "@/styles/components/Layout";
 import Header from "@/styles/components/Header";
+import QuestionProgressIndicator from "@/styles/components/QuestionProgressIndicator";
+import ArrowControls from "@/styles/components/ArrowControls";
+
+// need to fix spacing between the cards
 
 export default function PracticeInterviewOverview() {
     const router = useRouter();
@@ -23,49 +27,30 @@ export default function PracticeInterviewOverview() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Layout title="Practice Interview" showTopNav={false}>
-                <Flex height="100vh">
-                    {/* <Box 
-                        width="250px" 
-                        bg="gray.100" 
-                        position="fixed" 
-                        top="0" 
-                        left="0" 
-                        height="100vh" 
-                        overflowY="auto" 
-                    > */}
-                    {/* </Box> */}
-                    {/* <Flex direction="column" flex="1" marginLeft="250px">  */}
-                        <Box 
-                            bg="white" 
-                            position="fixed" 
-                            top="0" 
-                            left="250px" 
-                            right="0" 
-                            zIndex="1000" 
+            <Layout showTopNav={true} pageTitle="Practice Overview">
+                <Flex>
+                    <Flex direction="column" p={4}>
+                        <Flex 
+                            justifyContent={"flex-start"}
+                            alignItems="flex-start"
+                            mb={8} 
+                            flexDirection={{base: "column", xl: "row"}}
                         >
-
-                        </Box>
-                        <Flex direction="column" flex="1" p={4} pt="20px" overflowY="auto" align="center" mt="6">
-                            <Flex 
-                                flex="1" 
-                                justify="space-between" 
-                                alignItems="flex-end" 
-                                mb={6} 
-                            >
-                                <Box mx={0} flex="1" display="flex" alignItems="center" justifyContent="center" >
-                                    <VideoWQuestionCard />
-                                </Box>
-                                <Box mx={4} flex="1" display="flex" alignItems="center" justifyContent="center">
-                                    <ImprovementSteps />
-                                </Box>
+                            <Flex mx={0} flexDirection={"column"} alignItems="center" justifyContent="center" gap={"0.5rem"}>
+                                <VideoWQuestionCard />
+                                <QuestionProgressIndicator/>
+                                <ArrowControls/>
                             </Flex>
-
-                            <Box flex="0" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-                                <TranscriptionComponent />
+                            <Box mx={4} display="flex" alignItems="center" justifyContent="center" my={{base: "5", xl:0}}>
+                                <ImprovementSteps />
                             </Box>
                         </Flex>
+
+                        <Box>
+                            <TranscriptionComponent />
+                        </Box>
                     </Flex>
+                </Flex>
             </Layout>
         </>
     );
