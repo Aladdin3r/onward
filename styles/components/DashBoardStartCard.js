@@ -21,7 +21,7 @@ export default function DashboardCard() {
   return (
       <Flex 
         bg="brand.blueberryCreme" 
-        w={{ base: "30.5rem", lg:"25rem", xl: "33rem", "2xl":"53rem" }}
+        w={{ base: "32rem", lg:"25rem", xl: "33rem", "2xl":"53rem" }}
         h={{ base: "60%", lg: "100%", xl: "18rem", "2xl":"24rem" }}
         borderRadius="15px" 
         overflow="hidden"

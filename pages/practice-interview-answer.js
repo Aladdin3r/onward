@@ -2,10 +2,7 @@ import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import "@/styles/theme";
 import { Heading, Box, CardBody, Text, Stack, Card, Link, Flex, Button } from "@chakra-ui/react";
-import TopNav from "@/styles/components/TopNav";
-import { SideNavBar } from "@/styles/components/SideNav";
 import ProgressBar from "@/styles/components/ProgressBar";
-import Footer from "@/styles/components/Footer";
 import Popup from "@/styles/components/Popup.js";
 import ViewAllPopup from "@/styles/components/ViewAllPopup"; // Import the new ViewAllPopup component
 import { useDisclosure } from '@chakra-ui/react';
@@ -14,6 +11,7 @@ import Layout from "@/styles/components/Layout";
 import AnswerPractice from "@/styles/components/AnswerPractice"
 import { useState } from "react";
 import interviewQuestions from '@/data/interviewQuestions'; 
+import LayoutSim from "@/styles/components/LayoutSim";
 
 export default function PracticeAnswer() {
     const router = useRouter();
@@ -46,35 +44,39 @@ export default function PracticeAnswer() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <TopNav/>
-            <Flex 
-                flexDirection={"column"}
-                height="calc(100vh - 9rem)"
-                width="100%"
-                maxW={{ base: "100%", md: "1200px", lg: "1920px" }} 
-                >
-                <Flex flexDirection={"row"} ml={"5rem"} mt={"3rem"}>
-                    <AnswerPractice question={interviewQuestions[currentQuestionIndex]}/>
+            <LayoutSim>
+                <Flex 
+                    flexDirection={"column"}
+                    minH={{ base: "100vh", "2xl":"85vh" }} 
+                    width="100%"
+                    maxW={{ base: "100%", md: "1200px", lg: "1920px" }} 
+                    >
+                    <Flex flexDirection={"row"} ml={"5rem"} mt={"3rem"}>
+                        <AnswerPractice question={interviewQuestions[currentQuestionIndex]}/>
+                    </Flex>
+                    <Flex 
+                        flexDirection={"row"} 
+                        justify={"space-between"} 
+                        mt={"auto"} 
+                        >
+                        <Button bg={"brand.pureWhite"} size="xxs" width={"6rem"} p={2} border={"1px"} borderColor={"red"}
+                                onClick={handleEndClick}
+                                _hover={{
+                                    bg: "brand.pureWhite",
+                                    color: "red",
+                                    border:"1px",
+                                    borderColor:"red"
+                                }}>End</Button>
+                        <Button bg={"brand.blushPink"} size="xs" onClick={handleOverviewClick} color={"white"} py={"1.5rem"} px={"5rem"}
+                                _hover={{
+                                    bg: "white",
+                                    color: "brand.blushPink",
+                                    border: "1px",
+                                    borderColor: "brand.blushPink"
+                                }}>Finish</Button>
+                    </Flex>
                 </Flex>
-                <Flex flexDirection={"row"} justify={"space-between"} mt={"50px"} mx={"13%"}>
-                    <Button bg={"brand.pureWhite"} size="xxs" width={"6rem"} p={2} border={"1px"} borderColor={"red"}
-                            onClick={handleEndClick}
-                            _hover={{
-                                bg: "brand.pureWhite",
-                                color: "red",
-                                border:"1px",
-                                borderColor:"red"
-                            }}>End</Button>
-                    <Button bg={"brand.blushPink"} size="xxs" onClick={handleOverviewClick} width={"10rem"} color={"white"} p={2}
-                            _hover={{
-                                bg: "white",
-                                color: "brand.blushPink",
-                                border: "1px",
-                                borderColor: "brand.blushPink"
-                            }}>Next Question</Button>
-                </Flex>
-            </Flex>
-            <Footer/>
+            </LayoutSim>
         </>
     )
 }

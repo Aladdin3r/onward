@@ -45,10 +45,12 @@ export default function PracticeInterviewFilter() {
                 <div className={styles.page} style={{ position: "relative" }}>
                     <Flex 
                         flexDirection={"column"} 
-                        height="100vh" 
+                        // height="100vh" 
+                        minH={{ base: "90vh", md: "100vh", xl: "78vh", "2xl":"85vh" }} 
                         width={"100%"}
                         maxW={{ base: "100%", md: "1200px", lg: "1920px" }} 
                         mx="auto"
+                        flexGrow={1} 
                     >
                         <ProgressBar currentStep={2} />
 
@@ -63,7 +65,12 @@ export default function PracticeInterviewFilter() {
                         </Flex>
 
                         {/* bottom buttons */}
-                        <Flex flexDirection="row" justifyContent="space-between" mt={{ base: "5rem", xl: "3rem", "2xl":"5rem"}} mb="3rem">
+                        <Flex 
+                            flexDirection="row" 
+                            justifyContent="space-between" 
+                            // mt={{ base: "5rem", xl: "3rem", "2xl":"5rem"}} 
+                            mt="auto"
+                        >
                             <Button bg={"brand.blushPink"} color={"white"} py={"1.5rem"} px={"4rem"} size={{ base: "xxs", "2xl":"sm"}} width={{ base: "1rem", "2xl":"10rem"}} height={{ base: "2rem", "2xl":"2.5rem"}}
                                 onClick={handleBackClick}
                                 _hover={{

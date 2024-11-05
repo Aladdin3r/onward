@@ -18,6 +18,13 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
         },
     }));
 
+    // retrieve from local storage 
+    useEffect(() => {
+        const storedFiles = JSON.parse(localStorage.getItem('uploadedFiles')) || [];
+        setUploadedFilesState(storedFiles);
+    }, []);
+
+    // retrieve from supabase
     useEffect(() => {
         const fetchUploadedFiles = async () => {
             const { data, error } = await supabase.storage.from(bucketName).list('uploads/');
@@ -36,6 +43,7 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
         fetchUploadedFiles();
     }, [bucketName]);
 
+    // adding file to uppy
     useEffect(() => {
         const handleFileAdded = async (file) => {
             const isFileAlreadyUploaded = uploadedFiles.some((uploadedFile) => uploadedFile.name === file.name);
@@ -102,7 +110,7 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
         if (deleteError) {
             console.error('Error deleting file:', deleteError.message);
             toast({
-                title: 'Deletion Failed.',
+                title: 'Failed To Delete.',
                 description: deleteError.message,
                 status: 'error',
                 duration: 3000,
@@ -111,7 +119,10 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
             return;
         }
 
-        setUploadedFilesState((prevFiles) => prevFiles.filter(file => file.name !== fileName));
+        // updating local storage after delete
+        const updatedFiles = uploadedFiles.filter(file => file.name !== fileName);
+        setUploadedFilesState(updatedFiles);
+        localStorage.setItem('uploadedFiles', JSON.stringify(updatedFiles)); 
         console.log('File deleted successfully:', deleteData);
         toast({
             title: 'File Deleted.',

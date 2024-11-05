@@ -37,7 +37,6 @@ export default function ImprovementSteps() {
       boxShadow="md"
       maxW="lg" // Adjusted to a valid value
       minH="450px"
-      mt=""
       border="1px"
       borderColor="#E6EAF2"
       borderRadius="24"

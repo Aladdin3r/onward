@@ -10,6 +10,8 @@ const QuestionProgressIndicator = ({ totalSteps = 5, currentStep = 0 }) => {
         bg="white"
         boxShadow="md"
         position="relative"
+        w={"12rem"}
+        borderRadius={15}
       >
         <HStack spacing={2} align="center" justify="center" position="absolute" top="50%" left="50%" transform="translate(-50%, -50%) ">
           {Array.from({ length: totalSteps }).map((_, index) => (

@@ -1,10 +1,12 @@
 import { Box, Text } from '@chakra-ui/react';
-import PDFCard from './PDFCard'; 
+import { useState } from 'react';
 
 export default function MyResumesCard({ uploadedFiles = [] }) { 
+
+
     return (
         <Box 
-            w={{ base: "30.5rem", lg:"18rem", xl: "34rem", "2xl":"41rem" }}
+            w={{ base: "32rem", lg:"14rem", xl: "30rem", "2xl":"38rem" }}
             h={{ base: "60%", lg: "100%", xl: "18rem", "2xl":"24rem" }}
             borderRadius="15px" 
             overflow="hidden"
@@ -22,17 +24,13 @@ export default function MyResumesCard({ uploadedFiles = [] }) {
                 >
                     My Resumes:
                 </Text>
-            {uploadedFiles.length > 0 ? (
-                uploadedFiles.map((file, index) => (
-                    <PDFCard 
-                        key={index} 
-                        title={file.name} 
-                        size={`${(file.size / 1024).toFixed(2)} KB`} 
-                    />
-                ))
-            ) : (
-                <Text color="gray.500">No resumes uploaded</Text>
-            )}
+                <Box>
+                {uploadedFiles.map((file) => (
+                    <Box key={file.id} display="flex" justifyContent="space-between">
+                        <Text>{file.name}</Text>
+                    </Box>
+                ))}
+            </Box>
         </Box>
     );
 }

@@ -10,7 +10,8 @@ import FileUpload from "@/styles/components/FileUpload";
 import { useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 
-// uploads & deletes fine, but currently can't upload same file again, need to fix same file checking logic 
+// need to double check file upload & storing logic, it goes to uppy but
+// i think it needs to be converted to JSON object and stored in local storage
 
 export default function PracticeInterview() {
     const [uploadedResumeFiles, setUploadedResumeFiles] = useState([]);
@@ -109,7 +110,9 @@ export default function PracticeInterview() {
                         flexDirection={"column"} 
                         width="100%" 
                         maxW={{ base: "100%", md: "1200px", lg: "1920px" }} 
+                        minH={{ base: "100vh", xl: "72vh", "2xl":"80vh" }} 
                         mx="auto"
+                        flexGrow={1} 
                     >
                         <ProgressBar currentStep={1}/>
                         <Flex 
@@ -137,14 +140,21 @@ export default function PracticeInterview() {
                                 bucketName="onward-job-posting"
                             />
                         </Flex>
-
-
-                        <Flex 
+                    </Flex>
+                    {/* next boutton */}
+                    <Flex 
                             flexDirection={"row"} 
                             justify={"flex-end"} 
-                            mt={{ base: "5rem", xl: "3rem", "2xl":"5rem"}}  >
-                            <Button bg={"brand.blushPink"} size={{ base: "xxs", "2xl":"sm"}} py={"1.5rem"} px={"4rem"} width={{ base: "8rem", "2xl":"12rem"}} height={{ base: "2rem", "2xl":"2.5rem"}} color={"white"} boxShadow={"md"} 
-
+                            mt="auto"
+                            >
+                            <Button 
+                                bg={"brand.blushPink"} 
+                                size={{ base: "xxs", "2xl":"sm"}} 
+                                py={"1.5rem"} px={"4rem"} 
+                                width={{ base: "8rem", "2xl":"12rem"}} 
+                                height={{ base: "2rem", "2xl":"2.5rem"}} 
+                                color={"white"} 
+                                boxShadow={"md"} 
                                 onClick={handleNextClick}
                                 _hover={{
                                     bg: "white",
@@ -156,7 +166,6 @@ export default function PracticeInterview() {
                                 Next
                             </Button>
                         </Flex>
-                    </Flex>
                     </div>
             </Layout>
         </>

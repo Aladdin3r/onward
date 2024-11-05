@@ -2,12 +2,12 @@ import { Box, Text, VStack, Divider, HStack } from "@chakra-ui/react";
 
 const TranscriptionComponent = () => {
   return (
-    <Box mt={0} maxW="1086px" mx="auto">
-    <Text fontWeight="semibold" fontSize="20px" mb={0} ml={1} bg="white" zIndex={1} position="relative" maxW="100%">
-    Full Transcription
-  </Text>
-    <Box mt={2} maxW="1086px" mx="auto" border="1px" borderColor="#E6EAF2" borderRadius="md" boxShadow="md">
-      <Box p={4} bg="white" borderRadius="md">
+    <Box mt={0} maxW={{base:"78vw", "2xl":"65vw"}} >
+    <Text fontWeight="semibold" fontSize="20px" mb={0} ml={1} zIndex={1} position="relative" maxW="100%">
+        Full Transcription
+    </Text>
+    <Box mt={2}  border="1px" borderColor="#E6EAF2" borderRadius="15" boxShadow="md">
+      <Box p={4} bg="white" borderRadius="15">
         <VStack spacing={4} align="stretch">
           <HStack spacing={4} align="flex-start">
             <Text fontWeight="bold" color="gray.600" minW="120px">
