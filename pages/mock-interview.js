@@ -1,8 +1,8 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import "@/styles/theme";
-import { Box, Flex, Text, Button, IconButton, Stack, Center } from "@chakra-ui/react";
-import { Waveform, Microphone, VideoCamera } from "@phosphor-icons/react";
+import { Box, Flex, Button, Text } from "@chakra-ui/react";
+import { Waveform } from "@phosphor-icons/react";
 import VideoPlayer from "@/styles/components/VideoPlayer";
 import { useRouter } from "next/router";
 import nursingInterviewQuestions from "@/data/interviewQuestions";
@@ -25,7 +25,6 @@ export default function MockInterviewQuestionPage() {
     return randomCategory.questions[Math.floor(Math.random() * randomCategory.questions.length)];
   };
 
-
   const startInterview = () => {
     const randomCategory = nursingInterviewQuestions[Math.floor(Math.random() * nursingInterviewQuestions.length)];
     const randomQuestion = randomCategory.questions[Math.floor(Math.random() * randomCategory.questions.length)];
@@ -45,32 +44,37 @@ export default function MockInterviewQuestionPage() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout showTopNav={true} pageTitle="Mock Interview">
-        <Box className={styles.page} bg="gray.50" minH="100vh"  display="flex" flexDirection="row" gap={10} alignItems="center">
-
-          {/* Video Player with Audio Overlay Icon */}
-          <Flex justify="center" position="relative" width="80%">
-            <VideoPlayer
-              title="Interview Playback"
-              thumbnail="/images/smiling-girl.png"
-            />
-            {/* Audio Overlay */}
-            <Box position="absolute" top="4" left="430" bg="blackAlpha.700" p={2} borderRadius="md">
-              <Waveform size={32} color="white" />
+        <Flex className={styles.page} bg="gray.50" minH="100vh" align="center" justify="center" p={6} gap={6}>
+          
+          {/* Video Player with Button on the Right */}
+          <Flex width="100%" maxW="1200px" gap={8} align="center">
+            <Box position="relative" flex="1" maxW="70%">
+              <VideoPlayer
+                title="Interview Playback"
+                thumbnail="/images/smiling-girl.png"
+              />
+              {/* Audio Overlay */}
+              <Box position="absolute" top="4" left="4" bg="blackAlpha.700" p={2} borderRadius="md">
+                <Waveform size={32} color="white" />
+              </Box>
             </Box>
-          </Flex>
+            
+            {/* Text and Button Stack */}
+            <Flex direction="column" align="center" gap={2}>
+              <Text fontSize="md" fontWeight="bold">Ready to Join?</Text>
               <Button
                 bg="brand.blushPink"
                 color="brand.frostWhite"
                 size="sm"
                 px={8}
                 py={6}
-                onClick={startInterview} // Starts a new interview with a random question
+                onClick={startInterview} // Keeps original button styling
               >
                 Start Interview
               </Button>
-
-          
-        </Box>
+            </Flex>
+          </Flex>
+        </Flex>
       </Layout>
     </>
   );

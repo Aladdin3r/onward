@@ -26,14 +26,14 @@ export default function User() {
   return (
     <>
       <Head>
-        <title>User</title>
+        <title>Onward</title>
         <meta name="description" content="Onward is an AI-powered personal interview coach designed to help nurses, particularly those new to the Canadian healthcare system, excel in job interviews." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
         {/* Wrapping SideNavBar and main content in a flex container */}
-        <Layout title={"Profile"}>
+        <Layout showTopNav={true} pageTitle="Profile">
 
           {/* Main content area */}
           <Box flex="1" p={6} minW="1350px" mx="auto" >
