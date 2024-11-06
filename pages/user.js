@@ -113,7 +113,6 @@ export default function User() {
             </SimpleGrid>
           </Box>
         </Layout>
-        <Footer />
       </div>
     </>
   );

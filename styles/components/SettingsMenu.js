@@ -28,11 +28,11 @@ const SettingsMenu = () => {
   const [activeSection, setActiveSection] = useState("App Settings");
 
   return (
-    <Box display="flex" justifyContent="center" p={10} bg="gray.50" minH="100vh">
+    <Box display="flex" justifyContent="center" p={12} bg="gray.50" minH="100vh">
       {/* Outer background container */}
       <Box
-        w="60%"
-        minW="1200px"
+        w="50%"
+        minW="900px"
         display="flex"
         justifyContent="space-between"
         p={8}
@@ -41,7 +41,7 @@ const SettingsMenu = () => {
         shadow="md"
         border="1px solid"
         borderColor="gray.200"
-        height={{ base: "auto", md: "66vh" }}
+        height={{ base: "auto", md: "70vh" }}
       >
         {/* Left-side menu */}
         <Box w="40%" minW="300px" maxW="320px" ml="10">
@@ -82,7 +82,7 @@ const SettingsMenu = () => {
           </Box>
 
           {/* Additional Section */}
-          <Box bg="white" shadow="sm" borderRadius="lg" p={4} border="1px solid" borderColor="gray.200">
+          <Box bg="white" shadow="sm" borderRadius="lg" p={3} border="1px solid" borderColor="gray.200">
             <VStack align="stretch" spacing={3}>
               <MenuItem
                 icon={<ThumbsUp size={20} />}
@@ -107,7 +107,7 @@ const SettingsMenu = () => {
         </Box>
 
         {/* Vertical divider line in brand.pastelBlue */}
-        <Divider orientation="vertical" borderColor="brand.pastelBlue" borderWidth="2px" mx={6} height="550px" />
+        <Divider orientation="vertical" borderColor="brand.pastelBlue" borderWidth="2px" mx={6} height="540px" />
 
         {/* Right-side content area */}
         <Box w="55%" p={5}>
