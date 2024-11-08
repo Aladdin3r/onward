@@ -13,14 +13,18 @@ export default function Record() {
   const [isCameraOn, setIsCameraOn] = useState(false);
   const [isMicOn, setIsMicOn] = useState(true);
   const [recordedChunks, setRecordedChunks] = useState([]);
+  const [stream, setStream] = useState(null);
 
   const startCamera = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
+      const newStream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: isMicOn,
       });
-      videoRef.current.srcObject = stream;
+
+      // Set the new stream to videoRef
+      videoRef.current.srcObject = newStream;
+      setStream(newStream); // Save the stream for later use
       setIsCameraOn(true);
     } catch (error) {
       console.error("Error accessing webcam:", error);
@@ -28,16 +32,16 @@ export default function Record() {
   };
 
   const stopCamera = () => {
-    const stream = videoRef.current.srcObject;
     if (stream) {
+      // Stop all tracks of the stream
       stream.getTracks().forEach((track) => track.stop());
       videoRef.current.srcObject = null;
+      setIsCameraOn(false);
+      setStream(null);
     }
-    setIsCameraOn(false);
   };
 
   const startRecording = () => {
-    const stream = videoRef.current.srcObject;
     if (stream) {
       mediaRecorderRef.current = new MediaRecorder(stream);
       mediaRecorderRef.current.ondataavailable = (event) => {
@@ -68,15 +72,36 @@ export default function Record() {
     setRecordedChunks([]); // Clear the chunks for the next recording
   };
 
-  const toggleMic = () => {
+  const toggleMic = async () => {
     setIsMicOn((prev) => !prev);
-    stopCamera();
-    startCamera();
+
+    if (stream) {
+      // Stop current audio track(s)
+      stream.getTracks().forEach((track) => {
+        if (track.kind === "audio") track.stop();
+      });
+
+      // Recreate the stream without the mic if it's off
+      const newStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: isMicOn, // Will be false after toggling
+      });
+
+      // Update the video element with the new stream
+      videoRef.current.srcObject = newStream;
+      setStream(newStream); // Save the new stream for later use
+
+      // Restart the media recorder with the new stream
+      if (mediaRecorderRef.current) {
+        mediaRecorderRef.current.stop();
+        setRecordedChunks([]);
+        startRecording(); // Start recording with the updated stream
+      }
+    }
   };
 
   return (
     <div style={{ textAlign: "center", padding: "2em", width: "100%", maxWidth: "600px" }}>
-
       {/* Container with fixed width, height, and padding */}
       <div
         style={{
@@ -134,11 +159,11 @@ export default function Record() {
         <button onClick={toggleMic}>
           {isMicOn ? <Microphone size={32} /> : <MicrophoneSlash size={32} />}
         </button>
-        {/* {isRecording ? (
+        {isRecording ? (
           <button onClick={stopRecording}>Stop Recording</button>
         ) : (
           <button onClick={startRecording}>Start Recording</button>
-        )} */}
+        )}
       </div>
 
       {recordedChunks.length > 0 && (
