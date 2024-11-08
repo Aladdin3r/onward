@@ -14,6 +14,8 @@
         "@chakra-ui/react": "^2.10.3",
         "@emotion/react": "^11.13.3",
         "@emotion/styled": "^11.13.0",
+        "@ffmpeg/core": "^0.12.6",
+        "@ffmpeg/ffmpeg": "^0.12.10",
         "@phosphor-icons/react": "^2.1.7",
         "@phosphor-icons/web": "^2.1.1",
         "@supabase/supabase-js": "^2.46.1",
@@ -25,8 +27,10 @@
         "@uppy/react": "^4.0.3",
         "@uppy/transloadit": "^4.1.3",
         "@uppy/xhr-upload": "^4.2.1",
+        "fluent-ffmpeg": "^2.1.3",
         "framer-motion": "^11.11.9",
         "microsoft-cognitiveservices-speech-sdk": "^1.41.0",
+        "mp4-muxer": "^5.1.3",
         "nanoid": "^5.0.8",
         "next": "14.2.15",
         "next-google-fonts": "^2.2.0",
@@ -35,6 +39,8 @@
         "react-dom": "^18",
         "react-joyride": "^2.9.2",
         "uuid": "^11.0.2",
+        "video-converter": "^1.0.0",
+        "webm-to-mp4": "^1.0.0",
         "ws": "^8.18.0"
     }
 }
