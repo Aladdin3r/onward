@@ -54,7 +54,7 @@ export default function MockInterviewQuestionPage() {
 
           {/* Video Player with Audio Overlay Icon */}
           <Flex justify="center" mb={8} mt={20} position="relative" height="500px" width="70%">
-            <Record />
+            <Record isRecordingEnabled={false} />
             {/* Audio Overlay */}
           </Flex>
 
