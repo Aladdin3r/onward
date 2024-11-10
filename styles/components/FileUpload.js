@@ -14,7 +14,7 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
     const uppyRef = useRef(new Uppy({
         restrictions: {
             maxNumberOfFiles: 3,
-            allowedFileTypes: ['application/pdf'],
+            allowedFileTypes: ['application/pdf', 'application/msword'],
         },
     }));
 
@@ -71,14 +71,29 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
                         isClosable: true,
                     });
                 } else {
-                    console.log('File uploaded successfully:', uploadData);
-                    toast({
-                        title: 'Upload Successful.',
-                        description: `${file.name} has been uploaded.`,
-                        status: 'success',
-                        duration: 3000,
-                        isClosable: true,
-                    });
+                    
+                    // get public URL
+                    const { publicURL, error: urlError } = supabase.storage
+                        .from(bucketName)
+                        .getPublicUrl(`uploads/${file.name}`);
+    
+                    if (urlError) {
+                        console.error('Error getting public URL:', urlError.message);
+                    } else {
+                        console.log('File uploaded successfully. Public URL:', publicURL);
+                        
+                        // add public url to the file obejct
+                        const uploadedFileWithUrl = { ...newFile, url: publicURL };
+                        setUploadedFilesState((prevFiles) => [...prevFiles, uploadedFileWithUrl]);
+    
+                        toast({
+                            title: 'Upload Successful.',
+                            description: `${file.name} has been uploaded.`,
+                            status: 'success',
+                            duration: 3000,
+                            isClosable: true,
+                        });
+                    }
                 }
             } else {
                 console.log(`${file.name} is already uploaded.`);
