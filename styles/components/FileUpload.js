@@ -29,6 +29,8 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
         const fetchUploadedFiles = async () => {
             const { data, error } = await supabase.storage.from(bucketName).list('uploads/');
 
+            console.log(data);
+
             if (error) {
                 console.error('Error fetching files:', error.message);
             } else {
