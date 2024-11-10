@@ -49,7 +49,7 @@ export default function MockInterviewQuestionPage() {
           {/* Video Player with Button on the Right */}
           <Flex width="100%" maxW="1200px" gap={8} align="center">
             <Box position="relative" flex="1" maxW="70%">
-              <Record isRecordingEnabled={false}/>
+              <Record isRecordingEnabled={true}/>
               {/* Audio Overlay */}
               
             </Box>

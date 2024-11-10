@@ -128,8 +128,8 @@ export default function PracticeAnalysis() {
                                     Interview Playback
                                 </Text>
                                 <VideoPLayer 
-                                    videoSrc=""
-                                    thumbnail="/practice-analysis-images/videoPlaceholder.jpg"
+                                    videoSrc="/recorded-video.webm"
+                                    thumbnail="/recorded-video.webm"
                                     duration="0:00 - 2:14"
                                     width="100%"
                                     />
