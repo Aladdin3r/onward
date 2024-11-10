@@ -3,7 +3,7 @@ import styles from "@/styles/Home.module.css";
 import "@/styles/theme";
 import { Box, Flex, Text, Button, IconButton, Stack, Center } from "@chakra-ui/react";
 import { Waveform, Microphone, VideoCamera } from "@phosphor-icons/react";
-import VideoPlayer from "@/styles/components/VideoPlayer";
+import RecordCamera from "@/styles/components/Camera";
 import { useRouter } from "next/router";
 import Layout from "@/styles/components/LayoutSim";
 import { useState, useEffect } from "react";
@@ -53,15 +53,9 @@ export default function MockInterviewQuestionPage() {
           </Center>
 
           {/* Video Player with Audio Overlay Icon */}
-          <Flex justify="center" mb={8} mt={20} position="relative" width="70%">
-            <VideoPlayer
-              title="Interview Playback"
-              thumbnail="/images/smiling-girl.png"
-            />
+          <Flex justify="center" mb={8} mt={20} position="relative" height="500px" width="70%">
+            <RecordCamera isRecordingEnabled={false} />
             {/* Audio Overlay */}
-            <Box position="absolute" top="4" left="430" bg="blackAlpha.700" p={2} borderRadius="md">
-              <Waveform size={32} color="white" />
-            </Box>
           </Flex>
 
           {/* Bottom Control Bar */}
