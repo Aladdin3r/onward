@@ -8,28 +8,45 @@ import {
     StackDivider,
     Divider,
     Heading,
-    Button
+    Button,
+    Textarea
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import VideoPlayer from './VideoPlayer';
 import QuestionPractice from './QuestionPractice';
 import { Stop, Record, Pause } from '@phosphor-icons/react';
+import Transcriber from './Transcriber'
 
 export default function AnswerPractice({ videoSrc, thumbnail}) {
     const router = useRouter();
     const [showVideo, setShowVideo] = useState(false); // default is text
-    const [activeButton, setActiveButton] = useState('');
+    const [activeButton, setActiveButton] = useState('text');
+    const [isRecording, setIsRecording] = useState(false); 
+    const [transcription, setTranscription] = useState('');
+    const [editableTranscription, setEditableTranscription] = useState('');
+    const [typedAnswer, setTypedAnswer] = useState('');
 
     const handleVoiceClick = () => {
         setShowVideo(true);
         setActiveButton('voice');
+        setIsRecording(!isRecording); // toggle recording state
     };
 
     const handleTextClick = () => {
         setShowVideo(false);
         setActiveButton('text');
+        setEditableTranscription(transcription); // to be able to edit transcription when switch to text
     };
+
+    const handleTextChange = (event) => {
+        setTypedAnswer(event.target.value); // make answer box type-able when text is chosen
+    };
+
+    const handleEditableChange = (event) => {
+        setEditableTranscription(event.target.value); // update editable transcription
+    };
+
 
     return (
         <>
@@ -71,6 +88,8 @@ export default function AnswerPractice({ videoSrc, thumbnail}) {
                         divider={<StackDivider />}
                         width={"100%"}
                     >
+
+                        {/* Response type area - voice or text button */}
                         <Heading size="18pt" textAlign="left">Response Type:</Heading>
                         <Divider orientation="horizontal" mb={4} />
                         
@@ -84,7 +103,9 @@ export default function AnswerPractice({ videoSrc, thumbnail}) {
                                 border="1px" 
                                 _hover={{ boxShadow: '0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)' }}
                             >
-                                <Text fontSize="xxs">Voice</Text>
+                                <Text fontSize="xxs">
+                                    {isRecording ? 'Finish' : 'Voice'}
+                                </Text>
                             </Button>
                             <Button 
                                 width="7rem" 
@@ -97,6 +118,11 @@ export default function AnswerPractice({ videoSrc, thumbnail}) {
                             >
                                 <Text fontSize="xxs">Text</Text>
                             </Button>
+                            <Transcriber 
+                                isRecording={isRecording} 
+                                setTranscription={setTranscription}
+                                setEditableTranscription={setEditableTranscription} 
+                            />
                         </Flex>
                     </Flex>
                     
@@ -116,24 +142,25 @@ export default function AnswerPractice({ videoSrc, thumbnail}) {
                             <CardBody>
                                 <Stack spacing="4" divider={<StackDivider />}>
                                     <Box>
-                                        <Heading size="18pt" height="2rem">Transcript:</Heading>
+                                        <Heading size="18pt" height="2rem">Your Response:</Heading>
                                     </Box>
                                     
                                     {/* Answer Box */}
                                     <Box overflowY="auto" height="10rem" w="100%">
-                                        <Text pt="2" fontSize="14pt">
-                                            Um, in my previous role as a nurse in the ER, there was this one time when, 
-                                            like, a patient came in with chest pain, and we thought it might be a heart attack. 
-                                            At the same time, uh, another patient had a severe allergic reaction. So, I had to, like, 
-                                            figure out who needed help faster.
-                                            <br/>
-                                            I quickly checked the chest pain patient and told the doctor to start treatment while I, uh,
-                                            helped the allergic reaction patient by giving them epinephrine and, like, monitoring their breathing. 
-                                            I stayed with them until they were stable.
-                                            <br/>
-                                            I, um, made sure to communicate with my team, and, uh, even though it was urgent, I stayed calm. 
-                                            In the end, both patients got the care they needed, so, uh, yeah, it worked out okay.
-                                        </Text>
+                                        {activeButton === 'text' ? (
+                                            <Textarea 
+                                                value={editableTranscription} 
+                                                onChange={handleEditableChange} 
+                                                placeholder="Type your answer here"
+                                                size="sm"
+                                                height="10rem"
+                                                resize="vertical"
+                                            />
+                                        ) : (
+                                            <Text pt="2" fontSize="14pt">
+                                                {transcription}
+                                            </Text>
+                                        )}
                                     </Box>
                                 </Stack>
                             </CardBody>
