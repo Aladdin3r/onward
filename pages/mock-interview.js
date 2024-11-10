@@ -3,7 +3,7 @@ import styles from "@/styles/Home.module.css";
 import "@/styles/theme";
 import { Box, Flex, Button, Text } from "@chakra-ui/react";
 import { Waveform } from "@phosphor-icons/react";
-import Record from "@/styles/components/Camera";
+import RecordCamera from "@/styles/components/Camera";
 import { useRouter } from "next/router";
 import nursingInterviewQuestions from "@/data/interviewQuestions";
 import { useState, useEffect } from "react";
@@ -49,7 +49,7 @@ export default function MockInterviewQuestionPage() {
           {/* Video Player with Button on the Right */}
           <Flex width="100%" maxW="1200px" gap={8} align="center">
             <Box position="relative" flex="1" maxW="70%">
-              <Record isRecordingEnabled={false}/>
+              <RecordCamera isRecordingEnabled={false}/>
               {/* Audio Overlay */}
               
             </Box>

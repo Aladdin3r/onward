@@ -6,7 +6,7 @@ import {
   VideoCameraSlash,
 } from "@phosphor-icons/react";
 
-export default function Record({ isRecordingEnabled = true }) {
+export default function RecordCamera({ isRecordingEnabled = true }) {
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const [isRecording, setIsRecording] = useState(false);

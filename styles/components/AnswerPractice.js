@@ -16,7 +16,8 @@ import { useRouter } from 'next/router';
 import VideoPlayer from './VideoPlayer';
 import QuestionPractice from './QuestionPractice';
 import { Stop, Record, Pause } from '@phosphor-icons/react';
-import Transcriber from './Transcriber'
+import Transcriber from './Transcriber';
+import RecordCamera from './Camera';
 
 export default function AnswerPractice({ videoSrc, thumbnail}) {
     const router = useRouter();
@@ -179,10 +180,7 @@ export default function AnswerPractice({ videoSrc, thumbnail}) {
                         alignItems={"center"}
                         borderRadius={15}
                     >
-                        <VideoPlayer 
-                            videoSrc={videoSrc} 
-                            thumbnail="/images/smiling-girl.png" 
-                        />
+                        <RecordCamera />
                         <Flex>
                             <Button><Record size={24} /></Button>
                             <Button><Stop size={24} /></Button>
