@@ -1,12 +1,8 @@
-import { useState, useRef } from "react";
-import {
-  Microphone,
-  MicrophoneSlash,
-  VideoCamera,
-  VideoCameraSlash,
-} from "@phosphor-icons/react";
+import { useState, useRef, useEffect } from "react";
+import { Microphone, MicrophoneSlash, VideoCamera, VideoCameraSlash } from "@phosphor-icons/react";
+import { supabase } from "@/lib/supabaseClient"; // Import Supabase client
 
-export default function RecordCamera({ isRecordingEnabled = true }) {
+export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoUrl }) {
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const [isRecording, setIsRecording] = useState(false);
@@ -14,6 +10,20 @@ export default function RecordCamera({ isRecordingEnabled = true }) {
   const [isMicOn, setIsMicOn] = useState(true);
   const [recordedChunks, setRecordedChunks] = useState([]);
   const [stream, setStream] = useState(null);
+
+  useEffect(() => {
+    if (isCameraOn && !stream) {
+      startCamera();
+    } else if (!isCameraOn && stream) {
+      stopCamera();
+    }
+
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
+    };
+  }, [isCameraOn]);
 
   const startCamera = async () => {
     try {
@@ -23,7 +33,6 @@ export default function RecordCamera({ isRecordingEnabled = true }) {
       });
       videoRef.current.srcObject = newStream;
       setStream(newStream);
-      setIsCameraOn(true);
     } catch (error) {
       console.error("Error accessing webcam:", error);
     }
@@ -52,12 +61,42 @@ export default function RecordCamera({ isRecordingEnabled = true }) {
   };
 
   const stopRecording = () => {
-    mediaRecorderRef.current.stop();
-    setIsRecording(false);
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
   };
 
-  const saveRecording = () => {
+  const saveRecording = async () => {
     const blob = new Blob(recordedChunks, { type: "video/webm" });
+    const file = new File([blob], "recorded-video.webm", { type: "video/webm" });
+
+    // 1. Upload the file to Supabase
+    const { data, error } = await supabase
+      .storage
+      .from("onward-video") // Ensure correct bucket name
+      .upload(`videos/${Date.now()}-recorded-video.webm`, file, {
+        cacheControl: "3600",
+        upsert: false, // Prevent overwriting files
+      });
+
+    if (error) {
+      console.error("Error uploading video:", error.message);
+    } else {
+      // Fetch the public URL of the uploaded video
+      const { publicURL, error: urlError } = supabase
+        .storage
+        .from("onward-video")
+        .getPublicUrl(data.path);
+
+      if (urlError) {
+        console.error("Error fetching public URL:", urlError.message);
+      } else {
+        setSavedVideoUrl(publicURL); // Pass the URL to the parent component
+      }
+    }
+
+    // 2. Save the file to the device (Download)
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.style.display = "none";
@@ -65,8 +104,9 @@ export default function RecordCamera({ isRecordingEnabled = true }) {
     a.download = "recorded-video.webm";
     document.body.appendChild(a);
     a.click();
-    URL.revokeObjectURL(url);
-    setRecordedChunks([]);
+    URL.revokeObjectURL(url); // Revoke the object URL after use
+
+    setRecordedChunks([]); // Clear the recorded chunks after saving
   };
 
   const toggleMic = async () => {
