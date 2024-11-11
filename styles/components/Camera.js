@@ -27,10 +27,16 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
 
   const startCamera = async () => {
     try {
-      const newStream = await navigator.mediaDevices.getUserMedia({
+      const constraints = {
         video: true,
-        audio: isMicOn,
-      });
+        audio: {
+          echoCancellation: true,  // Enable echo cancellation to prevent feedback
+          noiseSuppression: true,  // Reduce background noise
+          autoGainControl: false,  // Turn off auto gain control (for better control over mic volume)
+        },
+      };
+
+      const newStream = await navigator.mediaDevices.getUserMedia(constraints);
       videoRef.current.srcObject = newStream;
       setStream(newStream);
     } catch (error) {
@@ -145,11 +151,11 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
         <video
           ref={videoRef}
           autoPlay
-          muted={!isMicOn}
+          muted={!isMicOn}  // Mute the video if the mic is off to prevent echo
           style={{
             width: "100%",
             height: "100%",
-            transform: "scaleX(-1)",
+            transform: "scaleX(-1)", // Flip the video to simulate mirror effect
             display: isCameraOn ? "block" : "none",
           }}
         />
