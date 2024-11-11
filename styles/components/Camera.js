@@ -177,7 +177,7 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
       </div>
 
       <div style={{ display: "flex", justifyContent: "center", gap: "20px", marginTop: "20px", zIndex: 100 }}>
-        <button onClick={isCameraOn ? stopCamera : startCamera}>
+        <button onClick={() => setIsCameraOn((prev) => !prev)}>
           {isCameraOn ? <VideoCamera size={32} /> : <VideoCameraSlash size={32} />}
         </button>
         <button onClick={toggleMic}>
