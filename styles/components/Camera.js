@@ -117,20 +117,12 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
 
   const toggleMic = async () => {
     setIsMicOn((prev) => !prev);
+
     if (stream) {
-      stream.getTracks().forEach((track) => {
-        if (track.kind === "audio") track.stop();
-      });
-      const newStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: isMicOn,
-      });
-      videoRef.current.srcObject = newStream;
-      setStream(newStream);
-      if (mediaRecorderRef.current) {
-        mediaRecorderRef.current.stop();
-        setRecordedChunks([]);
-        startRecording();
+      // Get the current tracks and stop the audio track
+      const audioTrack = stream.getAudioTracks()[0];
+      if (audioTrack) {
+        audioTrack.enabled = !audioTrack.enabled; // Toggle the microphone track state
       }
     }
   };
