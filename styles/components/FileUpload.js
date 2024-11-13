@@ -146,13 +146,7 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
                 width={{ base: "30rem", md: "32rem", lg: "38rem", xl:"29rem", "2xl": "42rem" }} 
                 height={{ base: "25rem",  lg: "30rem", "2xl": "35rem" }} 
             >
-                <Heading 
-                    fontSize={{ base: "xxs", md: "xxs", xl: "16pt" }} 
-                    padding={4}
-                >
-                    {title}
-                </Heading>
-                <Flex 
+                <Flex
                     flexDirection="column" 
                     overflowX="hidden" 
                     maxW="50rem"  
@@ -163,6 +157,12 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
                     borderRadius="lg" 
                     boxShadow="md"
                 >
+                <Heading 
+                    fontSize={{ base: "xxs", md: "xxs", xl: "16pt" }} 
+                    pb={4}
+                >
+                    {title}
+                </Heading>                    
                     <DragDrop 
                         id={fileType}
                         uppy={uppyRef.current} 
