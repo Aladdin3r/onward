@@ -123,7 +123,7 @@ const HistoryContainer = ({ limit = 3 }) => {
 
                 {limit !== 0 && videos.length > limit && (
                     <Box textAlign="center" mt={4}>
-                        <NextLink href="/videos" passHref>
+                        <NextLink href="/history" passHref>
                             <Link fontSize="sm" color="brand.blushPink" fontWeight="bold">
                                 View All
                             </Link>
