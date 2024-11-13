@@ -73,10 +73,16 @@ export default function PracticeInterviewOverview() {
             <Head>
                 <title>Practice Interview Overview</title>
             </Head>
-            <Layout showTopNav={true} pageTitle="Practice Overview">
-                <Flex direction="column" p={4}>
-                    <Flex justifyContent="flex-start" mb={8} flexDirection={{ base: "column", xl: "row" }}>
-                        <Box
+            <LayoutSim >
+                    <Flex direction="column" p={4} mx="10em">
+                        <Flex 
+                            justifyContent={"center"}
+                            alignItems="flex-start"
+                            flexDirection={{base: "column", xl: "row"}}
+                            columnGap="0em"
+                            w="100%"
+                        >
+                      <Box
                             width={{ base: "100%", xl: "60%" }}
                             maxW="600px"
                             mb={6}
@@ -102,17 +108,19 @@ export default function PracticeInterviewOverview() {
                                     <video src={videoUrl} controls width="100%" style={{ borderRadius: '8px' }} />
                                 )
                             )}
-                        </Box>
+                            <Box  display="flex" alignItems="center" justifyContent="center" my={{base: "5", xl:0}} width="100%">
+                                <ImprovementSteps />
+                            </Box>
+                        </Flex>
 
-                        <Box mx={4} display="flex" alignItems="center" justifyContent="center" my={{ base: "5", xl: 0 }} width={{ base: "100%", xl: "40%" }}>
-                            <ImprovementSteps />
-                        </Box>
+                        <Flex
+                            justifyContent={"center"}
+                            alignItems="flex-start"                       
+                        >
+                            <TranscriptionComponent />
+                        </Flex>
                     </Flex>
-                    <Box>
-                        <TranscriptionComponent />
-                    </Box>
-                </Flex>
-            </Layout>
+            </LayoutSim>
         </>
     );
 }
