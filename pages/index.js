@@ -2,7 +2,6 @@ import Head from "next/head";
 import { Heading, Box, Flex } from "@chakra-ui/react";
 import HistoryContainer from "@/styles/components/HistoryContainer";
 import MyResumesCard from "@/styles/components/MyResumesCard";
-import Footer from "@/styles/components/Footer";
 import Layout from "@/styles/components/Layout";
 import DashboardCard from "@/styles/components/DashBoardStartCard";
 import { useDisclosure } from '@chakra-ui/react';
@@ -79,7 +78,7 @@ export default function Home({ uploadedResumeFiles }) {
             flex="0 0 90%"
             mt={3} 
           >
-            <HistoryContainer />
+            <HistoryContainer limit={3} />
           </Box>
         </Flex>
       </Layout>

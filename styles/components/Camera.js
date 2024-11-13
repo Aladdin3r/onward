@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Microphone, MicrophoneSlash, VideoCamera, VideoCameraSlash } from "@phosphor-icons/react";
+import { useToast } from "@chakra-ui/react"; // Import useToast from Chakra UI
 import { supabase } from "@/lib/supabaseClient"; // Import Supabase client
 
 export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoUrl }) {
@@ -12,6 +13,7 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
   const [stream, setStream] = useState(null);
   const [audioContext, setAudioContext] = useState(null);
   const [gainNode, setGainNode] = useState(null);
+  const toast = useToast(); // Initialize toast
 
   useEffect(() => {
     // Start or stop the camera when the isCameraOn state changes
@@ -79,6 +81,18 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
   };
 
   const startRecording = () => {
+    if (!isCameraOn) {
+      // Show toast when trying to start recording without the camera on
+      toast({
+        title: "Camera Off",
+        description: "To record, turn the camera on.",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+      return; // Prevent recording if camera is off
+    }
+
     if (stream) {
       mediaRecorderRef.current = new MediaRecorder(stream);
       mediaRecorderRef.current.ondataavailable = (event) => {
@@ -99,7 +113,19 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
     }
   };
 
-  const saveRecording = async () => {
+  const saveRecordingLocally = () => {
+    const blob = new Blob(recordedChunks, { type: "video/webm" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.style.display = "none";
+    a.href = url;
+    a.download = "recorded-video.webm"; // Save to the local machine
+    document.body.appendChild(a);
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const saveRecordingToSupabase = async () => {
     const blob = new Blob(recordedChunks, { type: "video/webm" });
     const file = new File([blob], "recorded-video.webm", { type: "video/webm" });
 
@@ -127,18 +153,6 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
         setSavedVideoUrl(urlData.publicUrl); // Pass the URL to the parent component
       }
     }
-
-    // Save the file to the device (Download)
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.style.display = "none";
-    a.href = url;
-    a.download = "recorded-video.webm";
-    document.body.appendChild(a);
-    a.click();
-    URL.revokeObjectURL(url);
-
-    setRecordedChunks([]); // Clear the recorded chunks after saving
   };
 
   const toggleMic = async () => {
@@ -223,9 +237,12 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
       </div>
 
       {recordedChunks.length > 0 && (
-        <button onClick={saveRecording} style={{ marginTop: "20px" }}>
-          Save Recording
-        </button>
+        <div style={{ marginTop: "20px" }}>
+          <button onClick={saveRecordingLocally}>Save to Computer</button>
+          <button onClick={saveRecordingToSupabase} style={{ marginLeft: "10px" }}>
+            Save to Browser
+          </button>
+        </div>
       )}
     </div>
   );
