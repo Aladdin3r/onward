@@ -10,35 +10,57 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
   const [isMicOn, setIsMicOn] = useState(true);
   const [recordedChunks, setRecordedChunks] = useState([]);
   const [stream, setStream] = useState(null);
+  const [audioContext, setAudioContext] = useState(null);
+  const [gainNode, setGainNode] = useState(null);
 
   useEffect(() => {
+    // Start or stop the camera when the isCameraOn state changes
     if (isCameraOn && !stream) {
       startCamera();
     } else if (!isCameraOn && stream) {
       stopCamera();
     }
 
+    // Cleanup function to stop the camera stream when the component is unmounted or camera is turned off
     return () => {
       if (stream) {
         stream.getTracks().forEach((track) => track.stop());
       }
     };
-  }, [isCameraOn]);
+  }, [isCameraOn, stream]);
 
   const startCamera = async () => {
     try {
       const constraints = {
-        video: true,
+        video: true,  // Enable video
         audio: {
-          echoCancellation: true,  // Enable echo cancellation to prevent feedback
+          echoCancellation: true, // Prevent echo
           noiseSuppression: true,  // Reduce background noise
-          autoGainControl: false,  // Turn off auto gain control (for better control over mic volume)
+          autoGainControl: true,   // Control volume fluctuations
         },
       };
 
       const newStream = await navigator.mediaDevices.getUserMedia(constraints);
       videoRef.current.srcObject = newStream;
       setStream(newStream);
+
+      // Create audio context and gain node to manage audio volume
+      const newAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const audioTracks = newStream.getAudioTracks();
+      if (audioTracks.length > 0) {
+        const audioSource = newAudioContext.createMediaStreamSource(newStream);
+        const newGainNode = newAudioContext.createGain();
+        newGainNode.gain.setValueAtTime(0, newAudioContext.currentTime); // Mute the microphone initially
+        audioSource.connect(newGainNode);
+        newGainNode.connect(newAudioContext.destination);
+        setAudioContext(newAudioContext);
+        setGainNode(newGainNode);
+      }
+
+      // Log to check available tracks
+      newStream.getTracks().forEach(track => {
+        console.log(track.kind, track.label); // Log video and audio tracks
+      });
     } catch (error) {
       console.error("Error accessing webcam:", error);
     }
@@ -50,6 +72,9 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
       videoRef.current.srcObject = null;
       setIsCameraOn(false);
       setStream(null);
+      if (audioContext) {
+        audioContext.close(); // Cleanup audio context
+      }
     }
   };
 
@@ -58,6 +83,7 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
       mediaRecorderRef.current = new MediaRecorder(stream);
       mediaRecorderRef.current.ondataavailable = (event) => {
         if (event.data.size > 0) {
+          console.log("Recording data available:", event.data);
           setRecordedChunks((prev) => [...prev, event.data]);
         }
       };
@@ -77,20 +103,20 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
     const blob = new Blob(recordedChunks, { type: "video/webm" });
     const file = new File([blob], "recorded-video.webm", { type: "video/webm" });
 
-    // 1. Upload the file to Supabase
+    // Upload the file to Supabase
     const { data, error } = await supabase
       .storage
       .from("onward-video") // Ensure correct bucket name
       .upload(`videos/${Date.now()}-recorded-video.webm`, file, {
         cacheControl: "3600",
-        upsert: false, // Prevent overwriting files
+        upsert: false,
       });
 
     if (error) {
       console.error("Error uploading video:", error.message);
     } else {
       // Fetch the public URL of the uploaded video
-      const { publicURL, error: urlError } = supabase
+      const { data: urlData, error: urlError } = await supabase
         .storage
         .from("onward-video")
         .getPublicUrl(data.path);
@@ -98,11 +124,11 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
       if (urlError) {
         console.error("Error fetching public URL:", urlError.message);
       } else {
-        setSavedVideoUrl(publicURL); // Pass the URL to the parent component
+        setSavedVideoUrl(urlData.publicUrl); // Pass the URL to the parent component
       }
     }
 
-    // 2. Save the file to the device (Download)
+    // Save the file to the device (Download)
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.style.display = "none";
@@ -110,7 +136,7 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
     a.download = "recorded-video.webm";
     document.body.appendChild(a);
     a.click();
-    URL.revokeObjectURL(url); // Revoke the object URL after use
+    URL.revokeObjectURL(url);
 
     setRecordedChunks([]); // Clear the recorded chunks after saving
   };
@@ -119,10 +145,18 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
     setIsMicOn((prev) => !prev);
 
     if (stream) {
-      // Get the current tracks and stop the audio track
       const audioTrack = stream.getAudioTracks()[0];
       if (audioTrack) {
-        audioTrack.enabled = !audioTrack.enabled; // Toggle the microphone track state
+        audioTrack.enabled = !audioTrack.enabled; // Enable/Disable audio
+      }
+
+      // Adjust the gain to unmute or mute the microphone
+      if (gainNode) {
+        if (isMicOn) {
+          gainNode.gain.setValueAtTime(0, audioContext.currentTime); // Mute the mic
+        } else {
+          gainNode.gain.setValueAtTime(1, audioContext.currentTime); // Unmute the mic
+        }
       }
     }
   };
@@ -143,11 +177,11 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
         <video
           ref={videoRef}
           autoPlay
-          muted={!isMicOn}  // Mute the video if the mic is off to prevent echo
+          muted={!isMicOn} // Muting the video if mic is off
           style={{
             width: "100%",
             height: "100%",
-            transform: "scaleX(-1)", // Flip the video to simulate mirror effect
+            transform: "scaleX(-1)", // Flip the video horizontally
             display: isCameraOn ? "block" : "none",
           }}
         />

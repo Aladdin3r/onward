@@ -17,38 +17,62 @@ export default function PracticeAnalysis() {
     const [error, setError] = useState(null);
 
     const router = useRouter();
-
-    // Fetch the video from Supabase
-    const fetchVideo = async () => {
-        try {
-            const { data, error } = await supabase
-                .storage
-                .from('onward-video') // Bucket name
-                .list(); // List all files in the bucket
-
-            if (error) throw error;
-
-            // Assuming there's only one video uploaded, or get the first one
-            const video = data[0]; 
-
-            // Get the public URL for the first video file
-            const videoUrl = supabase
-                .storage
-                .from('onward-video') // Use the correct bucket
-                .getPublicUrl(video.name).publicURL;
-
-            setVideoUrl(videoUrl);
-        } catch (err) {
-            console.error("Error fetching video:", err);
-            setError("Failed to load video.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
     useEffect(() => {
+        const fetchVideo = async () => {
+            try {
+                // List files in the 'videos' folder
+                const { data, error } = await supabase
+                    .storage
+                    .from('onward-video')
+                    .list('videos', {
+                        limit: 1,
+                        offset: 0, 
+                        sortBy: { column: 'created_at', order: 'desc' }, // Sort by created_at for recent videos
+                    });
+                
+                if (error) {
+                    console.error("Error fetching video list:", error.message);
+                    setError("Failed to fetch video list.");
+                    return;
+                }
+
+                // Check if there's a valid video file or an empty placeholder
+                const videoPath = data?.[0]?.name;
+                if (videoPath && videoPath !== "emptyFolderPlaceholder") {
+                    console.log("Fetching video from path:", `videos/${videoPath}`);
+                    const { data: urlData, error: urlError } = await supabase
+                        .storage
+                        .from('onward-video')
+                        .getPublicUrl(`videos/${videoPath}`);
+                    
+                    if (urlError) {
+                        setError("Failed to load video.");
+                        console.error("Error fetching video URL:", urlError.message);
+                    } else {
+                        setVideoUrl(urlData.publicUrl);
+                    }
+                } else {
+                    setError("No valid video found.");
+                }
+
+                setLoading(false);
+            } catch (error) {
+                console.error("Error fetching video:", error.message);
+                setError("Error fetching video.");
+                setLoading(false);
+            }
+        };
+
+        // Initial fetch when the component is mounted
         fetchVideo();
-    }, []);
+
+        // Polling every 5 seconds for new videos
+        const intervalId = setInterval(fetchVideo, 5000);
+
+        // Cleanup the interval on component unmount
+        return () => clearInterval(intervalId);
+
+    }, []);  // Empty dependency array ensures this runs once on mount
 
     return (
         <>
