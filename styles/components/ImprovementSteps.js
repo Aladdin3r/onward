@@ -32,7 +32,8 @@ export default function ImprovementSteps() {
 
   return (
     <Box
-      mx="4em"
+      ml="4em"
+      mr="4em"
       width="100%"
       p="6"
       bg="white"
