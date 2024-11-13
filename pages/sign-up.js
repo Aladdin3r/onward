@@ -19,6 +19,7 @@ function PasswordInput() {
         <Input
         pr="4.5rem"
         type={show ? "text" : "password"}
+        fontSize="xs"
         placeholder="Enter password"
         value={value}
         onChange={handleChange}
@@ -45,16 +46,14 @@ export default function SignIn() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div className={`${styles.page}`}>
-                <Box display="flex" flexDirection="row" width="100vw" height="100vh" alignItems="center" justifyContent="left" gap="150px" paddingLeft="20px">
-                    
-                    <Image src="/signInImage.png" alt="Sign-in Visual" width="600px" height="750px" objectFit="cover" borderRadius="15px" />
+                <Box display="flex" flexDirection="row" width="100vw" height="100vh" alignItems="center" justifyContent="left" gap="17%" paddingLeft="20px" marginLeft="15%">
 
                     <Box className="content" width="500px">
                         <VStack spacing="15px" className={`${styles.contentContainer}`} align="center">
                             <Box mb="5px" align="center">
-                                <Image src="/logo.svg" width="160px" height="35px" objectFit="cover"/>
+                                <Image src="/logo.svg" width="200px" height="42px" objectFit="cover" mb={3}/>
                                 <Text fontFamily="heading" fontSize="lg" fontWeight="bold" textAlign="center">Welcome!</Text>
-                                <Text fontFamily="body" fontSize="sm" fontWeight="normal" textAlign="center">Please enter your details to get started</Text>
+                                <Text fontFamily="body" fontSize="xs" mt={5} color="gray.500" fontWeight="normal" textAlign="center">Please enter your details to get started</Text>
                             </Box>
                             
                             <Box display="flex" justifyContent="center">
@@ -63,7 +62,7 @@ export default function SignIn() {
 
                             <Box display="flex" alignItems="center" width="100%">
                                 <Divider borderWidth="1px" borderColor="gray.500" />
-                                <Text px={2} fontSize="sm" color="gray.500">or</Text>
+                                <Text px={2} fontSize="xs" color="gray.500">or</Text>
                                 <Divider borderWidth="1px" borderColor="gray.500" />
                             </Box>
 
@@ -73,49 +72,60 @@ export default function SignIn() {
                                     <Input
                                         placeholder="Enter your email"
                                         type="email"
-                                        size="sm"
+                                        size="xs"
                                         height="45px"
+                                        mb={5}
                                     />
                                 </FormControl>
                                 
                                 <FormControl>
                                     <FormLabel fontSize="xs" fontWeight="700" mb="0px" >Password:</FormLabel>
-                                    <PasswordInput />
+                                    <Box mb={5}>
+                                        <PasswordInput />
+                                    </Box>
                                 </FormControl>
 
                                 <FormControl>
                                     <FormLabel fontSize="xs" fontWeight="700" mb="0px" >Confirm Password:</FormLabel>
-                                    <PasswordInput />
+                                    <Box mb={5}>
+                                        <PasswordInput />
+                                    </Box>
                                 </FormControl>
 
                                 <Checkbox  
+                                    mb={5}
                                     size="lg" 
                                     defaultChecked
+                                    colorScheme="pink"
                                     sx={{
                                         ".chakra-checkbox__label": {
-                                        fontSize: "sm"
+                                        fontSize: "xxs",
+                                        color: "gray.500"
                                         }
                                     }}
                                     >Remember me
                                 </Checkbox>
                             </Box>
-                        
+                      
                             <Link href="/sign-in" passHref>
                                 <Button variant="smPrimary" width="100%">
                                     Create Account
                                 </Button>
-                            </Link>
+                            </Link> 
 
                             <Text fontSize="xxs">
                                 Already have an account?{" "}
                                 <Link href="/sign-in" passHref>
-                                <Text as="span" color="blushPink" fontWeight="bold" cursor="pointer">
-                                    Sign in
-                                </Text>
+                                    <Text as="span" fontWeight="bold" cursor="pointer" textDecoration="underline" color="brand.blushPink">
+                                        Sign in
+                                    </Text>
                                 </Link>
                             </Text>
                         </VStack>
                     </Box>
+
+                    <Image src="/signInImage.png" alt="Sign-in Visual" width="775px" height="1056px" objectFit="cover" borderRadius="15px" />
+
                 </Box>
             </div>
         </>

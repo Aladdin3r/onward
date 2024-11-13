@@ -19,7 +19,7 @@ import { Stop, Record, Pause } from '@phosphor-icons/react';
 import Transcriber from './Transcriber';
 import RecordCamera from './Camera';
 
-export default function AnswerPractice({ videoSrc, thumbnail}) {
+export default function AnswerPractice({ videoSrc, thumbnail }) {
     const router = useRouter();
     const [showVideo, setShowVideo] = useState(false); // default is text
     const [activeButton, setActiveButton] = useState('text');
@@ -27,6 +27,7 @@ export default function AnswerPractice({ videoSrc, thumbnail}) {
     const [transcription, setTranscription] = useState('');
     const [editableTranscription, setEditableTranscription] = useState('');
     const [typedAnswer, setTypedAnswer] = useState('');
+    const [savedVideoUrl, setSavedVideoUrl] = useState(null); // Track saved video URL
 
     const handleVoiceClick = () => {
         setShowVideo(true);
@@ -47,7 +48,6 @@ export default function AnswerPractice({ videoSrc, thumbnail}) {
     const handleEditableChange = (event) => {
         setEditableTranscription(event.target.value); // update editable transcription
     };
-
 
     return (
         <>
@@ -180,7 +180,7 @@ export default function AnswerPractice({ videoSrc, thumbnail}) {
                         alignItems={"center"}
                         borderRadius={15}
                     >
-                        <RecordCamera />
+                        <RecordCamera setSavedVideoUrl={setSavedVideoUrl} />
                         <Flex>
                             <Button><Record size={24} /></Button>
                             <Button><Stop size={24} /></Button>
