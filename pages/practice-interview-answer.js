@@ -46,19 +46,20 @@ export default function PracticeAnswer() {
             </Head>
             <LayoutSim>
                 <Flex 
-                    flexDirection={"column"}
-                    minH={{ base: "100vh", "2xl":"85vh" }} 
-                    width="100%"
-                    maxW={{ base: "100%", md: "1200px", lg: "1920px" }} 
-                    >
-                    <Flex flexDirection={"row"} ml={"5rem"} mt={"3rem"}>
+                flexDirection="column"
+                height="86vh"
+                width="100%"
+                >
+                    <Flex flexDirection={"row"} ml={"0rem"} mt={"3rem"}>
                         <AnswerPractice question={interviewQuestions[currentQuestionIndex]}/>
                     </Flex>
                     <Flex 
                         flexDirection={"row"} 
                         justify={"space-between"} 
                         mt={"auto"} 
-                        >
+                        px="4em"
+                         mb="20px"
+                    >
                         <Button bg={"brand.pureWhite"} size="xxs" width={"6rem"} p={2} border={"1px"} borderColor={"red"}
                                 onClick={handleEndClick}
                                 _hover={{
@@ -67,13 +68,17 @@ export default function PracticeAnswer() {
                                     border:"1px",
                                     borderColor:"red"
                                 }}>End</Button>
-                        <Button bg={"brand.blushPink"} size="xs" onClick={handleOverviewClick} color={"white"} py={"1.5rem"} px={"5rem"}
-                                _hover={{
-                                    bg: "white",
-                                    color: "brand.blushPink",
-                                    border: "1px",
-                                    borderColor: "brand.blushPink"
-                                }}>Finish</Button>
+                    <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"} boxShadow={"md"}
+                        onClick={handleOverviewClick}
+                        _hover={{
+                            bg: "white",
+                            color: "brand.blushPink",
+                            border: "1px",
+                            boxShadow:"md"
+                        }}
+                    > 
+                        Finish
+                    </Button>
                     </Flex>
                 </Flex>
             </LayoutSim>

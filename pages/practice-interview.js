@@ -105,20 +105,23 @@ export default function PracticeInterview() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <Layout showTopNav={true} pageTitle="Practice Interview">
-                <div className={styles.page} style={{ position: "relative" }}>
                     <Flex 
-                        flexDirection={"column"} 
-                        width="100%" 
-                        maxW={{ base: "100%", md: "1200px", lg: "1920px" }} 
-                        minH={{ base: "100vh", xl: "72vh", "2xl":"80vh" }} 
-                        mx="auto"
-                        flexGrow={1} 
+                        // flexDirection={"column"} 
+                        // width="100%" 
+                        // maxW={{ base: "100%", md: "1200px", lg: "1920px" }} 
+                        // minH={{ base: "100vh", xl: "72vh", "2xl":"80vh" }} 
+                        // mx="auto"
+                        // flexGrow={1} 
+                        flexDirection="column"
+                        height="86vh"
+                        width="100%"
                     >
                         <ProgressBar currentStep={1}/>
                         <Flex 
                             ml={{ base: "3", lg: "5", xl: "8", "2xl": "10" }}
                             columnGap={{lg: "3rem", "2xl": "5rem" }}
                             flexDirection={{ base: "column", xl: "row" }} 
+                            mt="3em"
                         >
                             {/* Resume Upload */}
                             <FileUpload 
@@ -140,19 +143,22 @@ export default function PracticeInterview() {
                                 bucketName="onward-job-posting"
                             />
                         </Flex>
-                    </Flex>
                     {/* next boutton */}
                     <Flex 
                             flexDirection={"row"} 
                             justify={"flex-end"} 
-                            mt="auto"
+                            mt={"auto"}
+                            mb="20px"
                             >
                             <Button 
                                 bg={"brand.blushPink"} 
-                                size={{ base: "xxs", "2xl":"sm"}} 
-                                py={"1.5rem"} px={"4rem"} 
+                                // size={{ base: "xxs", "2xl":"sm"}} 
+                                size="xs"
+                                py={"1.5rem"} px={"5rem"} 
                                 width={{ base: "8rem", "2xl":"12rem"}} 
                                 height={{ base: "2rem", "2xl":"2.5rem"}} 
+                                // width={{ base: "8rem", "2xl":"12rem"}} 
+                                // height={{ base: "2rem", "2xl":"2.5rem"}} 
                                 color={"white"} 
                                 boxShadow={"md"} 
                                 onClick={handleNextClick}
@@ -166,7 +172,7 @@ export default function PracticeInterview() {
                                 Next
                             </Button>
                         </Flex>
-                    </div>
+                        </Flex>
             </Layout>
         </>
     )

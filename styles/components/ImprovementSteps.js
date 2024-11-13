@@ -32,6 +32,8 @@ export default function ImprovementSteps() {
 
   return (
     <Box
+      mx="4em"
+      width="100%"
       p="6"
       bg="white"
       boxShadow="md"
@@ -79,11 +81,11 @@ export default function ImprovementSteps() {
         mt="8"
         bg="#EA4A7D"
         color='#FFFFFF'
-        width="100%"
         fontWeight="semibold"
         fontSize={14}
         borderRadius="full"
         onClick={handleAnalysisClick}
+        px="2em"
       >
         View Detailed Analysis
       </Button>

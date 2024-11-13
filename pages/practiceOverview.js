@@ -3,8 +3,18 @@ import { supabase } from "@/lib/supabaseClient";
 import Head from "next/head";
 import { Box, Center, Spinner, Text, Flex } from "@chakra-ui/react";
 import Layout from "@/styles/components/Layout";
+import Header from "@/styles/components/Header";
+import QuestionProgressIndicator from "@/styles/components/QuestionProgressIndicator";
+import ArrowControls from "@/styles/components/ArrowControls";
+import LayoutSim from "@/styles/components/LayoutSim";
 import ImprovementSteps from "@/styles/components/ImprovementSteps";
 import TranscriptionComponent from "@/styles/components/FullTranscriptionCard";
+// need to fix spacing between the cards
+
+export default function PracticeInterviewOverview() { 
+    const router = useRouter();
+
+
 
 export default function PracticeInterviewOverview() {
     const [videoUrl, setVideoUrl] = useState(null);
@@ -68,51 +78,41 @@ export default function PracticeInterviewOverview() {
 
     }, []);  // Empty dependency array ensures this runs once on mount
 
+
     return (
         <>
             <Head>
                 <title>Practice Interview Overview</title>
             </Head>
-            <Layout showTopNav={true} pageTitle="Practice Overview">
-                <Flex direction="column" p={4}>
-                    <Flex justifyContent="flex-start" mb={8} flexDirection={{ base: "column", xl: "row" }}>
-                        <Box
-                            width={{ base: "100%", xl: "60%" }}
-                            maxW="600px"
-                            mb={6}
-                            p={2}
-                            boxShadow="md"
-                            borderRadius="15"
-                            border="1px"
-                            borderColor="#E6EAF2"
-                            bg="white"
-                            overflow="hidden"
-                        >
-                            {isLoading ? (
-                                <Center height="400px">
-                                    <Spinner size="xl" />
-                                    <Text ml={4}>Loading your video...</Text>
-                                </Center>
-                            ) : error ? (
-                                <Center height="400px">
-                                    <Text fontSize="xl" color="red.500">{error}</Text>
-                                </Center>
-                            ) : (
-                                videoUrl && (
-                                    <video src={videoUrl} controls width="100%" style={{ borderRadius: '8px' }} />
-                                )
-                            )}
-                        </Box>
 
-                        <Box mx={4} display="flex" alignItems="center" justifyContent="center" my={{ base: "5", xl: 0 }} width={{ base: "100%", xl: "40%" }}>
-                            <ImprovementSteps />
-                        </Box>
+            <LayoutSim >
+                    <Flex direction="column" p={4} mx="10em">
+                        <Flex 
+                            justifyContent={"center"}
+                            alignItems="flex-start"
+                            flexDirection={{base: "column", xl: "row"}}
+                            columnGap="0em"
+                            w="100%"
+                        >
+                            <Flex  flexDirection={"column"} alignItems="center" justifyContent="center" gap={"0.5rem"} width="100%">
+                                <VideoWQuestionCard />
+                                <QuestionProgressIndicator/>
+                                <ArrowControls/>
+                            </Flex>
+                            <Box  display="flex" alignItems="center" justifyContent="center" my={{base: "5", xl:0}} width="100%">
+                                <ImprovementSteps />
+                            </Box>
+                        </Flex>
+
+                        <Flex
+                            justifyContent={"center"}
+                            alignItems="flex-start"                       
+                        >
+                            <TranscriptionComponent />
+                        </Flex>
                     </Flex>
-                    <Box>
-                        <TranscriptionComponent />
-                    </Box>
-                </Flex>
-            </Layout>
+            </LayoutSim>
+
         </>
     );
 }
