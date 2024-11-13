@@ -169,7 +169,7 @@ export default function PracticeAnalysis() {
                                     ) : error ? (
                                         <Text>{error}</Text>
                                     ) : videoUrl ? (
-                                        <video src={videoUrl} controls width="50%" style={{ borderRadius: '8px' }} />
+                                        <video src={videoUrl} controls width="100%" style={{ borderRadius: '8px' }} />
                                     ) : (
                                         <Text>No video available.</Text>
                                     )}
