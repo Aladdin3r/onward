@@ -24,7 +24,7 @@ export default function PracticeInterviewOverview() {
         <>
             <Head>
                 <title>Practice Interview — Onward</title>
-                <meta name="description" content="Onward is an AI-powered personal interview coach designed to help nurses, particularly those new to the Canadian healthcare system, excel in job interviews." />
+                <meta name="description" content="Onward is an AI-powered personal interview coach designed to help nurses, particularly those new to the Canadian healthcare system, excel in job" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
@@ -36,7 +36,7 @@ export default function PracticeInterviewOverview() {
                             flexDirection={{base: "column", xl: "row"}}
                             columnGap="0em"
                             w="100%"
-                        >
+                        > 
                             <Flex  flexDirection={"column"} alignItems="center" justifyContent="center" gap={"0.5rem"} width="100%">
                                 <VideoWQuestionCard />
                                 <QuestionProgressIndicator/>
