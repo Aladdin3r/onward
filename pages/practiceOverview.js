@@ -13,10 +13,11 @@ import Layout from "@/styles/components/Layout";
 import Header from "@/styles/components/Header";
 import QuestionProgressIndicator from "@/styles/components/QuestionProgressIndicator";
 import ArrowControls from "@/styles/components/ArrowControls";
+import LayoutSim from "@/styles/components/LayoutSim";
 
 // need to fix spacing between the cards
 
-export default function PracticeInterviewOverview() {
+export default function PracticeInterviewOverview() { 
     const router = useRouter();
 
     return (
@@ -27,31 +28,33 @@ export default function PracticeInterviewOverview() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Layout showTopNav={true} pageTitle="Practice Overview">
-                <Flex>
-                    <Flex direction="column" p={4}>
+            <LayoutSim >
+                    <Flex direction="column" p={4} mx="10em">
                         <Flex 
-                            justifyContent={"flex-start"}
+                            justifyContent={"center"}
                             alignItems="flex-start"
-                            mb={8} 
                             flexDirection={{base: "column", xl: "row"}}
+                            columnGap="0em"
+                            w="100%"
                         >
-                            <Flex mx={0} flexDirection={"column"} alignItems="center" justifyContent="center" gap={"0.5rem"}>
+                            <Flex  flexDirection={"column"} alignItems="center" justifyContent="center" gap={"0.5rem"} width="100%">
                                 <VideoWQuestionCard />
                                 <QuestionProgressIndicator/>
                                 <ArrowControls/>
                             </Flex>
-                            <Box mx={4} display="flex" alignItems="center" justifyContent="center" my={{base: "5", xl:0}}>
+                            <Box  display="flex" alignItems="center" justifyContent="center" my={{base: "5", xl:0}} width="100%">
                                 <ImprovementSteps />
                             </Box>
                         </Flex>
 
-                        <Box>
+                        <Flex
+                            justifyContent={"center"}
+                            alignItems="flex-start"                       
+                        >
                             <TranscriptionComponent />
-                        </Box>
+                        </Flex>
                     </Flex>
-                </Flex>
-            </Layout>
+            </LayoutSim>
         </>
     );
 };
