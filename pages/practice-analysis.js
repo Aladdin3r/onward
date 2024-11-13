@@ -16,7 +16,7 @@ export default function PracticeAnalysis() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const router = useRouter();
+    // const router = useRouter();
     useEffect(() => {
         const fetchVideo = async () => {
             try {
@@ -169,12 +169,7 @@ export default function PracticeAnalysis() {
                                     ) : error ? (
                                         <Text>{error}</Text>
                                     ) : videoUrl ? (
-                                        <VideoPLayer 
-                                            videoSrc={videoUrl}
-                                            thumbnail={videoUrl}
-                                            duration="0:00 - 2:14"
-                                            width="100%"
-                                        />
+                                        <video src={videoUrl} controls width="50%" style={{ borderRadius: '8px' }} />
                                     ) : (
                                         <Text>No video available.</Text>
                                     )}
