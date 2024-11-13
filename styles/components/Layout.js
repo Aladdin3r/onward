@@ -13,7 +13,7 @@ export default function Layout({ children, pageTitle, showTopNav }) {
   const variants = {
     default: "/",
     variant2: "/mock-interview",
-    variant3: "/practice-interview",
+    variant3: "/practice",
     variant4: "/history",
   };
 
