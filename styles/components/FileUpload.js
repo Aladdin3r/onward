@@ -13,11 +13,7 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
     const [uploadedFiles, setUploadedFilesState] = useState(initialUploadedFiles || []);
     const toast = useToast();
 
-    const getBucketName = () => {
-        return bucketName === "resume" ? "onward-resume" : "onward-job-posting";
-    };
-
-    // create Uppy instance 
+    // create Uppy instance and pass necessary configurations
     const uppy = useRef(
         new Uppy({
             restrictions: {
@@ -30,7 +26,7 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
     useEffect(() => {
         const fetchUploadedFiles = async () => {
             const { data, error } = await supabase.storage
-                .from(getBucketName())
+                .from(bucketName)
                 .list('uploads/');
 
             if (error) {
@@ -41,7 +37,9 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
             const files = data.map(file => ({
                 id: uuidv4(),
                 name: file.name,
-                url: supabase.storage.from(getBucketName()).getPublicUrl(`uploads/${file.name}`).publicURL,
+                url: supabase.storage
+                .from(bucketName)
+                .getPublicUrl(`uploads/${file.name}`).publicURL,
             }));
             setUploadedFilesState(files);
         };
@@ -50,7 +48,7 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
     }, [bucketName]);
 
     useEffect(() => {
-       
+        // attach file-added event listener to Uppy instance
         const handleFileAdded = async (file) => {
             const isFileAlreadyUploaded = uploadedFiles.some((uploadedFile) => uploadedFile.name === file.name);
             if (!isFileAlreadyUploaded) {
@@ -59,7 +57,7 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
                 try {
                     // upload file to Supabase
                     const { data: uploadData, error: uploadError } = await supabase.storage
-                        .from(getBucketName())
+                        .from(bucketName)
                         .upload(`uploads/${file.name}`, file.data, {
                             cacheControl: '3600',
                             upsert: true,
@@ -71,7 +69,7 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
 
                     // get the file's public URL
                     const { publicURL, error: urlError } = supabase.storage
-                        .from(getBucketName())
+                        .from(bucketName)
                         .getPublicUrl(`uploads/${file.name}`);
 
                     if (urlError) {
@@ -118,10 +116,10 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
         };
     }, [uploadedFiles, bucketName, toast, onFileUpload]);
 
-   // file deletion
+    // handle file deletion
     const handleDeleteFile = async (fileName) => {
         const { error: deleteError } = await supabase.storage
-            .from(getBucketName())
+            .from(bucketName)
             .remove([`uploads/${fileName}`]);
 
         if (deleteError) {
