@@ -1,101 +1,118 @@
 import { useEffect, useState } from "react";
-import { Flex, Box, Heading, Text, Divider } from "@chakra-ui/react";
 import { supabase } from "@/lib/supabaseClient";
+import Head from "next/head";
+import { Box, Center, Spinner, Text, Flex } from "@chakra-ui/react";
+import Layout from "@/styles/components/Layout";
+import ImprovementSteps from "@/styles/components/ImprovementSteps";
+import TranscriptionComponent from "@/styles/components/FullTranscriptionCard";
 
-const HistoryContainer = () => {
-    const [videos, setVideos] = useState([]);
+export default function PracticeInterviewOverview() {
+    const [videoUrl, setVideoUrl] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchVideos = async () => {
-            const { data: fileList, error } = await supabase
-                .storage
-                .from("onward-video")
-                .list("videos", { limit: 100 });
-            
-            if (error) {
-                console.error("Error fetching video list:", error);
-                return;
-            }
-
-            // Filter out any placeholder files such as "emptyFolderPlaceholder"
-            const filteredFileList = fileList.filter(file => file.name !== ".emptyFolderPlaceholder");
-
-            const videosData = await Promise.all(filteredFileList.map(async (file) => {
-                const { data, error } = supabase
+        const fetchVideo = async () => {
+            try {
+                // List files in the 'videos' folder
+                const { data, error } = await supabase
                     .storage
-                    .from("onward-video")
-                    .getPublicUrl(`videos/${file.name}`);
-
-                if (error || !data.publicUrl) {
-                    console.error("Error fetching video URL:", error);
-                    return null;
+                    .from('onward-video')
+                    .list('videos', {
+                        limit: 1,
+                        offset: 0, 
+                        sortBy: { column: 'created_at', order: 'desc' }, // Sort by created_at for recent videos
+                    });
+                
+                if (error) {
+                    console.error("Error fetching video list:", error.message);
+                    setError("Failed to fetch video list.");
+                    return;
                 }
 
-                return {
-                    file_name: file.name,
-                    upload_date: new Date().toISOString().slice(0, 10), // Placeholder date
-                    video_url: data.publicUrl,
-                };
-            }));
+                // Check if there's a valid video file or an empty placeholder
+                const videoPath = data?.[0]?.name;
+                if (videoPath && videoPath !== "emptyFolderPlaceholder") {
+                    console.log("Fetching video from path:", `videos/${videoPath}`);
+                    const { data: urlData, error: urlError } = await supabase
+                        .storage
+                        .from('onward-video')
+                        .getPublicUrl(`videos/${videoPath}`);
+                    
+                    if (urlError) {
+                        setError("Failed to load video.");
+                        console.error("Error fetching video URL:", urlError.message);
+                    } else {
+                        setVideoUrl(urlData.publicUrl);
+                    }
+                } else {
+                    setError("No valid video found.");
+                }
 
-            setVideos(videosData.filter(Boolean)); // Remove nulls from failed fetches
+                setIsLoading(false);
+            } catch (error) {
+                console.error("Error fetching video:", error.message);
+                setError("Error fetching video.");
+                setIsLoading(false);
+            }
         };
 
-        fetchVideos();
-    }, []);
+        // Initial fetch when the component is mounted
+        fetchVideo();
+
+        // Polling every 5 seconds for new videos
+        const intervalId = setInterval(fetchVideo, 5000);
+
+        // Cleanup the interval on component unmount
+        return () => clearInterval(intervalId);
+
+    }, []);  // Empty dependency array ensures this runs once on mount
 
     return (
-        <Flex flexDir="row" justify="center" height={{ base: "auto", md: "300px", lg: "400px", xl: "70%", "2xl": "100%" }}>
-            <Box
-                width={{ base: "30rem", md: "50rem", xl: "78rem", "2xl": "96rem" }}
-                height={"auto"}
-                bg="white"
-                boxShadow="md"
-                borderRadius={15}
-                p={{ base: 4, md: 6 }}
-                m="auto"
-                mt={3}
-            >
-                <Heading fontSize={{ base: "auto", md: "sm", lg: "sm", xl: "sm", "2xl": "lg" }} mb={2}>
-                    Practice Interview
-                </Heading>
-                <Divider mb={4} />
-                
-                {videos.map((video, index) => (
-                    <Box key={index} mb={4}>
-                        <Flex width="100%" justifyContent="flex-start" alignItems="center" gap={4} mt={4}>
-                            <Box width="200px" height="110px" position="relative" margin={4}>
-                                <video 
-                                    width="100%" 
-                                    height="100%" 
-                                    controls 
-                                    style={{ objectFit: "cover" }}
-                                >
-                                    <source src={video.video_url} type="video/webm" />
-                                    Your browser does not support the video tag.
-                                </video>
-                            </Box>
+        <>
+            <Head>
+                <title>Practice Interview Overview</title>
+            </Head>
+            <Layout showTopNav={true} pageTitle="Practice Overview">
+                <Flex direction="column" p={4}>
+                    <Flex justifyContent="flex-start" mb={8} flexDirection={{ base: "column", xl: "row" }}>
+                        <Box
+                            width={{ base: "100%", xl: "60%" }}
+                            maxW="600px"
+                            mb={6}
+                            p={2}
+                            boxShadow="md"
+                            borderRadius="15"
+                            border="1px"
+                            borderColor="#E6EAF2"
+                            bg="white"
+                            overflow="hidden"
+                        >
+                            {isLoading ? (
+                                <Center height="400px">
+                                    <Spinner size="xl" />
+                                    <Text ml={4}>Loading your video...</Text>
+                                </Center>
+                            ) : error ? (
+                                <Center height="400px">
+                                    <Text fontSize="xl" color="red.500">{error}</Text>
+                                </Center>
+                            ) : (
+                                videoUrl && (
+                                    <video src={videoUrl} controls width="100%" style={{ borderRadius: '8px' }} />
+                                )
+                            )}
+                        </Box>
 
-                            <Flex flexDirection="column" justifyContent="flex-start" alignItems="flex-start" gap={2}>
-                                <Text fontSize="20px" fontWeight="700">
-                                    Name: <br />
-                                    <Text as="span" fontWeight="400" lineHeight="27px" fontSize="20px">
-                                        {video.file_name}
-                                    </Text>
-                                </Text>
-                                <Text fontSize="20px" fontWeight="700">
-                                    Date: 
-                                    <Text as="span" fontWeight="400" lineHeight="27px" fontSize="20px">
-                                        {new Date(video.upload_date).toLocaleDateString()}
-                                    </Text>
-                                </Text>
-                            </Flex>
-                        </Flex>
+                        <Box mx={4} display="flex" alignItems="center" justifyContent="center" my={{ base: "5", xl: 0 }} width={{ base: "100%", xl: "40%" }}>
+                            <ImprovementSteps />
+                        </Box>
+                    </Flex>
+                    <Box>
+                        <TranscriptionComponent />
                     </Box>
-                ))}
-            </Box>
-        </Flex>
+                </Flex>
+            </Layout>
+        </>
     );
-};
-
-export default HistoryContainer;
+}

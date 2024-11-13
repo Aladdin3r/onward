@@ -181,11 +181,11 @@ export default function AnswerPractice({ videoSrc, thumbnail }) {
                         borderRadius={15}
                     >
                         <RecordCamera setSavedVideoUrl={setSavedVideoUrl} />
-                        <Flex>
+                        {/* <Flex>
                             <Button><Record size={24} /></Button>
                             <Button><Stop size={24} /></Button>
                             <Button><Pause size={24} /></Button>
-                        </Flex>
+                        </Flex> */}
                     </Flex>
                 )}
             </Flex>
