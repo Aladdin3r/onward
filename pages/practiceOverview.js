@@ -1,33 +1,90 @@
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
 import Head from "next/head";
-import styles from "@/styles/Home.module.css";
-import "@/styles/theme";
-import { Box, Flex } from "@chakra-ui/react";
-import TopNav from "@/styles/components/TopNav";
-import { SideNavBar } from "@/styles/components/SideNav";
-import ProgressBar from "@/styles/components/ProgressBar";
-import { useRouter } from 'next/router';
-import TranscriptionComponent from "@/styles/components/FullTranscriptionCard";
-import ImprovementSteps from "@/styles/components/ImprovementSteps";
-import VideoWQuestionCard from "@/styles/components/VideoWQuestionCard";
+import { Box, Center, Spinner, Text, Flex } from "@chakra-ui/react";
 import Layout from "@/styles/components/Layout";
 import Header from "@/styles/components/Header";
 import QuestionProgressIndicator from "@/styles/components/QuestionProgressIndicator";
 import ArrowControls from "@/styles/components/ArrowControls";
 import LayoutSim from "@/styles/components/LayoutSim";
-
+import ImprovementSteps from "@/styles/components/ImprovementSteps";
+import TranscriptionComponent from "@/styles/components/FullTranscriptionCard";
 // need to fix spacing between the cards
 
 export default function PracticeInterviewOverview() { 
     const router = useRouter();
 
+
+
+export default function PracticeInterviewOverview() {
+    const [videoUrl, setVideoUrl] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchVideo = async () => {
+            try {
+                // List files in the 'videos' folder
+                const { data, error } = await supabase
+                    .storage
+                    .from('onward-video')
+                    .list('videos', {
+                        limit: 1,
+                        offset: 0, 
+                        sortBy: { column: 'created_at', order: 'desc' }, // Sort by created_at for recent videos
+                    });
+                
+                if (error) {
+                    console.error("Error fetching video list:", error.message);
+                    setError("Failed to fetch video list.");
+                    return;
+                }
+
+                // Check if there's a valid video file or an empty placeholder
+                const videoPath = data?.[0]?.name;
+                if (videoPath && videoPath !== "emptyFolderPlaceholder") {
+                    console.log("Fetching video from path:", `videos/${videoPath}`);
+                    const { data: urlData, error: urlError } = await supabase
+                        .storage
+                        .from('onward-video')
+                        .getPublicUrl(`videos/${videoPath}`);
+                    
+                    if (urlError) {
+                        setError("Failed to load video.");
+                        console.error("Error fetching video URL:", urlError.message);
+                    } else {
+                        setVideoUrl(urlData.publicUrl);
+                    }
+                } else {
+                    setError("No valid video found.");
+                }
+
+                setIsLoading(false);
+            } catch (error) {
+                console.error("Error fetching video:", error.message);
+                setError("Error fetching video.");
+                setIsLoading(false);
+            }
+        };
+
+        // Initial fetch when the component is mounted
+        fetchVideo();
+
+        // Polling every 5 seconds for new videos
+        const intervalId = setInterval(fetchVideo, 5000);
+
+        // Cleanup the interval on component unmount
+        return () => clearInterval(intervalId);
+
+    }, []);  // Empty dependency array ensures this runs once on mount
+
+
     return (
         <>
             <Head>
-                <title>Practice Interview — Onward</title>
-                <meta name="description" content="Onward is an AI-powered personal interview coach designed to help nurses, particularly those new to the Canadian healthcare system, excel in job interviews." />
-                <meta name="viewport" content="width=device-width, initial-scale=1" />
-                <link rel="icon" href="/favicon.ico" />
+                <title>Practice Interview Overview</title>
             </Head>
+
             <LayoutSim >
                     <Flex direction="column" p={4} mx="10em">
                         <Flex 
@@ -55,6 +112,7 @@ export default function PracticeInterviewOverview() {
                         </Flex>
                     </Flex>
             </LayoutSim>
+
         </>
     );
-};
+}
