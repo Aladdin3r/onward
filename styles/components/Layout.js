@@ -84,7 +84,7 @@ export default function Layout({ children, pageTitle, showTopNav }) {
         </Box>
 
         {/* Footer */}
-        <Footer />
+        {/* <Footer /> */}
       </Box>
     </Flex>
   );

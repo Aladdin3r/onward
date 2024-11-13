@@ -1,195 +1,135 @@
-import { Flex, Box, Heading, Text, Divider } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { Flex, Box, Heading, Text, Divider, Link } from "@chakra-ui/react";
+import { supabase } from "@/lib/supabaseClient";
+import NextLink from "next/link"; // For "View All" navigation
 
-const HistoryContainer = () => {
+const HistoryContainer = ({ limit = 3 }) => {
+    const [videos, setVideos] = useState([]);
+
+    useEffect(() => {
+        const fetchVideos = async () => {
+            const { data: fileList, error } = await supabase
+                .storage
+                .from("onward-video")
+                .list("videos", { limit: 100 });
+
+            if (error) {
+                console.error("Error fetching video list:", error);
+                return;
+            }
+
+            const filteredFileList = fileList.filter(file => !file.name.includes("emptyFolder") && !file.name.startsWith("."));
+
+            const videosData = await Promise.all(filteredFileList.map(async (file) => {
+                const { data, error } = supabase
+                    .storage
+                    .from("onward-video")
+                    .getPublicUrl(`videos/${file.name}`);
+
+                if (error || !data.publicUrl) {
+                    console.error("Error fetching video URL:", error);
+                    return null;
+                }
+
+                return {
+                    file_name: file.name,
+                    upload_date: new Date().toISOString().slice(0, 10), // Placeholder date
+                    video_url: data.publicUrl,
+                };
+            }));
+
+            setVideos(videosData.filter(Boolean)); // Remove nulls from failed fetches
+        };
+
+        fetchVideos();
+    }, []);
+
+    const videosToShow = limit === 0 || limit === null ? videos : videos.slice(0, limit); // Show all if no limit
+
     return (
-        <Flex flexDir="row" justify="center" height={{ base: "auto", md: "300px", lg: "400px", xl:"70%", "2xl":"100%" }}>
+        <Flex
+            flexDir="column"
+            justify="center"
+            align="center"
+            width="100%"
+            height="auto"
+            p={4}
+            overflow="hidden"
+        >
             <Box
-                width={{ base: "30rem", md: "50rem", xl:"78rem", "2xl":"96rem" }}
-                height={"auto"}
+                width="100%"
+                maxWidth={{ base: "100%", md: "80%", xl: "70%" }} // Makes the box responsive
                 bg="white"
                 boxShadow="md"
                 borderRadius={15}
-                p={{ base: 4, md: 6 }}
-                m="auto"
+                p={6}
                 mt={3}
             >
-                <Heading fontSize={{ base: "auto", md: "sm", lg: "sm", xl:"sm", "2xl":"lg" }} mb={2}>
+                <Heading fontSize={{ base: "xl", md: "lg", xl: "xl" }} mb={2}>
                     Practice Interview
                 </Heading>
                 <Divider mb={4} />
-                <Text>Oct. 20th, 2024</Text>
-                <Flex 
-                    width="100%"
-                    justifyContent="flex-start"
-                    alignItems="center"
-                    gap={4}
-                    mt={4} 
-                >
-                    <Box 
-                        width="200px" 
-                        height="110px" 
-                        position="relative"
-                    >
-                        <img 
-                            style={{ 
-                                width: "100%", 
-                                height: "100%", 
-                                position: 'absolute', 
-                                left: 0, 
-                                top: 0, 
-                                objectFit: "cover"
-                            }} 
-                            src="video-picture.png" 
-                            alt="Placeholder" 
-                        />
-                        <Box 
-                            width="100%" 
-                            height="100%" 
-                            position="absolute" 
-                            background="rgba(0, 0, 0, 0.40)" 
-                        />
-                        <Box 
-                            width="30px" 
-                            height="30px" 
-                            position="absolute" 
-                            left="85%" 
-                            top="35%"
-                        >
-                            <Box 
-                                width="100%" 
-                                height="100%" 
-                                background="black" 
-                                opacity="0.60" 
-                            />
-                        </Box>
-                    </Box>
-                    
-                    <Flex 
-                        flexDirection="column" 
-                        justifyContent="flex-start" 
-                        alignItems="flex-start" 
-                        gap={2}
-                    >
-                        <Text 
-                            fontSize="20px" 
-                            fontFamily="body" 
-                            fontWeight="700"
-                        >
-                            Name: <br />
-                            <Text 
-                                as="span" 
-                                fontWeight="400"
-                                lineHeight="27px" 
-                                fontSize="20px"
-                            >
-                                Burnaby General Practice Interview
-                            </Text>
-                        </Text>
-                        <Text 
-                            fontSize="20px" 
-                            fontFamily="DM Sans" 
-                            fontWeight="700"
-                        >
-                            Length: 
-                            <Text 
-                                as="span" 
-                                fontWeight="400" 
-                                lineHeight="27px" 
-                                fontSize="20px"
-                            >
-                                8:53
-                            </Text>
-                        </Text>
-                    </Flex>
-                </Flex>
 
-                <Text>Oct. 20th, 2024</Text>
-                <Flex 
-                    width="100%"
-                    justifyContent="flex-start"
-                    alignItems="center"
-                    gap={4} // Spacing between items
-                    mt={4} // Margin top for spacing
-                >
-                    <Box 
-                        width="200px" 
-                        height="110px" 
-                        position="relative"
-                    >
-                        <img 
-                            style={{ 
-                                width: "100%", 
-                                height: "100%", 
-                                position: 'absolute', 
-                                left: 0, 
-                                top: 0, 
-                                objectFit: "cover"
-                            }} 
-                            src="video-picture.png" 
-                            alt="Placeholder" 
-                        />
-                        <Box 
-                            width="100%" 
-                            height="100%" 
-                            position="absolute" 
-                            background="rgba(0, 0, 0, 0.40)" 
-                            borderRadius="15px" // Optional: to match the style
-                        />
-                        <Box 
-                            width="30px" 
-                            height="30px" 
-                            position="absolute" 
-                            left="85%" 
-                            top="35%"
+                {videosToShow.map((video, index) => (
+                    <Box key={index} mb={4}>
+                        <Flex
+                            flexDir={{ base: "column", md: "row" }} // Stacks videos vertically on small screens
+                            justify="flex-start"
+                            alignItems="center"
+                            gap={4}
+                            mt={4}
                         >
-                            <Box 
-                                width="100%" 
-                                height="100%" 
-                                background="black" 
-                                opacity="0.60" 
-                                borderRadius="9999px" // Circle shape
-                            />
-                        </Box>
+                            <Box
+                                width="100%"
+                                maxWidth="200px"
+                                height="auto"
+                                position="relative"
+                                margin={4}
+                            >
+                                <video
+                                    width="100%"
+                                    height="auto"
+                                    controls
+                                    style={{ objectFit: "cover" }}
+                                >
+                                    <source src={video.video_url} type="video/webm" />
+                                    Your browser does not support the video tag.
+                                </video>
+                            </Box>
+
+                            <Flex
+                                flexDirection="column"
+                                justifyContent="flex-start"
+                                alignItems="flex-start"
+                                gap={2}
+                                width="100%"
+                            >
+                                <Text fontSize="20px" fontWeight="700">
+                                    Name: <br />
+                                    <Text as="span" fontWeight="400" lineHeight="27px" fontSize="20px">
+                                        {video.file_name}
+                                    </Text>
+                                </Text>
+                                <Text fontSize="20px" fontWeight="700">
+                                    Date: 
+                                    <Text as="span" fontWeight="400" lineHeight="27px" fontSize="20px">
+                                        {new Date(video.upload_date).toLocaleDateString()}
+                                    </Text>
+                                </Text>
+                            </Flex>
+                        </Flex>
                     </Box>
-                    
-                    <Flex 
-                        flexDirection="column" 
-                        justifyContent="flex-start" 
-                        alignItems="flex-start" 
-                        gap={2} // Space between text elements
-                    >
-                        <Text 
-                            fontSize="20px" 
-                            fontFamily="body" 
-                            fontWeight="700"
-                        >
-                            Name: <br />
-                            <Text 
-                                as="span" 
-                                fontWeight="400"
-                                lineHeight="27px" 
-                                fontSize="20px"
-                            >
-                                Burnaby General Practice Interview
-                            </Text>
-                        </Text>
-                        <Text 
-                            fontSize="20px" 
-                            fontFamily="DM Sans" 
-                            fontWeight="700"
-                        >
-                            Length: 
-                            <Text 
-                                as="span" 
-                                fontWeight="400" 
-                                lineHeight="27px" 
-                                fontSize="20px"
-                            >
-                                8:53
-                            </Text>
-                        </Text>
-                    </Flex>
-                </Flex>
+                ))}
+
+                {limit !== 0 && videos.length > limit && (
+                    <Box textAlign="center" mt={4}>
+                        <NextLink href="/videos" passHref>
+                            <Link fontSize="sm" color="brand.blushPink" fontWeight="bold">
+                                View All
+                            </Link>
+                        </NextLink>
+                    </Box>
+                )}
             </Box>
         </Flex>
     );
