@@ -21,6 +21,7 @@ const variants = {
     label: "Practice Interview",
     icon: <Presentation size={32} />,
     path: [
+      "/practiceOverview",
       "/practice-interview",
       "/practice-interview-filter",
       "/practice-interview-questions",
