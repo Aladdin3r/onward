@@ -17,11 +17,11 @@ export default function PracticeAnswer() {
     const router = useRouter();
     // const { question } = router.query;
 
-    const handleOverviewClick = () => {
-        router.push({
-            pathname: '/practiceOverview',
-        });
-    };
+    // const handleOverviewClick = () => {
+    //     router.push({
+    //         pathname: '/practiceOverview',
+    //     });
+    // };
     const handleEndClick = () => {
         router.push({
             pathname: '/',
@@ -68,7 +68,7 @@ export default function PracticeAnswer() {
                                     border:"1px",
                                     borderColor:"red"
                                 }}>End</Button>
-                    <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"} boxShadow={"md"}
+                    {/* <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"} boxShadow={"md"}
                         onClick={handleOverviewClick}
                         _hover={{
                             bg: "white",
@@ -78,7 +78,7 @@ export default function PracticeAnswer() {
                         }}
                     > 
                         Finish
-                    </Button>
+                    </Button> */}
                     </Flex>
                 </Flex>
             </LayoutSim>

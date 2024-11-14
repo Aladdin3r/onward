@@ -155,6 +155,7 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
     }
   };
 
+  
   const toggleMic = async () => {
     setIsMicOn((prev) => !prev);
 
