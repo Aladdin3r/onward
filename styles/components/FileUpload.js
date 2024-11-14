@@ -9,7 +9,7 @@ import Uppy from '@uppy/core';
 import { supabase } from '@/lib/supabaseClient';
 import { v4 as uuidv4 } from 'uuid';
 
-export default function FileUpload({ title, fileType, initialUploadedFiles, setUploadedFiles, onFileUpload, bucketName }) {
+export default function FileUpload({ title, fileType, initialUploadedFiles, setUploadedFiles, onFileUpload, bucketName, type }) {
     const [uploadedFiles, setUploadedFilesState] = useState(initialUploadedFiles || []);
     const toast = useToast();
 
@@ -28,7 +28,7 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
             const { data, error } = await supabase.storage
                 .from(bucketName)
                 .list('uploads/');
-
+            console.log("data", data);
             if (error) {
                 console.error('Error fetching files:', error.message);
                 return;
@@ -37,9 +37,7 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
             const files = data.map(file => ({
                 id: uuidv4(),
                 name: file.name,
-                url: supabase.storage
-                .from(bucketName)
-                .getPublicUrl(`uploads/${file.name}`).publicURL,
+                size: file.metadata.size,
             }));
             setUploadedFilesState(files);
         };
@@ -68,7 +66,7 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
                     }
 
                     // get the file's public URL
-                    const { publicURL, error: urlError } = supabase.storage
+                    const { publicURL, error: urlError } = await supabase.storage
                         .from(bucketName)
                         .getPublicUrl(`uploads/${file.name}`);
 

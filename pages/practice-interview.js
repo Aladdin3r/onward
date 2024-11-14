@@ -53,6 +53,7 @@ export default function PracticeInterview() {
     
 
     const handleDeleteFile = async (fileId, type) => {
+        console.log("delete stuff");
         const bucketName = type === 'resume' ? 'onward-resume' : 'onward-job-posting';
         const filePath = `uploads/${fileId}`;
         
@@ -111,7 +112,8 @@ export default function PracticeInterview() {
                                 setUploadedFiles={(files) => setUploadedFiles(prev => ({ ...prev, resumes: files }))}
                                 onFileUpload={(file) => handleFileUpload(file, 'resume')}
                                 bucketName="onward-resume"
-                                onDeleteFile={(fileId) => handleDeleteFile(fileId, 'resume')}
+                                // type="resume"
+                                // onDeleteFile={(fileId) => handleDeleteFile(fileId, 'resume')}
                             />
                             
                             {/* Job Posting upload */}
@@ -122,7 +124,8 @@ export default function PracticeInterview() {
                                 setUploadedFiles={(files) => setUploadedFiles(prev => ({ ...prev, jobPosts: files }))}
                                 onFileUpload={(file) => handleFileUpload(file, 'job-posting')}
                                 bucketName="onward-job-posting"
-                                onDeleteFile={(fileId) => handleDeleteFile(fileId, 'job-posting')}
+                                // type="jobPosts"
+                                // onDeleteFile={(fileId) => handleDeleteFile(fileId, 'job-posting')}
                             />
                         </Flex>
                     </Flex>
