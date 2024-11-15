@@ -104,3 +104,9 @@ __azurite_db*__.json
 .env.sandbox
 .env.local
 .env
+
+# macOS system files
+.DS_Store
+
+# Backup History files
+.history
