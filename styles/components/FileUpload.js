@@ -144,13 +144,35 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
     };
 
     return (
-        <Flex flexDir={"row"} width={'100%'} alignItems={"space-between"} mb={{ base: "2rem", md: "2rem" }}>
-            <Box width={{ base: "30rem", md: "32rem", lg: "38rem", xl:"29rem", "2xl": "42rem" }} height={{ base: "25rem", lg: "30rem", "2xl": "35rem" }}>
-                <Heading fontSize={{ base: "xxs", md: "xxs", xl: "16pt" }} padding={4}>
+
+        <Flex 
+            flexDir={"row"} 
+            width={'100%'} 
+            alignItems={"space-between"} 
+            mb={{ base: "2rem", md: "2rem" }} 
+        >
+            <Box 
+                width={{ base: "30rem", md: "32rem", lg: "38rem", xl:"29rem", "2xl": "42rem" }} 
+                height={{ base: "25rem",  lg: "30rem", "2xl": "35rem" }} 
+            >
+                <Flex
+                    flexDirection="column" 
+                    overflowX="hidden" 
+                    maxW="50rem"  
+                    mx="auto" 
+                    bg="brand.pureWhite" 
+                    p={6}
+                    borderWidth="1px"
+                    borderRadius="lg" 
+                    boxShadow="md"
+                >
+                <Heading 
+                    fontSize={{ base: "xxs", md: "xxs", xl: "16pt" }} 
+                    pb={4}
+                >
                     {title}
-                </Heading>
-                <Flex flexDirection="column" overflowX="hidden" maxW="50rem" mx="auto" bg="brand.pureWhite" p={6} borderWidth="1px" borderRadius="lg" boxShadow="md">
-                    <DragDrop
+                </Heading>                    
+                    <DragDrop 
                         id={fileType}
                         uppy={uppy.current}
                         width="100%"

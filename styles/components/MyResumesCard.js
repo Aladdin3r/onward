@@ -1,8 +1,61 @@
 import { Box, Text } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { supabase } from "@/lib/supabaseClient"; // Make sure to import your Supabase client
+import PDFCard from './PDFCard'; // Import PDFCard component
 
-export default function MyResumesCard({ uploadedFiles = [] }) { 
+export default function MyResumesCard() {
+    const [uploadedFiles, setUploadedFiles] = useState([]); // State to hold fetched files
 
+    useEffect(() => {
+        // Fetch files from the "job-postings" folder in the "onward-files" bucket
+        const fetchJobPostings = async () => {
+            const { data: fileList, error } = await supabase
+                .storage
+                .from("onward-resume") // Your bucket name
+                .list("uploads", { limit: 100 }); // Folder path and limit for the files to fetch
+
+            if (error) {
+                console.error("Error fetching job postings:", error);
+                return;
+            }
+
+            // Filter out unwanted files (e.g., hidden files, empty folders)
+            const filteredFileList = fileList.filter(file => !file.name.includes("emptyFolder") && !file.name.startsWith("."));
+
+            // Optionally, map the files to add more data, like a public URL and file size
+            const filesData = filteredFileList.map(file => ({
+                id: file.id,
+                name: file.name,
+                // If you want a public URL to the file
+                url: supabase.storage.from("onward-resume").getPublicUrl(`uploads/${file.name}`).publicURL,
+                size: file.size // Get file size for display
+            }));
+
+            // Set the files in state
+            setUploadedFiles(filesData);
+        };
+
+        fetchJobPostings(); // Call the function to fetch files
+    }, []); // Empty dependency array to fetch once when the component mounts
+
+    // Handle file deletion logic
+    const handleDeleteFile = async (fileName) => {
+        try {
+            const { error } = await supabase
+                .storage
+                .from("onward-resume")
+                .remove([`uploads/${fileName}`]); // Remove the file from the bucket
+
+            if (error) {
+                console.error("Error deleting file:", error);
+            } else {
+                // Remove the deleted file from the state
+                setUploadedFiles(prevFiles => prevFiles.filter(file => file.name !== fileName));
+            }
+        } catch (error) {
+            console.error("Error handling file deletion:", error);
+        }
+    };
 
     return (
         <Box 
@@ -21,15 +74,22 @@ export default function MyResumesCard({ uploadedFiles = [] }) {
                 fontSize={{ base: "xs", lg: "xxs", xl: "sm", "2xl":"md" }}
                 fontWeight="bold" 
                 mb={2}
-                >
-                    My Resumes:
-                </Text>
-                <Box>
-                {uploadedFiles.map((file) => (
-                    <Box key={file.id} display="flex" justifyContent="space-between">
-                        <Text>{file.name}</Text>
-                    </Box>
-                ))}
+            >
+                My Resumes:
+            </Text>
+            <Box>
+                {uploadedFiles.length === 0 ? (
+                    <Text>No resumes.</Text> // Message if no files are found
+                ) : (
+                    uploadedFiles.map((file) => (
+                        <PDFCard 
+                            key={file.id}
+                            title={file.name}
+                            size={`${(file.size / 1024).toFixed(2)} KB`} // Convert size to KB
+                            handleDeleteFile={handleDeleteFile} 
+                        />
+                    ))
+                )}
             </Box>
         </Box>
     );

@@ -16,9 +16,12 @@ import { useRouter } from 'next/router';
 import VideoPlayer from './VideoPlayer';
 import QuestionPractice from './QuestionPractice';
 import { Stop, Record, Pause } from '@phosphor-icons/react';
-import Transcriber from './Transcriber'
+import Transcriber from './Transcriber';
+import RecordCamera from './Camera';
+import { supabase } from '@/lib/supabaseClient';
+import { createClient } from '@supabase/supabase-js';
 
-export default function AnswerPractice({ videoSrc, thumbnail}) {
+export default function AnswerPractice({ videoSrc, thumbnail }) {
     const router = useRouter();
     const [showVideo, setShowVideo] = useState(false); // default is text
     const [activeButton, setActiveButton] = useState('text');
@@ -26,6 +29,8 @@ export default function AnswerPractice({ videoSrc, thumbnail}) {
     const [transcription, setTranscription] = useState('');
     const [editableTranscription, setEditableTranscription] = useState('');
     const [typedAnswer, setTypedAnswer] = useState('');
+    const [savedVideoUrl, setSavedVideoUrl] = useState(null); // Track saved video URL
+  
 
     const handleVoiceClick = () => {
         setShowVideo(true);
@@ -46,7 +51,20 @@ export default function AnswerPractice({ videoSrc, thumbnail}) {
     const handleEditableChange = (event) => {
         setEditableTranscription(event.target.value); // update editable transcription
     };
-
+    
+    const handleOverviewClick = async () => {
+        const videoURL = savedVideoUrl;
+        const transcriptionText = transcription;
+        debugger;
+        const transcriptionEntry = {text:transcriptionText, video_id:videoURL};
+        let {error} = await supabase.from("transcriptions").insert(transcriptionEntry);
+        if (error) {
+            throw error;
+        }
+        router.push({
+            pathname: '/practiceOverview',
+        });
+    };
 
     return (
         <>
@@ -179,15 +197,23 @@ export default function AnswerPractice({ videoSrc, thumbnail}) {
                         alignItems={"center"}
                         borderRadius={15}
                     >
-                        <VideoPlayer 
-                            videoSrc={videoSrc} 
-                            thumbnail="/images/smiling-girl.png" 
-                        />
-                        <Flex>
+                        <RecordCamera setSavedVideoUrl={setSavedVideoUrl} />
+                        {/* <Flex>
                             <Button><Record size={24} /></Button>
                             <Button><Stop size={24} /></Button>
                             <Button><Pause size={24} /></Button>
-                        </Flex>
+                        </Flex> */}
+                 <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"} boxShadow={"md"}
+                        onClick={handleOverviewClick}
+                        _hover={{
+                            bg: "white",
+                            color: "brand.blushPink",
+                            border: "1px",
+                            boxShadow:"md"
+                        }}
+                    > 
+                        Finish
+                    </Button>
                     </Flex>
                 )}
             </Flex>
