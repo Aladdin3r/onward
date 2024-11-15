@@ -2,8 +2,8 @@ import { Box, Text, VStack, Divider, HStack } from "@chakra-ui/react";
 
 const TranscriptionComponent = () => {
   return (
-    <Box mt={0} maxW={{base:"78vw", "2xl":"65vw"}} >
-    <Text fontWeight="semibold" fontSize="20px" mb={0} ml={1} zIndex={1} position="relative" maxW="100%">
+    <Box mt={0} width="100%">
+    <Text fontWeight="semibold" fontSize="20px" mb={0} ml={1} zIndex={1} position="relative" >
         Full Transcription
     </Text>
     <Box mt={2}  border="1px" borderColor="#E6EAF2" borderRadius="15" boxShadow="md">

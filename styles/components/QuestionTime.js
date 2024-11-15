@@ -29,6 +29,8 @@ export default function QuestionTime() {
                             fontSize={{ base: "xxs", md: "xxs", xl: "16pt" }} 
                             fontWeight="bold" 
                             textAlign="left"
+                            pb="1em"
+                            
                         >
                             Number of Questions
                         </Text>

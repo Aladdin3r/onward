@@ -44,18 +44,22 @@ export default function PracticeInterviewFilter() {
 
                 <div className={styles.page} style={{ position: "relative" }}>
                     <Flex 
-                        flexDirection={"column"} 
+                        // flexDirection={"column"} 
                         // height="100vh" 
-                        minH={{ base: "90vh", md: "100vh", xl: "78vh", "2xl":"85vh" }} 
-                        width={"100%"}
-                        maxW={{ base: "100%", md: "1200px", lg: "1920px" }} 
-                        mx="auto"
-                        flexGrow={1} 
+                        // minH={{ base: "90vh", md: "100vh", xl: "78vh", "2xl":"85vh" }} 
+                        // width={"100%"}
+                        // maxW={{ base: "100%", md: "1200px", lg: "1920px" }} 
+                        // mx="auto"
+                        // flexGrow={1} 
+                        flexDirection="column"
+                        height="86vh"
+                        width="100%"
                     >
                         <ProgressBar currentStep={2} />
 
                         {/* section for the question time & type cards */}
                         <Flex 
+                            mt="3em"
                             flexDirection={{ base: "column", xl: "row" }} 
                             justifyContent={"space-evenly"}
                             rowGap={5}
@@ -70,8 +74,10 @@ export default function PracticeInterviewFilter() {
                             justifyContent="space-between" 
                             // mt={{ base: "5rem", xl: "3rem", "2xl":"5rem"}} 
                             mt="auto"
+                            mb="20px"
                         >
-                            <Button bg={"brand.blushPink"} color={"white"} py={"1.5rem"} px={"4rem"} size={{ base: "xxs", "2xl":"sm"}} width={{ base: "1rem", "2xl":"10rem"}} height={{ base: "2rem", "2xl":"2.5rem"}}
+                            <Button bg={"brand.blushPink"} color={"white"} py={"1.5rem"} px={"5rem"} size="xs" width={{ base: "1rem", "2xl":"10rem"}} height={{ base: "2rem", "2xl":"2.5rem"}}
+                            // <Button bg={"brand.blushPink"} color={"white"} py={"1.5rem"} px={"4rem"} size={{ base: "xxs", "2xl":"sm"}} width={{ base: "1rem", "2xl":"10rem"}} height={{ base: "2rem", "2xl":"2.5rem"}}
                                 onClick={handleBackClick}
                                 _hover={{
                                     bg: "white",
@@ -82,7 +88,12 @@ export default function PracticeInterviewFilter() {
                             >
                                     Back
                                 </Button>
-                            <Button bg={"brand.blushPink"} color={"white"} py={"1.5rem"} px={"8rem"} size={{ base: "xxs", "2xl":"sm"}} width={{ base: "8rem", "2xl":"17rem"}} height={{ base: "2rem", "2xl":"2.5rem"}}
+                            <Button bg={"brand.blushPink"} color={"white"} py={"1.5rem"} px={"5rem"} size="xs" 
+                            width={{ base: "8rem", "2xl":"17rem"}} 
+                            height={{ base: "2rem", "2xl":"2.5rem"}}
+                            // width={{ base: "8rem", "2xl":"17rem"}} 
+                            // height={{ base: "2rem", "2xl":"2.5rem"}}
+                            // <Button bg={"brand.blushPink"} color={"white"} py={"1.5rem"} px={"8rem"} size={{ base: "xxs", "2xl":"sm"}} width={{ base: "8rem", "2xl":"17rem"}} height={{ base: "2rem", "2xl":"2.5rem"}}
                                 onClick={handleStartClick}
                                 _hover={{
                                     bg: "white",

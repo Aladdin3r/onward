@@ -61,6 +61,8 @@ typings/
 # dotenv environment variables file
 .env
 .env.test
+.env.local
+.env.sandbox
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -97,3 +99,8 @@ local.settings.json
 __blobstorage__
 __queuestorage__
 __azurite_db*__.json
+
+# env files
+.env.sandbox
+.env.local
+.env
