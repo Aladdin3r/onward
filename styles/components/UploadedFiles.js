@@ -3,6 +3,7 @@ import { FilePdf } from "@phosphor-icons/react";
 import PDFCard from "./PDFCard";
 
 export default function UploadedFiles({ files = [], handleDeleteFile }) {
+    console.log("files", files);
     return (
         <Flex flexDirection="column" mt={4}>
             <Text fontSize={'13pt'} fontWeight={'semibold'} mb={2}>Uploaded Files:</Text>

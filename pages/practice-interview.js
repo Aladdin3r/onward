@@ -4,19 +4,15 @@ import "@/styles/theme";
 import { Heading, Box, Flex, Button, Text } from "@chakra-ui/react";
 import ProgressBar from "@/styles/components/ProgressBar";
 import Footer from "@/styles/components/Footer";
-import { useRouter } from "next/router"; 
+import { useRouter } from "next/router";
 import Layout from "@/styles/components/Layout";
 import FileUpload from "@/styles/components/FileUpload";
+import { supabase } from '@/lib/supabaseClient';
 import { useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 
-// need to double check file upload & storing logic, it goes to uppy but
-// i think it needs to be converted to JSON object and stored in local storage
-
 export default function PracticeInterview() {
-    const [uploadedResumeFiles, setUploadedResumeFiles] = useState([]);
-    const [uploadedJobPostFiles, setUploadedJobPostFiles] = useState([]);
-
+    const [uploadedFiles, setUploadedFiles] = useState({ resumes: [], jobPosts: [] });
     const router = useRouter();
 
     const handleNextClick = (e) => {
@@ -24,81 +20,69 @@ export default function PracticeInterview() {
         router.push('/practice-interview-filter');
     };
 
-    const handleResumeUpload = async (file) => {
-        console.log("Resume file uploaded:", file);
-        const uniqueId = uuidv4(); 
-        const fileWithId = { id: uniqueId, name: file.name };
-    
-        setUploadedResumeFiles((prevFiles) => {
-           
-            if (!prevFiles.find((f) => f.name === file.name)) {
-                return [...prevFiles, fileWithId]; 
-            }
-            return prevFiles;
-        });
-        const extractedText = await extractDataFromFile(file);
-        console.log("Extracted Resume Text:", extractedText);
-    };
-
-    const handleJobPostUpload = async (file) => {
-        console.log("Job post file uploaded:", file);
-
-        const uniqueId = uuidv4();
-        const fileWithId = { id: uniqueId, name: file.name }; 
-    
-        setUploadedJobPostFiles((prevFiles) => {
-          
-            if (!prevFiles.find((f) => f.name === file.name)) {
-                return [...prevFiles, fileWithId]; 
-            }
-            return prevFiles; 
-        });
-
-        const extractedText = await extractDataFromFile(file); 
-        console.log("Extracted Job Posting Text:", extractedText);
-    };
-
-    const extractDataFromFile = async (file) => {
+    const handleFileUpload = async (file, type) => {
+        console.log(`${type} file uploaded:`, file);
         try {
-            const response = await fetch('/api/parse-pdf', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    file: {
-                        data: await file.arrayBuffer(),
-                        name: file.name,
-                    },
-                }),
-            });
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+            const bucketName = type === 'resume' ? 'onward-resume' : 'onward-job-posting';
+            const filePath = `uploads/${file.name}`; 
+            
+            // Upload to Supabase and get the URL
+            const { data, error } = await supabase.storage
+              .from(bucketName)
+              .upload(filePath, file, { upsert: true });
+        
+            if (error) {
+              console.error("Error uploading file:", error.message);
+              return;
             }
-            const result = await response.json();
-            return result.text; // return the extracted text
-        } catch (error) {
-            console.error("Error extracting data from file:", error);
+        
+            const publicURL = supabase.storage.from(bucketName).getPublicUrl(filePath).publicURL;
+            console.log(publicURL);  
+
+            setUploadedFiles((prevFiles) => {
+                const updatedFiles = { ...prevFiles };
+                const fileType = type === 'resume' ? 'resumes' : 'jobPosts';
+
+                updatedFiles[fileType] = [...updatedFiles[fileType], { id: filePath, url: publicURL }];
+                return updatedFiles;
+            });
+        } catch (err) {
+            console.error("Upload failed:", err.message);
         }
     };
+    
 
-    const handleDeleteFile = (fileName) => {
-        setUploadedFiles((prevFiles) => prevFiles.filter(file => file.name !== fileName));
+    const handleDeleteFile = async (fileId, type) => {
+        console.log("delete stuff");
+        const bucketName = type === 'resume' ? 'onward-resume' : 'onward-job-posting';
+        const filePath = `uploads/${fileId}`;
+        
+        try {
+            const { error } = await supabase.storage.from(bucketName).remove([filePath]);
+    
+            if (error) {
+                console.error("Error deleting file from Supabase:", error.message);
+                return;
+            }
+
+            console.log(`File ${fileId} deleted successfully from ${bucketName}`);
+    
+            // update the UI 
+            setUploadedFiles((prevFiles) => {
+                const updatedFiles = { ...prevFiles };
+                const fileType = type === 'resume' ? 'resumes' : 'jobPosts';
+                updatedFiles[fileType] = updatedFiles[fileType].filter((file) => file.id !== fileId);
+                return updatedFiles;
+            });
+        } catch (err) {
+            console.error("Error deleting file:", err.message);
+        }
     };
-
-    const handleDeleteResumeFile = (fileId) => {
-        setUploadedResumeFiles((prevFiles) => prevFiles.filter((f) => f.id !== fileId));
-    };
-
-    const handleDeleteJobPostFile = (fileId) => {
-        setUploadedJobPostFiles((prevFiles) => prevFiles.filter((f) => f.id !== fileId));
-    };
-
-    const [currentStep, setCurrentStep] = useState(0);
+        
 
     return (
         <>
-             <Head>
+            <Head>
                 <title>Practice Interview — Onward</title>
                 <meta name="description" content="Onward is an AI-powered personal interview coach designed to help nurses, particularly those new to the Canadian healthcare system, excel in job interviews." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -127,22 +111,27 @@ export default function PracticeInterview() {
                             <FileUpload 
                                 title="Upload Resume"
                                 fileType="resume"
-                                uploadedFiles={uploadedResumeFiles}
-                                setUploadedFiles={setUploadedResumeFiles}
-                                onFileUpload={handleResumeUpload}
+                                uploadedFiles={uploadedFiles?.resumes || []} 
+                                setUploadedFiles={(files) => setUploadedFiles(prev => ({ ...prev, resumes: files }))}
+                                onFileUpload={(file) => handleFileUpload(file, 'resume')}
                                 bucketName="onward-resume"
+                                // type="resume"
+                                // onDeleteFile={(fileId) => handleDeleteFile(fileId, 'resume')}
                             />
                             
                             {/* Job Posting upload */}
                             <FileUpload 
                                 title="Upload Job Posting"
                                 fileType="job-posting"
-                                uploadedFiles={uploadedJobPostFiles}
-                                setUploadedFiles={setUploadedJobPostFiles}
-                                onFileUpload={handleJobPostUpload}
+                                uploadedFiles={uploadedFiles?.jobPosts || []}
+                                setUploadedFiles={(files) => setUploadedFiles(prev => ({ ...prev, jobPosts: files }))}
+                                onFileUpload={(file) => handleFileUpload(file, 'job-posting')}
                                 bucketName="onward-job-posting"
+                                // type="jobPosts"
+                                // onDeleteFile={(fileId) => handleDeleteFile(fileId, 'job-posting')}
                             />
                         </Flex>
+
                     {/* next boutton */}
                     <Flex 
                             flexDirection={"row"} 
@@ -175,5 +164,5 @@ export default function PracticeInterview() {
                         </Flex>
             </Layout>
         </>
-    )
+    );
 }
