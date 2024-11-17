@@ -9,11 +9,18 @@ import Uppy from '@uppy/core';
 import { supabase } from '@/lib/supabaseClient';
 import { v4 as uuidv4 } from 'uuid';
 
-export default function FileUpload({ title, fileType, initialUploadedFiles, setUploadedFiles, onFileUpload, bucketName, handleFileSelect, selectedFiles, type }) {
-    const [uploadedFiles, setUploadedFilesState] = useState(initialUploadedFiles || []);
+export default function FileUpload({
+    title,
+    fileType,
+    initialUploadedFiles = [],
+    onFileUpload,
+    bucketName,
+    handleFileSelect,
+    selectedFiles,
+}) {
+    const [uploadedFiles, setUploadedFiles] = useState(initialUploadedFiles);
     const toast = useToast();
 
-    // create Uppy instance and pass necessary configurations
     const uppy = useRef(
         new Uppy({
             restrictions: {
@@ -23,12 +30,13 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
         })
     );
 
+    // Fetch uploaded files from Supabase
     useEffect(() => {
         const fetchUploadedFiles = async () => {
             const { data, error } = await supabase.storage
                 .from(bucketName)
                 .list('uploads/');
-            console.log("data", data);
+
             if (error) {
                 console.error('Error fetching files:', error.message);
                 return;
@@ -37,69 +45,63 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
             const files = data.map(file => ({
                 id: uuidv4(),
                 name: file.name,
-                size: file.metadata.size,
+                size: file.metadata?.size || 0,
             }));
-            setUploadedFilesState(files);
+            setUploadedFiles(files);
         };
 
         fetchUploadedFiles();
     }, [bucketName]);
 
+    // Handle file-added event
     useEffect(() => {
-        // attach file-added event listener to Uppy instance
         const handleFileAdded = async (file) => {
-            const isFileAlreadyUploaded = uploadedFiles.some((uploadedFile) => uploadedFile.name === file.name);
-            if (!isFileAlreadyUploaded) {
-                const newFile = { id: uuidv4(), name: file.name, size: file.size };
-
-                try {
-                    // upload file to Supabase
-                    const { data: uploadData, error: uploadError } = await supabase.storage
-                        .from(bucketName)
-                        .upload(`uploads/${file.name}`, file.data, {
-                            cacheControl: '3600',
-                            upsert: true,
-                        });
-
-                    if (uploadError) {
-                        throw new Error(uploadError.message);
-                    }
-
-                    // get the file's public URL
-                    const { publicURL, error: urlError } = await supabase.storage
-                        .from(bucketName)
-                        .getPublicUrl(`uploads/${file.name}`);
-
-                    if (urlError) {
-                        throw new Error(urlError.message);
-                    }
-
-                    const uploadedFileWithUrl = { ...newFile, url: publicURL };
-                    setUploadedFilesState(prevFiles => [...prevFiles, uploadedFileWithUrl]);
-                    onFileUpload(uploadedFileWithUrl);
-
-                    toast({
-                        title: 'Upload Successful.',
-                        description: `${file.name} has been uploaded.`,
-                        status: 'success',
-                        duration: 3000,
-                        isClosable: true,
-                    });
-                } catch (error) {
-                    console.error('Error uploading file:', error.message);
-                    toast({
-                        title: 'Upload Failed.',
-                        description: error.message,
-                        status: 'error',
-                        duration: 3000,
-                        isClosable: true,
-                    });
-                }
-            } else {
+            if (uploadedFiles.some((uploadedFile) => uploadedFile.name === file.name)) {
                 toast({
                     title: 'File Already Uploaded.',
                     description: `${file.name} has already been uploaded.`,
                     status: 'info',
+                    duration: 3000,
+                    isClosable: true,
+                });
+                return;
+            }
+
+            try {
+                // Upload file to Supabase
+                const { error: uploadError } = await supabase.storage
+                    .from(bucketName)
+                    .upload(`uploads/${file.name}`, file.data, {
+                        cacheControl: '3600',
+                        upsert: true,
+                    });
+
+                if (uploadError) throw new Error(uploadError.message);
+
+                // Get the file's public URL
+                const { publicURL, error: urlError } = await supabase.storage
+                    .from(bucketName)
+                    .getPublicUrl(`uploads/${file.name}`);
+
+                if (urlError) throw new Error(urlError.message);
+
+                const newFile = { id: uuidv4(), name: file.name, size: file.size, url: publicURL };
+                setUploadedFiles((prevFiles) => [...prevFiles, newFile]);
+                onFileUpload(newFile);
+
+                toast({
+                    title: 'Upload Successful.',
+                    description: `${file.name} has been uploaded.`,
+                    status: 'success',
+                    duration: 3000,
+                    isClosable: true,
+                });
+            } catch (error) {
+                console.error('Error uploading file:', error.message);
+                toast({
+                    title: 'Upload Failed.',
+                    description: error.message,
+                    status: 'error',
                     duration: 3000,
                     isClosable: true,
                 });
@@ -108,70 +110,70 @@ export default function FileUpload({ title, fileType, initialUploadedFiles, setU
 
         uppy.current.on('file-added', handleFileAdded);
 
-        // cleanup function 
         return () => {
             uppy.current.off('file-added', handleFileAdded);
         };
-    }, [uploadedFiles, bucketName, toast, onFileUpload]);
+    }, [uploadedFiles, bucketName, onFileUpload, toast]);
 
-    // handle file deletion
+    // Handle file deletion
     const handleDeleteFile = async (fileName) => {
-        const { error: deleteError } = await supabase.storage
-            .from(bucketName)
-            .remove([`uploads/${fileName}`]);
+        try {
+            const { error } = await supabase.storage
+                .from(bucketName)
+                .remove([`uploads/${fileName}`]);
 
-        if (deleteError) {
-            console.error('Error deleting file:', deleteError.message);
+            if (error) throw new Error(error.message);
+
+            setUploadedFiles((prevFiles) => prevFiles.filter(file => file.name !== fileName));
+
+            toast({
+                title: 'Delete Successful.',
+                description: `${fileName} has been deleted.`,
+                status: 'success',
+                duration: 3000,
+                isClosable: true,
+            });
+        } catch (error) {
+            console.error('Error deleting file:', error.message);
             toast({
                 title: 'Failed To Delete.',
-                description: deleteError.message,
+                description: error.message,
                 status: 'error',
                 duration: 3000,
                 isClosable: true,
             });
-            return;
         }
-
-        toast({
-            title: 'Delete successful.',
-            description: `${fileName} has been deleted.`,
-            status: 'success',
-            duration: 3000,
-            isClosable: true,
-        });
-
-        setUploadedFilesState((prevFiles) => prevFiles.filter(file => file.name !== fileName));
     };
 
     return (
         <Flex 
-            flexDir={"row"} 
-            width={'100%'} 
-            alignItems={"space-between"} 
-            mb={{ base: "2rem", md: "2rem" }} 
+            flexDir="row" 
+            width="100%" 
+            alignItems="space-between" 
+            mb="2rem"
         >
             <Box 
-                width={{ base: "30rem", md: "32rem", lg: "38rem", xl:"29rem", "2xl": "42rem" }} 
-                height={{ base: "25rem",  lg: "30rem", "2xl": "35rem" }} 
+                width={{ base: "30rem", lg: "38rem", "2xl": "42rem" }}
+                height={{ base: "25rem", "2xl": "35rem" }}
             >
                 <Flex
-                    flexDirection="column" 
-                    overflowX="hidden" 
-                    maxW="50rem"  
-                    mx="auto" 
-                    bg="brand.pureWhite" 
+                    flexDirection="column"
+                    overflowX="hidden"
+                    maxW="50rem"
+                    mx="auto"
+                    bg="brand.pureWhite"
                     p={6}
                     borderWidth="1px"
-                    borderRadius="lg" 
+                    borderRadius="lg"
                     boxShadow="md"
                 >
-                <Heading 
-                    fontSize={{ base: "xxs", md: "xxs", xl: "16pt" }} 
-                    pb={4}
-                >
-                    {title}
-                </Heading>                    
-                    <DragDrop 
+                    <Heading 
+                        fontSize={{ base: "xxs", xl: "16pt" }} 
+                        pb={4}
+                    >
+                        {title}
+                    </Heading>
+                    <DragDrop
                         id={fileType}
                         uppy={uppy.current}
                         width="100%"
