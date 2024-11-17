@@ -27,20 +27,16 @@ export default function PracticeInterviewFilter() {
     const [error, setError] = useState("");
 
         const handleStartClick  = () => {
-            if (selectedQuestions.length === 0) {
-                alert("Please select at least one type of question.");
-            } else {
-                setError("");
-                router.push({
-                    pathname: '/practice-interview-questions',
-                });
-            }
+            router.push({
+                pathname: '/practice-interview-questions',
+            });
         };
-             const handleBackClick = () => {
-        router.push({
-            pathname: '/practice-interview',
-        });
-    };
+        
+        const handleBackClick = () => {
+            router.push({
+                pathname: '/practice-interview',
+            });
+        };
 
     // get slected file url
     const getPublicURLs = async (selectedFiles) => {
