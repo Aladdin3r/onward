@@ -21,10 +21,18 @@ export default function PracticeInterview() {
     ];
 
     const handleNextClick = async () => {
+        // save file selection to local storage
         const storedFiles = JSON.stringify(selectedFiles);
         localStorage.setItem("selectedFiles", storedFiles);
         
+       // ensure user select a resume and job post file
+        if (!selectedFiles.resumes.length || !selectedFiles.jobPosts.length) {
+            alert("Please select one resume and one job post to get a tailored analysis for you!");
+            return; // Prevent navigation
+        }
+
         router.push("/practice-interview-filter");
+        
     };
 
     // handle file selection
