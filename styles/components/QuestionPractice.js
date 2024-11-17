@@ -110,19 +110,12 @@ export default function QuestionPractice({ showArrows, borderTopRadius, borderBo
                         display="flex" 
                         alignItems="center" 
                         justifyContent="flex-end" 
-                        paddingRight="16px">
+                        paddingRight="16px"
+                        borderBottomRadius="15px"
+                        >
                             <Button bg="#E6EAF2" width="172px" height="50px" borderRadius="5px">Next</Button>
                     </Box>
                 </Card>
-
-                {/* conditionally show the arrow buttons so can be hidden in answer page */}
-                {showArrows && (
-                    <Flex alignItems={"center"} py={5}>
-                        <Button onClick={handlePreviousQ} backgroundColor={"transparent"} size={"sm"}>{`<`}</Button>
-                        <Text mx={"3rem"}>{`${currentQuestionIndex + 1}/${totalQuestions}`}</Text>
-                        <Button onClick={handleNextQ} backgroundColor={"transparent"} size={"sm"}>{`>`}</Button>
-                    </Flex>
-                )}
             </Flex>
         </>
     );
