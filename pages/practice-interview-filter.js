@@ -14,11 +14,54 @@ import UploadFile from "@/styles/components/FileUpload";
 import Layout from "@/styles/components/Layout";
 import QuestionType from "@/styles/components/QuestionType";
 import QuestionTime from "@/styles/components/QuestionTime";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabaseClient";
 
 // right now using drop down for question number and length of interview
 
 export default function PracticeInterviewFilter() {
     const router = useRouter();
+    const [selectedFiles, setSelectedFiles] = useState({ resumes: [], jobPosts: [] });
+    const [selectedFilesWithURLs, setSelectedFilesWithURLs] = useState({ resumes: [], jobPosts: [] });
+
+    useEffect(() => {
+        const fetchSelectedFiles = async () => {
+            const selectedFiles = JSON.parse(localStorage.getItem("selectedFiles"));
+            if (!selectedFiles) {
+                console.log("No selected files found in localStorage.");
+                return;
+            }
+
+            const fetchPublicURLs = async (fileIds, bucketName) => {
+                const publicURLs = [];
+                for (const fileId of fileIds) {
+                    // Remove 'uploads/' prefix if the fileId already includes it
+                    const filePath = fileId.startsWith("uploads/") ? fileId : `uploads/${fileId}`;
+                    const { publicURL, error } = supabase
+                        .storage
+                        .from(bucketName)
+                        .getPublicUrl(filePath);
+
+                    if (error) {
+                        console.error(`Error fetching public URL for ${filePath}:`, error.message);
+                    } else {
+                        publicURLs.push(publicURL);
+                    }
+                }
+                return publicURLs;
+            };
+
+            const resumes = await fetchPublicURLs(selectedFiles.resumes, "onward-resume");
+            const jobPosts = await fetchPublicURLs(selectedFiles.jobPosts, "onward-job-posting");
+
+            console.log("Resumes Public URLs:", resumes);
+            console.log("Job Posts Public URLs:", jobPosts);
+        };
+
+        fetchSelectedFiles();
+    }, []);
+    
+    console.log("Selected Files with URLs:", selectedFilesWithURLs);
 
         const handleStartClick  = () => {
         router.push({

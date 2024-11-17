@@ -1,22 +1,26 @@
-import { Box, Flex, Image, Text, CloseButton } from '@chakra-ui/react'
+import { Flex, Box, Text, CloseButton, Image } from "@chakra-ui/react";
 
-export default function PDFCard({ title, size, handleDeleteFile}) {
-  
-    return (
-        <Flex p={4} w="100%" h="65px" bg="brand.blueberryCreme" borderRadius="md" borderWidth="1px" alignItems="center">
+export default function PDFCard({ title, size, isSelected, handleDeleteFile, handleFileSelect, file, type }) {
+  return (
+      <Flex 
+        p={4} w="100%" h="65px" 
+        borderRadius="md" borderWidth="1px" 
+        alignItems="center" 
+        bgColor={isSelected ? "brand.blushPink" : "brand.blueberryCreme"}
+      >
           <Box>
-            <Image src="/images/PDF-icon.svg" alt="PDF Icon" width="32px" style={{ marginRight: '8px' }} />
+              <Image src="/images/PDF-icon.svg" alt="PDF Icon" width="32px" style={{ marginRight: '8px' }} />
           </Box>
           <Box>
-            <Text fontSize="12pt" flex="1">{title}</Text>
-            <Text fontSize="12pt" color="gray.500">{size}</Text>
+              <Text fontSize="12pt" flex="1">{title}</Text>
+              <Text fontSize="12pt" color="gray.500">{size}</Text>
           </Box>
           <Box alignSelf={"flex-start"} ml="auto">
-            <CloseButton 
-              aria-label="Delete file" 
-              size="sm" 
-              onClick={() => handleDeleteFile(title)} />
+              <CloseButton
+                  aria-label="Delete file"
+                  size="sm"
+                  onClick={() => handleDeleteFile(title)} />
           </Box>
-        </Flex>
-    )
- }
+      </Flex>
+  )
+}
