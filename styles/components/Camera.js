@@ -177,13 +177,14 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
   };
 
   return (
-    <div style={{ textAlign: "center", padding: "2em", width: "100%", maxWidth: "600px" }}>
+    <div style={{ textAlign: "center", padding: "2em", width: "100%", maxWidth: "100%" }}>
       <div
         style={{
           position: "relative",
-          width: "100%",
-          maxWidth: "600px",
-          height: "400px",
+          width: "80%",
+          maxWidth: "1000px",
+          height: "calc(100vw * 9 / 16)",
+          maxHeight: "600px",
           margin: "0 auto",
           backgroundColor: "#f0f0f0",
           overflow: "hidden",
@@ -248,3 +249,4 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
     </div>
   );
 }
+
