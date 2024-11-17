@@ -23,12 +23,19 @@ export default function PracticeInterviewFilter() {
     const router = useRouter();
     const [selectedFiles, setSelectedFiles] = useState({ resumes: [], jobPosts: [] });
     const [fileURLs, setFileURLs] = useState({ resumes: [], jobPosts: [] });
+    const [selectedQuestions, setSelectedQuestions] = useState([]);
+    const [error, setError] = useState("");
 
         const handleStartClick  = () => {
-        router.push({
-            pathname: '/practice-interview-questions',
-        });
-    };
+            if (selectedQuestions.length === 0) {
+                alert("Please select at least one type of question.");
+            } else {
+                setError("");
+                router.push({
+                    pathname: '/practice-interview-questions',
+                });
+            }
+        };
              const handleBackClick = () => {
         router.push({
             pathname: '/practice-interview',

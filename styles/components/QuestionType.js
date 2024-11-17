@@ -10,7 +10,7 @@ import {
     CardFooter
 } from '@chakra-ui/react'
 
-export default function QuestionType() {
+export default function QuestionType({ selectedQuestions, setSelectedQuestions }) {
     return(
         <>
         <Card 
@@ -28,38 +28,44 @@ export default function QuestionType() {
                     >
                         Type of Questions
                     </Text>
-                    <Flex 
-                        direction={{ base: "row"}}
-                        padding={4}
-                        gap={4} 
-                        justify={"center"}
+                    <CheckboxGroup
+                        value={selectedQuestions}
+                        onChange={(values) => setSelectedQuestions(values)}
                     >
-                        <Box flex="1" >
-                            <Checkbox size={"lg"} my={3}>
-                                <Text fontSize={{base: "xxxs", "2xl":"xs"}}>Behavioural Questions</Text>
-                            </Checkbox>
-                            <Checkbox size={"lg"} my={3}>
-                                <Text fontSize={{base: "xxxs", "2xl":"xs"}}>Situational Questions</Text>
-                            </Checkbox>
-                            <Checkbox size={"lg"} my={3}>
-                                <Text fontSize={{base: "xxxs", "2xl":"xs"}}>Technical Questions</Text>
-                            </Checkbox>
-                            <Checkbox size={"lg"} my={3}>
-                                <Text fontSize={{base: "xxxs", "2xl":"xs"}}>Competency Questions</Text>
-                            </Checkbox>
-                        </Box>
-                        <Box flex="1">
-                            <Checkbox size={"lg"} my={3}>
-                                <Text fontSize={{base: "xxxs", "2xl":"xs"}}>Cultural Questions</Text>
-                            </Checkbox>
-                            <Checkbox size={"lg"} my={3}>
-                                <Text fontSize={{base: "xxxs", "2xl":"xs"}}>Career Goals Questions</Text>
-                            </Checkbox>
-                            <Checkbox size={"lg"} my={3}>
-                                <Text fontSize={{base: "xxxs", "2xl":"xs"}}>Legal / Regulation Questions</Text>
-                            </Checkbox>
-                        </Box>
-                    </Flex>
+                        <Flex 
+                            direction={{ base: "row"}}
+                            padding={4}
+                            gap={4} 
+                            justify={"center"}
+                        >
+                            <Box flex="1" >
+                                <Checkbox size={"lg"} my={3}>
+                                    <Text fontSize={{base: "xxxs", "2xl":"xs"}}>Behavioural Questions</Text>
+                                </Checkbox>
+                                <Checkbox size={"lg"} my={3}>
+                                    <Text fontSize={{base: "xxxs", "2xl":"xs"}}>Situational Questions</Text>
+                                </Checkbox>
+                                <Checkbox size={"lg"} my={3}>
+                                    <Text fontSize={{base: "xxxs", "2xl":"xs"}}>Technical Questions</Text>
+                                </Checkbox>
+                                <Checkbox size={"lg"} my={3}>
+                                    <Text fontSize={{base: "xxxs", "2xl":"xs"}}>Competency Questions</Text>
+                                </Checkbox>
+                            </Box>
+                            <Box flex="1">
+                                <Checkbox size={"lg"} my={3}>
+                                    <Text fontSize={{base: "xxxs", "2xl":"xs"}}>Cultural Questions</Text>
+                                </Checkbox>
+                                <Checkbox size={"lg"} my={3}>
+                                    <Text fontSize={{base: "xxxs", "2xl":"xs"}}>Career Goals Questions</Text>
+                                </Checkbox>
+                                <Checkbox size={"lg"} my={3}>
+                                    <Text fontSize={{base: "xxxs", "2xl":"xs"}}>Legal / Regulation Questions</Text>
+                                </Checkbox>
+                            </Box>
+                        </Flex>
+                    </CheckboxGroup>
+                    
                 </Flex>
             </CardBody>
         </Card>
