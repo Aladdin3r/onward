@@ -31,8 +31,11 @@ export default function Home() {
             minH="100vh"
 
         >
-            {/* Hero Section */}
+            {/* Navigation */}
+
             <TopNav />
+
+            {/* Content */}
 
             <Flex
                 p={3}
@@ -43,6 +46,9 @@ export default function Home() {
                 justifyContent="space-between"
                 gap="2rem"
             >
+
+                {/* Hero Section */}
+
                 <Flex flexDirection="column" zIndex={1} ml="20">
                     <Heading
                         fontFamily="heading"
@@ -84,53 +90,285 @@ export default function Home() {
 
                 </Flex>
 
-                <Box width="95%" >
+                <Box width="100%" flex align="right">
                     <Image
                         src="/images/ipad-nurse.png"
                         alt="IPad Nurse"
-                        width="100%"
+                        width="95%"
                         height="auto"
                         objectFit="cover"
                         ml={-15}
+                        pr={45}
                     />
                 </Box>
             </Flex>
 
-
             {/* What We Offer Section */}
-            <Box p={40} textAlign="center" borderRadius="md" boxShadow="lg" maxW="90%" mx="auto" bg={"white"} mt={-3}>
-                <Heading fontFamily="heading" fontSize="5xl" mb={20} mt={-20}>What We Offer</Heading>
-                <Flex justify="center" gap={20} mb={30}>
-                    <Stack
-                        width="300px"
-                        height="300px"
-                        borderRadius="md"
-                        boxShadow={`0 4px 20px rgba(51, 82, 207, 0.5)`} // Custom shadow color
-                        p={6}
-                        textAlign="center"
-                        alignItems="center"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M223.68,66.15,135.68,18h0a15.88,15.88,0,0,0-15.36,0l-88,48.17a16,16,0,0,0-8.32,14v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,223.68,66.15ZM128,32h0l80.34,44L128,120,47.66,76ZM40,90l80,43.78v85.79L40,175.82Zm96,129.57V133.82L216,90v85.78Z"></path></svg>
-                        <Heading width="80%" fontFamily="heading" fontSize="xl" mb={4}>Personalized Coaching for Your Success</Heading>
-                        <Text fontFamily="body">
-                            Receive AI coaching sessions tailored to your unique needs.
-                        </Text>
-                    </Stack>
-                    <Stack width="300px" borderRadius="md" boxShadow={`0 4px 20px rgba(51, 82, 207, 0.5)`}
-                        p={6} textAlign="center" alignItems="center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M223.68,66.15,135.68,18h0a15.88,15.88,0,0,0-15.36,0l-88,48.17a16,16,0,0,0-8.32,14v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,223.68,66.15ZM128,32h0l80.34,44L128,120,47.66,76ZM40,90l80,43.78v85.79L40,175.82Zm96,129.57V133.82L216,90v85.78Z"></path></svg>
-                        <Heading width="80%" fontFamily="heading" fontSize="xl" mb={4}>Mock Interviews to Build Your Confidence</Heading>
-                        <Text fontFamily="body">
-                            Participate in realistic mock interviews to refine your skills.
-                        </Text>
-                    </Stack>
-                    <Stack width="300px" borderRadius="md" boxShadow={`0 4px 20px rgba(51, 82, 207, 0.5)`} p={6} textAlign="center" alignItems="center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M223.68,66.15,135.68,18h0a15.88,15.88,0,0,0-15.36,0l-88,48.17a16,16,0,0,0-8.32,14v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,223.68,66.15ZM128,32h0l80.34,44L128,120,47.66,76ZM40,90l80,43.78v85.79L40,175.82Zm96,129.57V133.82L216,90v85.78Z"></path></svg>
-                        <Heading width="80%" fontFamily="heading" fontSize="xl" mb={4}>Performance Feedback for Your Empowerment</Heading>
-                        <Text fontFamily="body">
-                            Receive personalized feedback to refine your responses and improve your performance.
-                        </Text>
-                    </Stack>
+
+            <Box p={40} textAlign="center" borderRadius="md" maxW="90%" mx="auto" bg={"white"} padding={0} mt={-3}>
+                <Heading fontFamily="heading" fontSize="5xl" mb={20} align="left" pt={100} pr={100} pl={100}>
+                    <Text as="span" color="black">Empowering </Text>
+                    <Text as="span" color="pink.500">immigrant </Text>
+                    <Text as="span" color="pink.500">nurses </Text>
+                    <Text color="black">to achieve job success with AI-driven</Text>
+                    <Text color="black">interview coaching.</Text>
+                </Heading>
+
+                <Box width="100%" align="right" pr={100}>
+                    <Image
+                        src="/images/landing-page-nurses-together.png"
+                        alt="Nurses Together"
+                        width="45%"
+                        height="auto"
+                        objectFit="cover"
+                        align="right"
+                    />
+                </Box>
+                
+
+                <Box bg="pink.500" maxW="100%" h={300} color="#FFFFFF" display="flex" alignItems="center" justifyContent="center">
+                    <Text 
+                        align="center"
+                        fontFamily="body"
+                        maxW="75%"
+                        fontSize="md">
+                            <Text fontWeight="bold" as="span">Onward</Text> 
+                                is an AI-powered personal interview coach specifically designed to help nurses entering the Canadian healthcare system. We help nurses excel in job interviews and effectively showcase their qualifications.
+                            </Text>
+                </Box>
+
+                <Flex justify="center" gap={20} mb={30} direction="column">
+
+                    {/* Upload Resume and Job Posting */}
+
+                    <Flex position="relative" alignItems="left" justifyContent="left" p={10}>
+                        <Stack
+                            width="1070px"
+                            height="448px"
+                            borderRadius="md"
+                            bg="#CBD5FF"
+                            p={6}
+                            alignItems="center"
+                            justifyContent="center"
+                            position="relative"
+                            zIndex={1}
+                        >
+                            <Heading
+                                width="80%"
+                                fontFamily="heading"
+                                fontSize="2xl"
+                                textAlign="left"
+                                maxW="80%"
+                            >
+                                UPLOAD RESUME <br/>& JOB POSTING
+                            </Heading>
+                            <Text
+                                fontFamily="body"
+                                fontSize="sm"
+                                textAlign="left"
+                                maxW="80%"
+                            >
+                                Upload personal resumes and job postings to prepare for specific interviews. This feature helps you customize your practice based on the role you’re applying for, as well as allows you to keep your application materials organized and accessible whenever you need them.
+                            </Text>
+                        </Stack>
+                        <Box
+                            position="absolute"
+                            top="200"
+                            right="10"
+                            zIndex={2}
+                            width="100%"
+                            align="right"
+                        >
+                            <Image
+                            src="/images/upload-resume-job-posting.png"
+                            alt="Nurses Together"
+                            height="auto"
+                            objectFit="cover"
+                            width="40%"
+                            />
+                        </Box>
+                    </Flex>
+
+                    {/* Receive tailored interview questions */}
+
+                    <Flex position="relative" alignItems="right" justifyContent="right" p={5}>
+                        <Stack
+                            width="1070px"
+                            height="448px"
+                            borderRadius="md"
+                            bg="#CBD5FF"
+                            p={6}
+                            alignItems="center"
+                            justifyContent="center"
+                            position="relative"
+                            zIndex={1}
+                        >
+                            <Heading
+                                width="80%"
+                                fontFamily="heading"
+                                fontSize="2xl"
+                                textAlign="left"
+                                maxW="80%"
+                            >
+                                RECEIVE TAILORED  <br/>INTERVIEW QUESTIONS
+                            </Heading>
+                            <Text
+                                fontFamily="body"
+                                fontSize="sm"
+                                textAlign="left"
+                                maxW="80%"
+                            >
+                                Tailoring the experience to your needs such as selecting the type of questions and the number of questions, allowing you to focus on the areas where you need the most practice.
+                            </Text>
+                        </Stack>
+                        <Box
+                            position="absolute"
+                            top="250"
+                            left="10"
+                            zIndex={3}
+                            width="100%"
+                            align="left"
+                        >
+                            <Image
+                            src="/images/tailored-interview-question-2.png"
+                            alt="Nurses Together"
+                            height="auto"
+                            objectFit="cover"
+                            width="40%"
+                            />
+                        </Box>
+                        <Box
+                            position="absolute"
+                            top="150"
+                            left="5"
+                            zIndex={2}
+                            width="100%"
+                            align="left"
+                        >
+                            <Image
+                            src="/images/tailored-interview-question-1.png"
+                            alt="Nurses Together"
+                            height="auto"
+                            objectFit="cover"
+                            width="35%"
+                            />
+                        </Box>
+                    </Flex>
+
+                    {/* Practice with text or speech */}
+
+                    <Flex position="relative" alignItems="left" justifyContent="left" p={10}>
+                        <Stack
+                            width="1070px"
+                            height="448px"
+                            borderRadius="md"
+                            bg="#CBD5FF"
+                            p={6}
+                            alignItems="center"
+                            justifyContent="center"
+                            position="relative"
+                            zIndex={1}
+                        >
+                            <Heading
+                                width="80%"
+                                fontFamily="heading"
+                                fontSize="2xl"
+                                textAlign="left"
+                                maxW="80%"
+                            >
+                                PRACTICE WITH  <br/>TEXT OR SPEECH
+                            </Heading>
+                            <Text
+                                fontFamily="body"
+                                fontSize="sm"
+                                textAlign="left"
+                                maxW="80%"
+                            >
+                                If you prefer writing, you can type your responses to reflect on your wording and clarity. If you want to work on your speaking skills, you can select the speech option and get real-time feedback on your pronunciation and delivery.
+                            </Text>
+                        </Stack>
+                        <Box
+                            position="absolute"
+                            top="50"
+                            right="100"
+                            zIndex={3}
+                            width="100%"
+                            align="right"
+                        >
+                            <Image
+                            src="/images/practice-with-text-or-speech-video-camera.png"
+                            alt="Nurses Together"
+                            height="auto"
+                            objectFit="cover"
+                            width="25%"
+                            />
+                        </Box>
+                        <Box
+                            position="absolute"
+                            top="300"
+                            right="10"
+                            zIndex={2}
+                            width="100%"
+                            align="right"
+                        >
+                            <Image
+                            src="/images/practice-with-text-or-speech-text.png"
+                            alt="Nurses Together"
+                            height="auto"
+                            objectFit="cover"
+                            width="43%"
+                            />
+                        </Box>
+                    </Flex>
+
+                    {/* get instant feedback */}
+
+                    <Flex position="relative" alignItems="right" justifyContent="right" p={10}>
+                        <Stack
+                            width="1070px"
+                            height="448px"
+                            borderRadius="md"
+                            bg="#CBD5FF"
+                            p={6}
+                            alignItems="center"
+                            justifyContent="center"
+                            position="relative"
+                            zIndex={1}
+                        >
+                            <Heading
+                                width="80%"
+                                fontFamily="heading"
+                                fontSize="2xl"
+                                textAlign="left"
+                                maxW="80%"
+                            >
+                                GET INSTANT FEEDBACK
+                            </Heading>
+                            <Text
+                                fontFamily="body"
+                                fontSize="sm"
+                                textAlign="left"
+                                maxW="80%"
+                            >
+                                Receive constructive feedback on your interview performance. Our AI analyzes your responses and provides insights to help you improve for a more prepared and self-assured approach to real interviews.
+                            </Text>
+                        </Stack>
+                        <Box
+                            position="absolute"
+                            left="10"
+                            zIndex={2}
+                            width="100%"
+                            align="left"
+                        >
+                            <Image
+                            src="/images/get-instant-feedback.png"
+                            alt="Nurses Together"
+                            height="auto"
+                            objectFit="cover"
+                            width="35%"
+                            />
+                        </Box>
+                    </Flex>
                 </Flex>
             </Box>
 
