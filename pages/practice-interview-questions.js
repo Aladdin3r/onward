@@ -119,6 +119,7 @@ import Layout from "@/styles/components/Layout";
 import QuestionPractice from "@/styles/components/QuestionPractice";
 import VideoPlayer from '@/styles/components/VideoPlayer'
 import LayoutSim from "@/styles/components/LayoutSim";
+import { Image } from "@chakra-ui/react";
 
 export default function PracticeInterviewQuestion() {
     const router = useRouter();
@@ -157,11 +158,39 @@ export default function PracticeInterviewQuestion() {
                     width="100%"
                 >
                     {/* Top Container */}
+                    <Flex 
+                        display="flex"
+                        alignItems="center" 
+                        justifyContent="center"
+                        direction="column"
+                        gap="10px"
+                    >
+                        <Image
+                            src="/images/practice-question-icon.png"
+                            alt="Icon"
+                            height="auto"
+                            objectFit="cover"
+                            width="10%"
+                            display="flex"
+                        alignItems="center" 
+                        justifyContent="center"
+                            />
+                        <Text fontSize="sm" textAlign="center">Customize your practice! <br/> Choose how many questions you’d like to answer and select the types that best fit your focus areas:  </Text>
+                    </Flex>
                     <Flex
                         flex="1"
                         alignItems="center"
                         justifyContent="center"
+                        direction="column"
+                        gap="5"
                     >
+                        <Box>
+                            <QuestionPractice
+                                showArrows={"true"}
+                                borderRadius={"15"}
+                                questionWidth={"80%"}
+                            />
+                        </Box>
                         <Box>
                             <QuestionPractice
                                 showArrows={"true"}
