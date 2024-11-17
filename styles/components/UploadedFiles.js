@@ -24,7 +24,7 @@ export default function UploadedFiles({ files = [], selectedFiles = [], handleDe
                                 title={file.name}
                                 size={`${(file.size / 1024).toFixed(1)} KB`}
                                 handleDeleteFile={handleDeleteFile}
-                                isSelected={selectedFiles.includes(file.id)}
+                                isSelected={selectedFiles.some((item) => item.id === file.id)}
                             />
                         </Flex>
                     ))}

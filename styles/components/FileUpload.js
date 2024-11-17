@@ -148,7 +148,7 @@ export default function FileUpload({
     return (
         <Flex 
             flexDir="row" 
-            width="100%" 
+            width="45%" 
             alignItems="space-between" 
             mb="2rem"
         >
@@ -177,7 +177,7 @@ export default function FileUpload({
                         id={fileType}
                         uppy={uppy.current}
                         width="100%"
-                        height="9rem"
+                        height="10rem"
                         locale={{
                             strings: {
                                 dropHereOr: 'Drop file here or %{browse}',
