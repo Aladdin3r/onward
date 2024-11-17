@@ -22,46 +22,7 @@ import { supabase } from "@/lib/supabaseClient";
 export default function PracticeInterviewFilter() {
     const router = useRouter();
     const [selectedFiles, setSelectedFiles] = useState({ resumes: [], jobPosts: [] });
-    const [selectedFilesWithURLs, setSelectedFilesWithURLs] = useState({ resumes: [], jobPosts: [] });
-
-    useEffect(() => {
-        const fetchSelectedFiles = async () => {
-            const selectedFiles = JSON.parse(localStorage.getItem("selectedFiles"));
-            if (!selectedFiles) {
-                console.log("No selected files found in localStorage.");
-                return;
-            }
-
-            const fetchPublicURLs = async (fileIds, bucketName) => {
-                const publicURLs = [];
-                for (const fileId of fileIds) {
-                    // Remove 'uploads/' prefix if the fileId already includes it
-                    const filePath = fileId.startsWith("uploads/") ? fileId : `uploads/${fileId}`;
-                    const { publicURL, error } = supabase
-                        .storage
-                        .from(bucketName)
-                        .getPublicUrl(filePath);
-
-                    if (error) {
-                        console.error(`Error fetching public URL for ${filePath}:`, error.message);
-                    } else {
-                        publicURLs.push(publicURL);
-                    }
-                }
-                return publicURLs;
-            };
-
-            const resumes = await fetchPublicURLs(selectedFiles.resumes, "onward-resume");
-            const jobPosts = await fetchPublicURLs(selectedFiles.jobPosts, "onward-job-posting");
-
-            console.log("Resumes Public URLs:", resumes);
-            console.log("Job Posts Public URLs:", jobPosts);
-        };
-
-        fetchSelectedFiles();
-    }, []);
-    
-    console.log("Selected Files with URLs:", selectedFilesWithURLs);
+    const [fileURLs, setFileURLs] = useState({ resumes: [], jobPosts: [] });
 
         const handleStartClick  = () => {
         router.push({
@@ -73,6 +34,68 @@ export default function PracticeInterviewFilter() {
             pathname: '/practice-interview',
         });
     };
+
+    // get slected file url
+    const getPublicURLs = async (selectedFiles) => {
+        try {
+            const selectedFileURLs = { resumes: [], jobPosts: [] };
+    
+            for (const type in selectedFiles) {
+                const bucketName = type === "resumes" ? "onward-resume" : "onward-job-posting";
+                const selectedFileArray = selectedFiles[type];
+    
+                for (const file of selectedFileArray) {
+                    const filePath = `uploads/${file.name}`;
+                    console.log(`Fetching public URL for file: ${filePath} in bucket: ${bucketName}`);
+    
+                    // Use the correct destructuring approach
+                    const { data, error } = supabase
+                        .storage
+                        .from(bucketName)
+                        .getPublicUrl(filePath);
+    
+                    if (error) {
+                        console.error(`Error fetching public URL for ${file.name}:`, error);
+                    } else if (data) {
+                        console.log(`Fetched public URL for ${file.name}: ${data.publicUrl}`);
+                        selectedFileURLs[type].push({
+                            name: file.name,
+                            url: data.publicUrl,
+                        });
+                    }
+                }
+            }
+    
+            console.log("Final Selected File URLs:", selectedFileURLs);
+            return selectedFileURLs;
+        } catch (error) {
+            console.error("Error fetching public URLs:", error);
+        }
+    };
+
+    // Fetch URLs when the component mounts
+    useEffect(() => {
+        const fetchURLs = async () => {
+            try {
+                // Retrieve selected files from localStorage
+                const storedFiles = JSON.parse(localStorage.getItem("selectedFiles"));
+                console.log("Stored Files from Local Storage:", storedFiles);
+    
+                if (storedFiles) {
+                    const urls = await getPublicURLs(storedFiles);
+                    setFileURLs(urls);
+                    console.log("File URLs in State:", urls);
+                } else {
+                    console.warn("No selected files found in localStorage.");
+                }
+            } catch (error) {
+                console.error("Error during URL fetching in useEffect:", error);
+            }
+        };
+    
+        fetchURLs();
+    }, []);
+    
 
     return (
         <>

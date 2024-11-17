@@ -15,38 +15,19 @@ export default function PracticeInterview() {
   const router = useRouter();
 
   const steps = [
-    { description: "Upload Resume and Job Posting" },
-    { description: "Filter Questions" },
-    { description: "Practice Questions" },
-];
+        { description: "Upload Resume and Job Posting" },
+        { description: "Filter Questions" },
+        { description: "Practice Questions" },
+    ];
 
     const handleNextClick = async () => {
-        const selectedFileNames = { resumes: [], jobPosts: [] };
-
-        for (const fileType in selectedFiles) {
-            const bucketName = fileType === "resumes" ? "onward-resume" : "onward-job-posting";
-            for (const fileId of selectedFiles[fileType]) {
-                const filePath = `uploads/${fileId}`;
-                const { data, error } = await supabase.storage.from(bucketName).getPublicUrl(filePath);
-                if (error) {
-                    console.error(`Error fetching public URL for ${filePath}:`, error.message);
-                } else {
-                    const fileName = filePath.split("/").pop(); // Extract file name
-                    selectedFileNames[fileType].push(fileName);
-                }
-            }
-        }
-
-        console.log("Selected File Names:", selectedFileNames);
-
-        // Save to localStorage
-        localStorage.setItem("selectedFileNames", JSON.stringify(selectedFileNames));
-
-        // Navigate to the next page
+        const storedFiles = JSON.stringify(selectedFiles);
+        localStorage.setItem("selectedFiles", storedFiles);
+        
         router.push("/practice-interview-filter");
     };
 
-
+    // handle file selection
     const handleFileSelect = (file, type) => {
         try {
             console.log("File and Type received:", file, type);
@@ -57,35 +38,31 @@ export default function PracticeInterview() {
     
                 console.log("Current Selection:", updatedSelection[fileType]);
     
-                // Toggle selection
-                if (updatedSelection[fileType].includes(file.id)) {
-                    updatedSelection[fileType] = updatedSelection[fileType].filter((id) => id !== file.id);
-                    console.log(`Deselected file ${file.id}`);
-                } else {
-                    updatedSelection[fileType] = [...updatedSelection[fileType], file.id];
-                    console.log(`Selected file ${file.id}`);
-                }
+                // Allow only one file per type
+                updatedSelection[fileType] = [{ id: file.id, name: file.name }];
     
                 console.log("Updated Selection After Change:", updatedSelection);
     
                 // Persist to localStorage
                 localStorage.setItem("selectedFiles", JSON.stringify(updatedSelection));
-                console.log("LocalStorage Selection:", JSON.parse(localStorage.getItem("selectedFiles"))); // <-- Add this here
+                console.log("LocalStorage Selection:", JSON.parse(localStorage.getItem("selectedFiles")));
+    
                 return updatedSelection;
             });
         } catch (error) {
             console.error("Error in handleFileSelect:", error);
         }
-    };    
+    };  
 
-
+    // handle file uplaod
   const handleFileUpload = async (file, type) => {
     console.log(`${type} file uploaded:`, file);
     try {
-      const bucketName = type === 'resume' ? 'onward-resume' : 'onward-job-posting';
-      const filePath = `uploads/${file.name}`; 
-      
-      // Upload to Supabase and get the URL
+        const bucketName = type === "resume" ? "onward-resume" : "onward-job-posting";
+        const filePath = `uploads/${file.name}`;
+        console.log(`Uploading to bucket: ${bucketName}, path: ${filePath}`);
+
+      // upload to Supabase and get the URL
       const { data, error } = await supabase.storage
         .from(bucketName)
         .upload(filePath, file, { upsert: true });
@@ -163,6 +140,7 @@ export default function PracticeInterview() {
                 title="Upload Resume"
                 fileType="resume"
                 bucketName="onward-resume"
+                onFileUpload={(newFile) => console.log("Uploaded File:", newFile)}
                 selectedFiles={selectedFiles.resumes}
                 handleFileSelect={(file) => handleFileSelect(file, "resume")}
             />
@@ -172,6 +150,7 @@ export default function PracticeInterview() {
                 title="Upload Job Posting"
                 fileType="job-posting"
                 bucketName="onward-job-posting"
+                onFileUpload={(newFile) => console.log("Uploaded File:", newFile)}
                 selectedFiles={selectedFiles.jobPosts}
                 handleFileSelect={(file) => handleFileSelect(file, "jobPost")}
             />

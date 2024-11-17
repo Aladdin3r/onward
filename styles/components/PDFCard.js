@@ -9,7 +9,7 @@ export default function PDFCard({ title, size, isSelected, handleDeleteFile, han
         bgColor="brand.blueberryCreme"
         border={isSelected ? "2px" : 0}
         borderColor={isSelected ? "brand.confirmationGreen" : "none"}
-        boxShadow={isSelected ? "md" : "null"}
+        // boxShadow={isSelected ? "md" : "null"}
       >
           <Box>
               <Image src="/images/PDF-icon.svg" alt="PDF Icon" width="32px" style={{ marginRight: '8px' }} />
