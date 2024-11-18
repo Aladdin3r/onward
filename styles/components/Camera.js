@@ -34,39 +34,36 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
   const startCamera = async () => {
     try {
       const constraints = {
-        video: true,  // Enable video
+        video: true, // Enable video
         audio: {
-          echoCancellation: true, // Prevent echo
-          noiseSuppression: true,  // Reduce background noise
-          autoGainControl: true,   // Control volume fluctuations
+          echoCancellation: false, // Disable echo cancellation
+          noiseSuppression: false, // Disable noise suppression
+          autoGainControl: false,  // Disable auto gain control
         },
       };
-
+  
       const newStream = await navigator.mediaDevices.getUserMedia(constraints);
       videoRef.current.srcObject = newStream;
+      videoRef.current.muted = true; // Ensure the speaker stays muted
       setStream(newStream);
-
-      // Create audio context and gain node to manage audio volume
+  
+      // Optionally, set up the audio context for fine-grained audio control (can be skipped)
       const newAudioContext = new (window.AudioContext || window.webkitAudioContext)();
       const audioTracks = newStream.getAudioTracks();
       if (audioTracks.length > 0) {
         const audioSource = newAudioContext.createMediaStreamSource(newStream);
         const newGainNode = newAudioContext.createGain();
-        newGainNode.gain.setValueAtTime(0, newAudioContext.currentTime); // Mute the microphone initially
+        newGainNode.gain.setValueAtTime(1, newAudioContext.currentTime); // Default to full gain
         audioSource.connect(newGainNode);
         newGainNode.connect(newAudioContext.destination);
         setAudioContext(newAudioContext);
         setGainNode(newGainNode);
       }
-
-      // Log to check available tracks
-      newStream.getTracks().forEach(track => {
-        console.log(track.kind, track.label); // Log video and audio tracks
-      });
     } catch (error) {
       console.error("Error accessing webcam:", error);
     }
   };
+  
 
   const stopCamera = () => {
     if (stream) {
