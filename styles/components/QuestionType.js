@@ -14,7 +14,7 @@ export default function QuestionType({ selectedQuestions, setSelectedQuestions }
     return(
         <>
         <Card 
-            width={{ base: "30rem", sm:"32rem", lg:"40rem", xl: "38rem", "2xl":"55rem"}} 
+            width={{ base: "30rem", sm:"32rem", lg:"40rem", xl: "38rem", "2xl":"50rem"}} 
             borderRadius="15px" 
             boxShadow="md"
         >

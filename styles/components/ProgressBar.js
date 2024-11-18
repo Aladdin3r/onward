@@ -12,30 +12,17 @@ import {
   Flex
 } from '@chakra-ui/react';
 
-// on parent page: 
-// add:     
-    // const [activeStep, setActiveStep] = useState(0);
-        // change use state to current active state index
-    // const steps = [
-    //     { description: 'Upload Resume and Job Posting' },
-    //     { description: 'Filter Questions' },
-    //     { description: 'Practice Questions' },
-    // ];
-
-// import prop as 
-    // <ProgressBar activeStep={activeStep} />
-
 export default function ProgressBar({ activeStep }) {
   const steps = [
     { title: 'Step 1', description: 'Upload Resume and Job Posting' },
     { title: 'Step 2', description: 'Filter Questions' },
-    { title: 'Step 3', description: 'Practice Questions' },
+    { title: 'Step 3', description: 'Questions Preview' },
   ];
 
   return (
     <>
       <Box 
-        w={{ base: "30rem", xl: "60rem", "2xl": "80rem" }}  
+        w={{ base: "30rem", xl: "40rem", "2xl": "80rem" }}  
         mx="auto"  
         my="1rem" 
       >

@@ -124,19 +124,18 @@ export default function PracticeInterviewFilter() {
                         height="86vh"
                         width="100%"
                     >
-                        <ProgressBar currentStep={2} />
+                     <ProgressBar activeStep={1}/>
 
                         {/* section for the question time & type cards */}
                         <Flex 
                             mt="3em"
                             flexDirection={{ base: "column", xl: "row" }} 
-                            justifyContent={"space-evenly"}
-                            rowGap={5}
+                            justifyContent={"space-between"}
+                            gap={"5%"}
                         >
                             <QuestionTime />
                             <QuestionType />
                         </Flex>
-
                         {/* bottom buttons */}
                         <Flex 
                             flexDirection="row" 
