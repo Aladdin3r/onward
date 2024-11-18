@@ -19,5 +19,5 @@ export default function HistoryPage() {
         <HistoryContainer limit={0} mb={3} />
       </Layout>
     </>
-  );
+  ); 
 }
