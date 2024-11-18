@@ -14,22 +14,91 @@ import UploadFile from "@/styles/components/FileUpload";
 import Layout from "@/styles/components/Layout";
 import QuestionType from "@/styles/components/QuestionType";
 import QuestionTime from "@/styles/components/QuestionTime";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabaseClient";
 
 // right now using drop down for question number and length of interview
 
 export default function PracticeInterviewFilter() {
     const router = useRouter();
+    const [selectedFiles, setSelectedFiles] = useState({ resumes: [], jobPosts: [] });
+    const [fileURLs, setFileURLs] = useState({ resumes: [], jobPosts: [] });
+    const [selectedQuestions, setSelectedQuestions] = useState([]);
+    const [error, setError] = useState("");
 
         const handleStartClick  = () => {
-        router.push({
-            pathname: '/practice-interview-questions',
-        });
+            router.push({
+                pathname: '/practice-interview-questions',
+            });
+        };
+        
+        const handleBackClick = () => {
+            router.push({
+                pathname: '/practice-interview',
+            });
+        };
+
+    // get slected file url
+    const getPublicURLs = async (selectedFiles) => {
+        try {
+            const selectedFileURLs = { resumes: [], jobPosts: [] };
+    
+            for (const type in selectedFiles) {
+                const bucketName = type === "resumes" ? "onward-resume" : "onward-job-posting";
+                const selectedFileArray = selectedFiles[type];
+    
+                for (const file of selectedFileArray) {
+                    const filePath = `uploads/${file.name}`;
+                    console.log(`Fetching public URL for file: ${filePath} in bucket: ${bucketName}`);
+    
+                    // Use the correct destructuring approach
+                    const { data, error } = supabase
+                        .storage
+                        .from(bucketName)
+                        .getPublicUrl(filePath);
+    
+                    if (error) {
+                        console.error(`Error fetching public URL for ${file.name}:`, error);
+                    } else if (data) {
+                        console.log(`Fetched public URL for ${file.name}: ${data.publicUrl}`);
+                        selectedFileURLs[type].push({
+                            name: file.name,
+                            url: data.publicUrl,
+                        });
+                    }
+                }
+            }
+    
+            console.log("Final Selected File URLs:", selectedFileURLs);
+            return selectedFileURLs;
+        } catch (error) {
+            console.error("Error fetching public URLs:", error);
+        }
     };
-             const handleBackClick = () => {
-        router.push({
-            pathname: '/practice-interview',
-        });
-    };
+
+    // Fetch URLs when the component mounts
+    useEffect(() => {
+        const fetchURLs = async () => {
+            try {
+                // Retrieve selected files from localStorage
+                const storedFiles = JSON.parse(localStorage.getItem("selectedFiles"));
+                console.log("Stored Files from Local Storage:", storedFiles);
+    
+                if (storedFiles) {
+                    const urls = await getPublicURLs(storedFiles);
+                    setFileURLs(urls);
+                    console.log("File URLs in State:", urls);
+                } else {
+                    console.warn("No selected files found in localStorage.");
+                }
+            } catch (error) {
+                console.error("Error during URL fetching in useEffect:", error);
+            }
+        };
+    
+        fetchURLs();
+    }, []);
+    
 
     return (
         <>
@@ -55,19 +124,18 @@ export default function PracticeInterviewFilter() {
                         height="86vh"
                         width="100%"
                     >
-                        <ProgressBar currentStep={2} />
+                     <ProgressBar activeStep={1}/>
 
                         {/* section for the question time & type cards */}
                         <Flex 
                             mt="3em"
                             flexDirection={{ base: "column", xl: "row" }} 
-                            justifyContent={"space-evenly"}
-                            rowGap={5}
+                            justifyContent={"space-between"}
+                            gap={"5%"}
                         >
                             <QuestionTime />
                             <QuestionType />
                         </Flex>
-
                         {/* bottom buttons */}
                         <Flex 
                             flexDirection="row" 

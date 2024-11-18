@@ -1,77 +1,99 @@
+import React from 'react';
 import {
   Step,
-  StepDescription,
-  StepIcon,
   StepIndicator,
   StepNumber,
   StepSeparator,
   StepStatus,
+  StepIcon,
   Stepper,
   Box,
+  VStack,
   Flex
 } from '@chakra-ui/react';
 
-export default function ProgressBar({ currentStep }) {
-
+export default function ProgressBar({ activeStep }) {
   const steps = [
-      { index: '1', description: 'Upload Resume and Job Posting' },
-      { index: '2', description: 'Filter Questions' },
-      { index: '3', description: 'Practice Questions' },
+    { title: 'Step 1', description: 'Upload Resume and Job Posting' },
+    { title: 'Step 2', description: 'Filter Questions' },
+    { title: 'Step 3', description: 'Questions Preview' },
   ];
 
   return (
+    <>
       <Box 
+        w={{ base: "30rem", xl: "40rem", "2xl": "80rem" }}  
+        mx="auto"  
         my="1rem" 
-        maxW={{ base: "30rem", xl:"35rem", "2xl": "50rem" }}
-        mx="auto">
-          <Stepper index={currentStep} size='xxxs' colorScheme='pink'>
-              {steps.map((step, index) => (
-                  <Step key={index}>
-                      <Flex flexDirection="column" align="center" width="100%">
-                          <StepIndicator
-                              sx={{
-                                  '[data-status=complete] &': {
-                                      background: 'brand.blushPink',
-                                      borderColor: 'brand.blushPink',
-                                      color: 'brand.pureWhite',
-                                      width: { base: "1.5rem", "2xl": "2.25rem" },
-                                      height: { base: "1.5rem", "2xl": "2.25rem" },
-                                  },
-                                  '[data-status=active] &': {
-                                      background: 'brand.pureWhite',
-                                      borderColor: 'brand.blushPink',
-                                      color: 'brand.nightBlack',
-                                      width: { base: "1.5rem", "2xl": "2.25rem" },
-                                      height: { base: "1.5rem", "2xl": "2.25rem" },
-                                  },
-                                  '[data-status=incomplete] &': {
-                                      background: 'brand.pureWhite',
-                                      borderColor: 'brand.blushPink',
-                                      color: 'brand.nightBlack',
-                                      width: { base: "1.5rem", "2xl": "2.25rem" },
-                                      height: { base: "1.5rem", "2xl": "2.25rem" },
-                                  },
-                              }}
-                          >
-                              <StepStatus
-                                  complete={<StepIcon />}
-                                  incomplete={<StepNumber />}
-                                  active={<StepNumber />}
-                              />
-                          </StepIndicator>
+      >
+        <Stepper index={activeStep} size="xs"> 
+          {steps.map((step, index) => (
+            <Step key={index}>
+              <VStack>
+                <StepIndicator
+                  p={0}
+                  m={0}
+                  sx={{
+                    '[data-status=complete] &': {
+                      bg: 'brand.blushPink',
+                      borderColor: 'brand.blushPink',
+                      color: 'brand.pureWhite',
+                      w: { base: "2rem", "2xl": "2.25rem" },
+                      h: { base: "2rem", "2xl": "2.25rem" },
+                    },
+                    '[data-status=active] &': {
+                      bg: 'brand.pureWhite', 
+                      borderColor: 'brand.blushPink',
+                      color: 'brand.nightBlack',
+                      w: { base: "2rem", "2xl": "2.25rem" },
+                      h: { base: "2rem", "2xl": "2.25rem" },
+                    },
+                    '[data-status=incomplete] &': {
+                      bg: 'brand.pureWhite',
+                      borderColor: 'brand.blushPink',
+                      color: 'brand.nightBlack',
+                      w: { base: "2rem", "2xl": "2.25rem" },
+                      h: { base: "2rem", "2xl": "2.25rem" },
+                    },
+                  }}
+                >
+                  <StepStatus
+                    complete={<StepIcon />} 
+                    incomplete={<StepNumber />} 
+                    active={<StepNumber />}
+                  />
+                </StepIndicator>
+              </VStack>
 
-                          <Box flexShrink='0'>
-                              <StepDescription mt="0.5rem" textAlign="center" fontSize={{ base: "0.9rem", "2xl": "1.1rem" }}>
-                                  {step.description}
-                              </StepDescription>
-                          </Box>
-                      </Flex>
-                      {index < steps.length - 1 && (
-                          <StepSeparator _horizontal={{ backgroundColor: 'pink' }} />
-                      )}
-                  </Step>
-              ))}
-          </Stepper>
+              {index < steps.length - 1 && (
+                <StepSeparator
+                  _horizontal={{
+                    bg: index < activeStep ? 'brand.blushPink' : 'lightGray', 
+                    height: '5px',
+                    marginLeft: '-0.5rem',
+                    marginRight: '-1rem',
+                  }}
+                />
+              )}
+            </Step>
+          ))}
+        </Stepper>
+
+        <Flex pt="0" textAlign="center" justifyContent="space-between" fontSize={{ base: "0.9rem", "2xl": "1.1rem" }}>
+          {steps.map((step, index) => (
+            <Box
+              key={index}
+              color={index === activeStep ? 'brand.blushPink' : index < activeStep ? 'lightGrey' : 'brand.nightBlack'}
+              mt="1rem" 
+              mr="-3rem"
+              // justifySelf={index === 0 ? 'flex-start' : index === 2 ? 'flex-end' : 'center'}
+              ml={index === 0? '-6rem' : index === 1 ? '-2.5rem' : '0'}
+            >
+              {step.description}
+            </Box>
+          ))}
+        </Flex>
       </Box>
+    </>
   );
 }

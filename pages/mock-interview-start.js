@@ -2,7 +2,7 @@ import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import "@/styles/theme";
 import { Box, Flex, Text, Button, IconButton, Stack, Center } from "@chakra-ui/react";
-import { Waveform, Microphone, VideoCamera } from "@phosphor-icons/react";
+import { Microphone, MicrophoneSlash, VideoCamera, VideoCameraSlash } from "@phosphor-icons/react";
 import RecordCamera from "@/styles/components/Camera";
 import { useRouter } from "next/router";
 import Layout from "@/styles/components/LayoutSim";
@@ -14,12 +14,19 @@ export default function MockInterviewQuestionPage() {
   const { question: initialQuestion } = router.query;
   const [currentQuestion, setCurrentQuestion] = useState(initialQuestion);
 
+  // State for microphone and camera
+  const [isMicOn, setIsMicOn] = useState(true); // Default: mic on
+  const [isCameraOn, setIsCameraOn] = useState(false); // Default: camera off
+
+
   useEffect(() => {
     if (!initialQuestion) {
       setCurrentQuestion(getRandomQuestion());
     }
   }, [initialQuestion]);
 
+
+// HERE: YET TO IMPLEMENT SPOKEN QUESTIONS WITH REPEAT BUTTON + HIDE THE QUESTION FROM INTERVIEWEE'S VIEW!
   const getRandomQuestion = () => {
     const randomCategory = nursingInterviewQuestions[Math.floor(Math.random() * nursingInterviewQuestions.length)];
     return randomCategory.questions[Math.floor(Math.random() * randomCategory.questions.length)];
@@ -28,6 +35,14 @@ export default function MockInterviewQuestionPage() {
   const handleNextQuestion = () => {
     setCurrentQuestion(getRandomQuestion());
   };
+
+  // const toggleMic = () => {
+  //   setIsMicOn((prev) => !prev);
+  // };
+
+  // const toggleCamera = () => {
+  //   setIsCameraOn((prev) => !prev);
+  // };
 
   return (
     <>
@@ -41,21 +56,28 @@ export default function MockInterviewQuestionPage() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout showTopNav={true} pageTitle="Mock Interview">
-        <Box className={styles.page} bg="gray.50" minH="100vh" py={8} display="flex" flexDirection="column" alignItems="center">
-          
+        <Box
+          className={styles.page}
+          bg="gray.50"
+          minH="100vh"
+          py={8}
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+        >
           {/* Question Prompt */}
+          {/* HERE: YET TO IMPLEMENT SPOKEN QUESTIONS WITH REPEAT BUTTON + HIDE THE QUESTION FROM INTERVIEWEE'S VIEW! */}
           <Center>
-            <Box bg="white" mt={5} px={6} py={4} borderRadius="md" boxShadow="sm" width="70%">
+            <Box bg="white" mt={4} px={6} py={4} borderRadius="md" boxShadow="sm" width="70%">
               <Text fontSize="sm" fontWeight="semibold" textAlign="center">
                 {currentQuestion || "Loading..."}
               </Text>
             </Box>
           </Center>
 
-          {/* Video Player with Audio Overlay Icon */}
-          <Flex justify="center" mb={8} mt={20} position="relative" height="500px" width="70%">
-            <RecordCamera isRecordingEnabled={false} />
-            {/* Audio Overlay */}
+          {/* Video Player */}
+          <Flex justify="center" mb={8} mt={20} position="relative" height="500px" width="100%">
+            <RecordCamera isMicOn={isMicOn} isCameraOn={isCameraOn} isRecordingEnabled={false} />
           </Flex>
 
           {/* Bottom Control Bar */}
@@ -67,25 +89,44 @@ export default function MockInterviewQuestionPage() {
               </Button>
 
               {/* Mic and Video Icon Buttons */}
+                {/* HERE: Noticed these are not made functional yet? Currently the Camera component's ones work, so hiding them out for now...*/}
+
               <Stack direction="row" spacing={10}>
-                <IconButton
+                {/* Microphone Toggle Button */}
+                {/* <IconButton
                   px={4}
                   py={8}
                   aria-label="Toggle Microphone"
-                  icon={<Microphone size={35} color="black" weight="fill" />}
+                  icon={
+                    isMicOn ? (
+                      <Microphone size={35} color="black" weight="fill" />
+                    ) : (
+                      <MicrophoneSlash size={35} color="black" weight="fill" />
+                    )
+                  }
                   bg="white"
                   boxShadow="md"
                   borderRadius="full"
-                />
-                <IconButton
+                  onClick={toggleMic} // Toggle mic
+                /> */}
+
+                {/* Camera Toggle Button */}
+                {/* <IconButton
                   px={4}
                   py={8}
                   aria-label="Toggle Video"
-                  icon={<VideoCamera size={35} color="black" weight="fill" />}
+                  icon={
+                    isCameraOn ? (
+                      <VideoCamera size={35} color="black" weight="fill" />
+                    ) : (
+                      <VideoCameraSlash size={35} color="black" weight="fill" />
+                    )
+                  }
                   bg="white"
                   boxShadow="md"
                   borderRadius="full"
-                />
+                  onClick={() => setIsCameraOn((prev) => !prev)} // Toggle camera
+                /> */}
               </Stack>
 
               {/* Next Question Button */}

@@ -18,13 +18,10 @@ const RatingBox = () => {
   };
 
   return (
-    <Box mt={4} p={8} bg="frostWhite" borderRadius="md" boxShadow="md" w={400}>
-      <Text mb={2} fontWeight="bold" color="blushPink">
+    <Box p={8} borderRadius="md" w={550}>
+      <Text mb={35} fontWeight="bold" fontSize="sm">
         Leave us a review
       </Text>
-      <HStack>
-        <Text mb='8px'>Your response: {value}</Text>
-      </HStack>
       <HStack spacing={1}>
         <Textarea 
             placeholder="Type your review here" 
@@ -32,9 +29,10 @@ const RatingBox = () => {
             value={value}
             onChange={handleInputChange} 
             mb={4}
+            h={150}
         />
       </HStack>
-      <HStack spacing={1}>
+      <HStack spacing={2}>
         {Array(5)
           .fill("")
           .map((_, index) => (
@@ -50,10 +48,11 @@ const RatingBox = () => {
         <Button
                 bg="brand.blushPink"
                 color="brand.frostWhite"
-                size="sm"
+                variant={'xsPrimary'}
+                fontSize="12pt"
                 px={4}
                 py={6}
-                ml={16}
+                ml={"225px"}
               >
                 Submit
               </Button>

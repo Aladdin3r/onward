@@ -1,8 +1,7 @@
-import { Heading, Box, Flex, Text, IconButton } from "@chakra-ui/react";
-import { FilePdf } from "@phosphor-icons/react";
+import { Flex, Box, Text } from "@chakra-ui/react";
 import PDFCard from "./PDFCard";
 
-export default function UploadedFiles({ files = [], handleDeleteFile }) {
+export default function UploadedFiles({ files = [], selectedFiles = [], handleDeleteFile, handleFileSelect, type }) {
     return (
         <Flex flexDirection="column" mt={4}>
             <Text fontSize={'13pt'} fontWeight={'semibold'} mb={2}>Uploaded Files:</Text>
@@ -11,8 +10,22 @@ export default function UploadedFiles({ files = [], handleDeleteFile }) {
             ) : (
                 <Box>
                     {files.map((file) => (
-                        <Flex key={file.id} alignItems="center" mb={2}>
-                            <PDFCard title={file.name} size={`${(file.size / 1024).toFixed(1)} KB`} handleDeleteFile={handleDeleteFile}/>
+                        <Flex
+                            key={file.id}
+                            alignItems="center"
+                            mb={2}
+                            onClick={() => {
+                                console.log('Attempting to call handleFileSelect...');
+                                handleFileSelect(file, type); // Call handleFileSelect with proper arguments
+                            }}
+                        >
+                            <PDFCard
+                                file={file} // Pass the entire file object to the PDFCard component
+                                title={file.name}
+                                size={`${(file.size / 1024).toFixed(1)} KB`}
+                                handleDeleteFile={handleDeleteFile}
+                                isSelected={selectedFiles.some((item) => item.id === file.id)}
+                            />
                         </Flex>
                     ))}
                 </Box>

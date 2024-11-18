@@ -25,6 +25,7 @@ const variants = {
       "/practice-interview-filter",
       "/practice-interview-questions",
       "/practice-interview-answer",
+      "/practiceOverview",
       "/practice"
     ]
   },
