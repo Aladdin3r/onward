@@ -153,7 +153,7 @@ export default function FileUpload({
             mb="2rem"
         >
             <Box 
-                width={{ base: "30rem", lg: "38rem", "2xl": "42rem" }}
+                width={{ base: "100%", lg: "38rem", "2xl": "42rem" }}
                 height={{ base: "25rem", "2xl": "35rem" }}
             >
                 <Flex

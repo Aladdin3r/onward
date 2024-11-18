@@ -27,20 +27,16 @@ export default function PracticeInterviewFilter() {
     const [error, setError] = useState("");
 
         const handleStartClick  = () => {
-            if (selectedQuestions.length === 0) {
-                alert("Please select at least one type of question.");
-            } else {
-                setError("");
-                router.push({
-                    pathname: '/practice-interview-questions',
-                });
-            }
+            router.push({
+                pathname: '/practice-interview-questions',
+            });
         };
-             const handleBackClick = () => {
-        router.push({
-            pathname: '/practice-interview',
-        });
-    };
+        
+        const handleBackClick = () => {
+            router.push({
+                pathname: '/practice-interview',
+            });
+        };
 
     // get slected file url
     const getPublicURLs = async (selectedFiles) => {
@@ -128,19 +124,18 @@ export default function PracticeInterviewFilter() {
                         height="86vh"
                         width="100%"
                     >
-                        <ProgressBar currentStep={2} />
+                     <ProgressBar activeStep={1}/>
 
                         {/* section for the question time & type cards */}
                         <Flex 
                             mt="3em"
                             flexDirection={{ base: "column", xl: "row" }} 
-                            justifyContent={"space-evenly"}
-                            rowGap={5}
+                            justifyContent={"space-between"}
+                            gap={"5%"}
                         >
                             <QuestionTime />
                             <QuestionType />
                         </Flex>
-
                         {/* bottom buttons */}
                         <Flex 
                             flexDirection="row" 

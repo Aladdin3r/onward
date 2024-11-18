@@ -14,12 +14,6 @@ export default function PracticeInterview() {
   const [selectedFiles, setSelectedFiles] = useState({ resumes: [], jobPosts: [] });
   const router = useRouter();
 
-  const steps = [
-        { description: "Upload Resume and Job Posting" },
-        { description: "Filter Questions" },
-        { description: "Practice Questions" },
-    ];
-
     const handleNextClick = async () => {
         // save file selection to local storage
         const storedFiles = JSON.stringify(selectedFiles);
@@ -34,6 +28,14 @@ export default function PracticeInterview() {
         router.push("/practice-interview-filter");
         
     };
+
+    // remember last file selection
+    useEffect(() => {
+      const savedSelections = JSON.parse(localStorage.getItem("selectedFiles"));
+      if (savedSelections) {
+          setSelectedFiles(savedSelections);
+      }
+  }, []);
 
     // handle file selection
     const handleFileSelect = (file, type) => {
@@ -136,12 +138,13 @@ export default function PracticeInterview() {
           height="86vh"
           width="100%"
         >
-          <ProgressBar currentStep={1}/>
+          <ProgressBar activeStep={0}/>
           <Flex 
-            ml={{ base: "3", lg: "5", xl: "8", "2xl": "10" }}
+            ml={{ xl: "8", "2xl": "10" }}
             columnGap={{lg: "3rem", "2xl": "5rem" }}
             flexDirection={{ base: "column", xl: "row" }} 
             mt="3em"
+            alignItems={{ base: "center", xl: "unset" }} 
           >
             {/* Resume Upload */}
             <FileUpload
