@@ -58,20 +58,20 @@ const HistoryContainer = ({ limit = 3 }) => {
         >
             <Box
                 width="100%"
-                maxWidth={{ base: "100%", md: "80%", xl: "70%" }} // Makes the box responsive
+                maxWidth={{ base: "100%", md: "80%", xl: "100%" }} // Makes the box responsive
                 bg="white"
                 boxShadow="md"
                 borderRadius={15}
                 p={6}
                 mt={3}
             >
-                <Heading fontSize={{ base: "xl", md: "lg", xl: "xl" }} mb={2}>
+                <Heading fontSize="sm" mb={2}>
                     Practice Interview
                 </Heading>
                 <Divider mb={4} />
 
                 {videosToShow.map((video, index) => (
-                    <Box key={index} mb={4}>
+                    <Box w="100%" key={index} mb={4}>
                         <Flex
                             flexDir={{ base: "column", md: "row" }} // Stacks videos vertically on small screens
                             justify="flex-start"
@@ -110,10 +110,16 @@ const HistoryContainer = ({ limit = 3 }) => {
                                         {video.file_name}
                                     </Text>
                                 </Text>
-                                <Text fontSize="20px" fontWeight="700">
-                                    Date: 
-                                    <Text as="span" fontWeight="400" lineHeight="27px" fontSize="20px">
+                                <Text color="grey" fontSize="14px" fontWeight="400" mt="-2">
+                                    Date: <t/>
+                                    <Text as="span" fontWeight="400" lineHeight="27px" fontSize="14px">
                                         {new Date(video.upload_date).toLocaleDateString()}
+                                    </Text>
+                                </Text>
+                                <Text fontSize="20px" fontWeight="700">
+                                    Length: 
+                                    <Text as="span" fontWeight="400" lineHeight="27px" fontSize="20px">
+                                        insert vid length time here from supabase
                                     </Text>
                                 </Text>
                             </Flex>
