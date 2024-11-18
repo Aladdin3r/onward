@@ -128,7 +128,7 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
   const saveRecordingToSupabase = async () => {
     const blob = new Blob(recordedChunks, { type: "video/webm" });
     const file = new File([blob], "recorded-video.webm", { type: "video/webm" });
-
+  
     // Upload the file to Supabase
     const { data, error } = await supabase
       .storage
@@ -137,7 +137,7 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
         cacheControl: "3600",
         upsert: false,
       });
-
+  
     if (error) {
       console.error("Error uploading video:", error.message);
     } else {
@@ -146,14 +146,40 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
         .storage
         .from("onward-video")
         .getPublicUrl(data.path);
-
+  
       if (urlError) {
         console.error("Error fetching public URL:", urlError.message);
       } else {
-        setSavedVideoUrl(urlData.publicUrl); // Pass the URL to the parent component
+        // Fetch the latest transcription data from the 'transcriptions' table
+        const { data: transcriptionData, error: transcriptionError } = await supabase
+          .from('transcriptions')
+          .select('id, text, video_id')
+          .order('created_at', { ascending: false })
+          .limit(1)  // Fetch the latest transcription
+          .single();
+  
+        if (transcriptionError) {
+          console.error("Error fetching transcription data:", transcriptionError.message);
+        } else {
+          // Update the transcription row with the video URL
+          const { error: updateError } = await supabase
+            .from('transcriptions')
+            .update({
+              video_id: urlData.publicUrl,  // Save the video URL to the transcription row
+            })
+            .eq('id', transcriptionData.id);  // Match the correct transcription row by ID
+  
+          if (updateError) {
+            console.error("Error updating transcription data with video URL:", updateError.message);
+          } else {
+            console.log("Video URL saved successfully to the transcription table");
+            setSavedVideoUrl(urlData.publicUrl); // Pass the URL to the parent component
+          }
+        }
       }
     }
   };
+  
 
   
   const toggleMic = async () => {

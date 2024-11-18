@@ -30,7 +30,6 @@ export default function AnswerPractice({ videoSrc, thumbnail }) {
     const [editableTranscription, setEditableTranscription] = useState('');
     const [typedAnswer, setTypedAnswer] = useState('');
     const [savedVideoUrl, setSavedVideoUrl] = useState(null); // Track saved video URL
-  
 
     const handleVoiceClick = () => {
         setShowVideo(true);
@@ -53,17 +52,27 @@ export default function AnswerPractice({ videoSrc, thumbnail }) {
     };
     
     const handleOverviewClick = async () => {
-        const videoURL = savedVideoUrl;
-        const transcriptionText = transcription;
-        debugger;
-        const transcriptionEntry = {text:transcriptionText, video_id:videoURL};
-        let {error} = await supabase.from("transcriptions").insert(transcriptionEntry);
-        if (error) {
-            throw error;
+        if (!savedVideoUrl) {
+            console.error('No video URL available!');
+            return;
         }
-        router.push({
-            pathname: '/practiceOverview',
-        });
+
+        const transcriptionText = transcription || editableTranscription;
+        const transcriptionEntry = {
+            text: transcriptionText,
+            video_id: savedVideoUrl
+        };
+
+        try {
+            const { error } = await supabase.from("transcriptions").insert(transcriptionEntry);
+            if (error) throw error;
+
+            router.push({
+                pathname: '/practiceOverview',
+            });
+        } catch (error) {
+            console.error("Error saving transcription:", error.message);
+        }
     };
 
     return (
@@ -198,22 +207,23 @@ export default function AnswerPractice({ videoSrc, thumbnail }) {
                         borderRadius={15}
                     >
                         <RecordCamera setSavedVideoUrl={setSavedVideoUrl} />
-                        {/* <Flex>
-                            <Button><Record size={24} /></Button>
-                            <Button><Stop size={24} /></Button>
-                            <Button><Pause size={24} /></Button>
-                        </Flex> */}
-                 <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"} boxShadow={"md"}
-                        onClick={handleOverviewClick}
-                        _hover={{
-                            bg: "white",
-                            color: "brand.blushPink",
-                            border: "1px",
-                            boxShadow:"md"
-                        }}
-                    > 
-                        Finish
-                    </Button>
+                        <Button 
+                            bg={"brand.blushPink"} 
+                            size="xs" 
+                            color={"white"} 
+                            py={"1.5rem"} 
+                            px={"5rem"} 
+                            boxShadow={"md"}
+                            onClick={handleOverviewClick}
+                            _hover={{
+                                bg: "white",
+                                color: "brand.blushPink",
+                                border: "1px",
+                                boxShadow:"md"
+                            }}
+                        > 
+                            Finish
+                        </Button>
                     </Flex>
                 )}
             </Flex>
