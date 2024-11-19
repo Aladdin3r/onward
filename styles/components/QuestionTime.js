@@ -13,7 +13,7 @@ import {
     NumberDecrementStepper,
 } from '@chakra-ui/react'
 
-export default function QuestionTime() {
+export default function QuestionTime({ selectedNumber, onNumberChange, selectedLength, onLengthChange }) {
     return(
         <>
         <Card 
@@ -39,6 +39,8 @@ export default function QuestionTime() {
                         <Box>
                             <NumberInput defaultValue={5} min={1} max={30}
                                 w={{ base: "25rem", sm:"27rem", lg:"35rem", xl: "15rem", "2xl":"25rem"}}
+                                value={selectedNumber}
+                                onChange={(valueString, valueNumber) => onNumberChange(valueNumber)}
                             >
                                 <NumberInputField fontSize={{base: "xxs", md: "xxs", xl: "16pt"}} />
                                 <NumberInputStepper>
@@ -62,6 +64,8 @@ export default function QuestionTime() {
                             <Box>
                                 <NumberInput defaultValue={10} min={1} max={30}
                                     w={{ base: "25rem", sm:"27rem", lg:"35rem", xl: "15rem", "2xl":"25rem"}}
+                                    value={selectedLength}
+                                    onChange={(valueString, valueNumber) => onLengthChange(valueNumber)}
                                 >
                                     <NumberInputField fontSize={{base: "xxs", md: "xxs", xl: "16pt"}} />
                                     <NumberInputStepper>
