@@ -33,6 +33,7 @@ export default function DashboardCard() {
           justifyContent="center"
           p={{ base: 2, md: 6 }}
           width={{ base: "60%", md: "50%", lg: "50%", xl: "60%", "2xl":"140%" }}
+
         >
           <Image
             src="/images/dashboard-img.png"

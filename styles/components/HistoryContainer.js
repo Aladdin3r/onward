@@ -53,7 +53,7 @@ const HistoryContainer = ({ limit = 3 }) => {
             align="center"
             width="100%"
             height="auto"
-            p={4}
+            py="4"
             overflow="hidden"
         >
             <Box
@@ -65,13 +65,15 @@ const HistoryContainer = ({ limit = 3 }) => {
                 p={6}
                 mt={3}
             >
-                <Heading fontSize="sm" mb={2}>
+                <Heading fontSize="xs" mb={2}>
                     Practice Interview
                 </Heading>
                 <Divider mb={4} />
 
                 {videosToShow.map((video, index) => (
-                    <Box w="100%" key={index} mb={4}>
+                    <Box w="100%" key={index} mb={4}
+                    bg="#FAFAFA"
+                    >
                         <Flex
                             flexDir={{ base: "column", md: "row" }} // Stacks videos vertically on small screens
                             justify="flex-start"
