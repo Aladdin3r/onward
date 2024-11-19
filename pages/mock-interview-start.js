@@ -81,7 +81,7 @@ export default function MockInterviewQuestionPage() {
           </Flex>
 
           {/* Bottom Control Bar */}
-          <Box width="100%" py={2} bg="white" boxShadow="md" position="fixed" bottom={0}>
+          <Box width="100%" py={2} bg="white" boxShadow="md" position="fixed" bottom={0} zIndex="9999" >
             <Flex justify="space-between" align="center" maxW="800px" mx="auto" px={4}>
               {/* End Button */}
               <Button colorScheme="red" size="sm" px={8} py={6} onClick={() => router.push('/')}>

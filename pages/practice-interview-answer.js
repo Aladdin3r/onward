@@ -14,23 +14,20 @@ import interviewQuestions from '@/data/interviewQuestions';
 import LayoutSim from "@/styles/components/LayoutSim";
 
 export default function PracticeAnswer() {
+
+    const [showVideo, setShowVideo] = useState(false);
     const router = useRouter();
     // const { question } = router.query;
 
-    // const handleOverviewClick = () => {
-    //     router.push({
-    //         pathname: '/practiceOverview',
-    //     });
-    // };
-    const handleEndClick = () => {
+    const handleAnalysisClick = () => {
         router.push({
-            pathname: '/',
+            pathname: '/practiceOverview',
         });
     };
 
-    const handleNextClick = () => {
+    const handleEndClick = () => {
         router.push({
-            pathname: '/practice-interview-questions-2',
+            pathname: '/practice-interview',
         });
     };
 
@@ -50,15 +47,18 @@ export default function PracticeAnswer() {
                 height="86vh"
                 width="100%"
                 >
+                    {/* Answer cards */}
                     <Flex flexDirection={"row"} ml={"0rem"} mt={"3rem"}>
-                        <AnswerPractice question={interviewQuestions[currentQuestionIndex]}/>
+                        <AnswerPractice question={interviewQuestions[currentQuestionIndex]} onShowVideoChange={setShowVideo}/>
                     </Flex>
+
+                    {/* Bottom Buttons */}
                     <Flex 
                         flexDirection={"row"} 
                         justify={"space-between"} 
                         mt={"auto"} 
                         px="4em"
-                         mb="20px"
+                        mb="20px"
                     >
                         <Button bg={"brand.pureWhite"} size="xxs" width={"6rem"} p={2} border={"1px"} borderColor={"red"}
                                 onClick={handleEndClick}
@@ -68,17 +68,20 @@ export default function PracticeAnswer() {
                                     border:"1px",
                                     borderColor:"red"
                                 }}>End</Button>
-                    {/* <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"} boxShadow={"md"}
-                        onClick={handleOverviewClick}
-                        _hover={{
-                            bg: "white",
-                            color: "brand.blushPink",
-                            border: "1px",
-                            boxShadow:"md"
-                        }}
-                    > 
-                        Finish
-                    </Button> */}
+
+                        {!showVideo && (
+                        <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"} boxShadow={"md"} 
+                            onClick={handleAnalysisClick}
+                            _hover={{
+                                bg: "white",
+                                color: "brand.blushPink",
+                                border: "1px",
+                                boxShadow:"md"
+                            }}
+                        > 
+                            Start Analysis
+                        </Button>
+                        )};
                     </Flex>
                 </Flex>
             </LayoutSim>

@@ -26,7 +26,7 @@ const overrides = {
         md: "768px",         // Medium screens (tablets)
         lg: "1024px",         // Large screens (laptops)
         xl: "1280px",         // Extra large screens (desktops)
-        "2xl": "1920px",   // Extra extra large (full desktop)
+        "2xl": "1400px",   // Extra extra large (full desktop)
       },
     components: {
         Button: ChakraButton,

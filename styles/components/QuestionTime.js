@@ -1,15 +1,16 @@
 
 import { 
-    Checkbox, 
-    CheckboxGroup,
     Box,
     Flex,
     Text,
     Card, 
-    CardHeader, 
     CardBody, 
-    CardFooter,
-    Select
+    Select,
+    NumberInput,
+    NumberInputField,
+    NumberInputStepper,
+    NumberIncrementStepper,
+    NumberDecrementStepper,
 } from '@chakra-ui/react'
 
 export default function QuestionTime() {
@@ -23,6 +24,8 @@ export default function QuestionTime() {
             >
             <CardBody>
                 <Flex direction={"column"} gap={5} p={3} alignItems={"center"} justifyContent={"center"}>
+
+                    {/* number of questions */}
                     <Box>
                         <Text 
                             fontFamily="heading" 
@@ -30,19 +33,23 @@ export default function QuestionTime() {
                             fontWeight="bold" 
                             textAlign="left"
                             pb="1em"
-                            
                         >
                             Number of Questions
                         </Text>
-                        <Select 
-                            placeholder='Select option' 
-                            width={{ base: "18rem", sm: "28rem", lg:"35rem", xl:"18rem", "2xl": "25rem" }}  
-                            fontSize={{ base: "xxxs", "2xl": "xxs" }}>
-                            <option value='option1'>5</option>
-                            <option value='option2'>8</option>
-                            <option value='option3'>10</option>
-                        </Select>
+                        <Box>
+                            <NumberInput defaultValue={5} min={1} max={30}
+                                w={{ base: "25rem", sm:"27rem", lg:"35rem", xl: "15rem", "2xl":"25rem"}}
+                            >
+                                <NumberInputField fontSize={{base: "xxs", md: "xxs", xl: "16pt"}} />
+                                <NumberInputStepper>
+                                    <NumberIncrementStepper />
+                                    <NumberDecrementStepper />
+                                </NumberInputStepper>
+                            </NumberInput>
+                        </Box>
                     </Box>
+
+                    {/* time / length */}
                     <Box>
                         <Text 
                             fontFamily="heading" 
@@ -52,15 +59,17 @@ export default function QuestionTime() {
                         >
                             Length of Interview
                         </Text>
-                        <Select 
-                            placeholder='Select option' 
-                            width={{ base: "18rem", sm: "28rem", lg:"35rem", xl:"18rem", "2xl": "25rem" }} 
-                            fontSize={{ base: "xxxs", "2xl": "xxs" }}
-                        >
-                            <option value='option1'>10 Minutes</option>
-                            <option value='option2'>15 Minutes</option>
-                            <option value='option3'>20 Minutes</option>
-                        </Select>
+                            <Box>
+                                <NumberInput defaultValue={10} min={1} max={30}
+                                    w={{ base: "25rem", sm:"27rem", lg:"35rem", xl: "15rem", "2xl":"25rem"}}
+                                >
+                                    <NumberInputField fontSize={{base: "xxs", md: "xxs", xl: "16pt"}} />
+                                    <NumberInputStepper>
+                                        <NumberIncrementStepper />
+                                        <NumberDecrementStepper />
+                                    </NumberInputStepper>
+                                </NumberInput>
+                            </Box>
                     </Box>
                 </Flex>
             </CardBody>

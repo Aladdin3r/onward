@@ -79,6 +79,8 @@ export default function Layout({ children, pageTitle, showTopNav }) {
           flex="1"
           bg="brand.frostWhite"
           px={{ base: "7", xl: "8", "2xl": "16" }}
+          display={"flex"}
+          justifyContent={{ base: "center", xl: "space-evenly" }} 
         >
           {children}
         </Box>
