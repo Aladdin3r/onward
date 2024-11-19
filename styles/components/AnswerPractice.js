@@ -21,7 +21,7 @@ import RecordCamera from './Camera';
 import { supabase } from '@/lib/supabaseClient';
 import { createClient } from '@supabase/supabase-js';
 
-export default function AnswerPractice({ videoSrc, thumbnail }) {
+export default function AnswerPractice({ videoSrc, thumbnail, onShowVideoChange }) {
     const router = useRouter();
     const [showVideo, setShowVideo] = useState(false); // default is text
     const [activeButton, setActiveButton] = useState('text');
@@ -36,12 +36,14 @@ export default function AnswerPractice({ videoSrc, thumbnail }) {
         setShowVideo(true);
         setActiveButton('voice');
         setIsRecording(!isRecording); // toggle recording state
+        onShowVideoChange(true);
     };
 
     const handleTextClick = () => {
         setShowVideo(false);
         setActiveButton('text');
         setEditableTranscription(transcription); // to be able to edit transcription when switch to text
+        onShowVideoChange(false);
     };
 
     const handleTextChange = (event) => {
@@ -52,7 +54,7 @@ export default function AnswerPractice({ videoSrc, thumbnail }) {
         setEditableTranscription(event.target.value); // update editable transcription
     };
     
-    const handleOverviewClick = async () => {
+    const handleAnalysisClick = async () => {
         const videoURL = savedVideoUrl;
         const transcriptionText = transcription;
         debugger;
@@ -91,7 +93,7 @@ export default function AnswerPractice({ videoSrc, thumbnail }) {
                         showArrows={false}
                         borderTopRadius={15}
                         borderBottomRadius={0}
-                        width="100%"
+                        width="80%"
                     />
                     <Flex 
                         gap="1.1rem" 
@@ -190,7 +192,7 @@ export default function AnswerPractice({ videoSrc, thumbnail }) {
                 {showVideo && (
                     <Flex 
                         flexDirection={"column"}
-                        width="40%" 
+                        width="60%" 
                         py={"2rem"}
                         boxShadow="md" 
                         justifyContent={"center"}
@@ -204,7 +206,7 @@ export default function AnswerPractice({ videoSrc, thumbnail }) {
                             <Button><Pause size={24} /></Button>
                         </Flex> */}
                  <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"} boxShadow={"md"}
-                        onClick={handleOverviewClick}
+                        onClick={handleAnalysisClick}
                         _hover={{
                             bg: "white",
                             color: "brand.blushPink",
@@ -212,7 +214,7 @@ export default function AnswerPractice({ videoSrc, thumbnail }) {
                             boxShadow:"md"
                         }}
                     > 
-                        Finish
+                       Start Analysis
                     </Button>
                     </Flex>
                 )}

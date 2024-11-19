@@ -39,130 +39,134 @@ export default function MockInterviewQuestionPage() {
   return (
     <>
       <Layout showTopNav={true} pageTitle="Mock Interview">
-        {/* Header Section */}
-        <Flex direction="column" align="start" width="100%" p={6}>
-          <Flex
-            direction="row"
-            align="center"
-            // justify="space-between"
-            width="100%"
-            maxW="800px"
-            mt={10}
-            position="relative"
-          >
-            <Text fontSize="md" fontWeight="medium" textAlign="left">
-              Welcome to the{" "}
-              <Box as="span" fontWeight="extrabold">
-                Mock Interview!
-              </Box>
-            </Text>
-
-            {/* Clickable Info Icon */}
-            <Box
-              ml={4}
-              as="span"
-              cursor="pointer"
-              onClick={() => setInfoVisible(!isInfoVisible)}
+        <Flex
+          direction="column" 
+          align="center" 
+        >
+          {/* Header Section */}
+          <Flex direction="column" align="start" width="100%" p={6}>
+            <Flex
+              direction="row"
+              align="center"
+              width="100%"
+              maxW="800px"
+              mt={10}
+              position="relative"
             >
-              <Info size={24} />
-            </Box>
+              <Text fontSize="md" fontWeight="medium" textAlign="left">
+                Welcome to the{" "}
+                <Box as="span" fontWeight="extrabold">
+                  Mock Interview!
+                </Box>
+              </Text>
 
-            {/* Info Popup */}
-            {isInfoVisible && (
+              {/* Clickable Info Icon */}
               <Box
-                position="absolute"
-                top="100%"
-                right={1}
-                bg="white"
-                border="1px solid"
-                borderColor="gray.200"
-                boxShadow="lg"
-                borderRadius="md"
-                p={4}
-                mt={2}
-                zIndex="10"
-                maxW="600px"
+                ml={4}
+                as="span"
+                cursor="pointer"
+                onClick={() => setInfoVisible(!isInfoVisible)}
               >
-                <Flex justify="space-between" align="center" mb={2}>
-                  <Text fontSize="sm" fontWeight="semibold">
-                    About Mock Interview
-                  </Text>
-                  {/* Close Icon */}
-                  <Text
-                    as="span"
-                    cursor="pointer"
-                    fontWeight="bold"
-                    onClick={() => setInfoVisible(false)}
-                  >
-                    ✕
-                  </Text>
-                </Flex>
-                <Text fontSize="xxs" color="gray.700" mb={2}>
-                  This feature closely mimics a real-life healthcare interview to
-                  help you prepare effectively. You’ll see each question only once
-                  and respond by speaking aloud, rather than typing.
-                </Text>
-                <Text fontSize="xxs" color="gray.700" mb={2}>
-                  <strong>Unlike Practice Interviews:</strong> Mock Interviews
-                  don’t allow customization options, encouraging you to think on
-                  your feet and practice answering naturally.
-                </Text>
-                <Text fontSize="xxs" color="gray.700">
-                  <strong>Interview Length:</strong> Typically lasts between <strong>20 to
-                  60 minutes</strong>, adapting to your pace for a realistic experience.
-                </Text>
+                <Info size={24} />
               </Box>
-            )}
+
+              {/* Info Popup */}
+              {isInfoVisible && (
+                <Box
+                  position="absolute"
+                  top="100%"
+                  right={-10}
+                  bg="white"
+                  border="1px solid"
+                  borderColor="gray.200"
+                  boxShadow="lg"
+                  borderRadius="md"
+                  p={4}
+                  mt={2}
+                  zIndex="10"
+                  maxW="600px"
+                >
+                  <Flex justify="space-between" align="center" mb={2}>
+                    <Text fontSize="sm" fontWeight="semibold">
+                      About Mock Interview
+                    </Text>
+                    {/* Close Icon */}
+                    <Text
+                      as="span"
+                      cursor="pointer"
+                      fontWeight="bold"
+                      onClick={() => setInfoVisible(false)}
+                    >
+                      ✕
+                    </Text>
+                  </Flex>
+                  <Text fontSize="xxs" color="gray.700" mb={2}>
+                    This feature closely mimics a real-life healthcare interview to
+                    help you prepare effectively. You’ll see each question only once
+                    and respond by speaking aloud, rather than typing.
+                  </Text>
+                  <Text fontSize="xxs" color="gray.700" mb={2}>
+                    <strong>Unlike Practice Interviews:</strong> Mock Interviews
+                    don’t allow customization options, encouraging you to think on
+                    your feet and practice answering naturally.
+                  </Text>
+                  <Text fontSize="xxs" color="gray.700">
+                    <strong>Interview Length:</strong> Typically lasts between <strong>20 to
+                    60 minutes</strong>, adapting to your pace for a realistic experience.
+                  </Text>
+                </Box>
+              )}
+            </Flex>
+
+            {/* Description */}
+            <Text
+              fontSize="sm"
+              color="gray.600"
+              textAlign="left"
+              width="100%"
+              mt={1}
+              mb={5}
+            >
+              This feature closely mimics a real-life healthcare interview to help
+              you prepare effectively.
+            </Text>
           </Flex>
 
-          {/* Description */}
-          <Text
-            fontSize="sm"
-            color="gray.600"
-            textAlign="left"
-            width="100%"
-            mt={1}
+          <Flex
+            bg="gray.50"
+            // minH="90vh"
+            align="center"
+            justify="center"
+            direction="column"
+            gap={7}
           >
-            This feature closely mimics a real-life healthcare interview to help
-            you prepare effectively.
-          </Text>
-        </Flex>
+            {/* Video Section */}
+            <Box
+              position="relative"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              width="400%"
+              maxW="800px"
+              mt={9}
+            >
+              <RecordCamera isRecordingEnabled={false} />
+            </Box>
 
-        <Flex
-          bg="gray.50"
-          minH="100vh"
-          align="center"
-          justify="center"
-          direction="column"
-          gap={6}
-        >
-          {/* Video Section */}
-          <Box
-            position="relative"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            width="100%"
-            maxW="1000px"
-            mt={-200}
-          >
-            <RecordCamera isRecordingEnabled={false} />
-          </Box>
-
-          {/* Button Section */}
-          <Button
-            bg="brand.blushPink"
-            color="white"
-            size="md"
-            px={10}
-            py={9}
-            onClick={startInterview}
-          >
-            Start Interview
-          </Button>
+            {/* Button Section */}
+            <Button
+              bg="brand.blushPink"
+              color="white"
+              size="md"
+              px={10}
+              py={9}
+              onClick={startInterview}
+            >
+              Start Interview
+            </Button>
+          </Flex>
         </Flex>
       </Layout>
     </>
   );
 }
-

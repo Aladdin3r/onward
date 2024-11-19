@@ -71,23 +71,31 @@ export default function MyResumesCard() {
             flexDirection="column"
         >
             <Text 
-                fontSize={{ base: "xs", lg: "xxs", xl: "sm", "2xl":"md" }}
+                // fontSize={{ base: "xs", lg: "xxs", xl: "sm", "2xl":"md" }}
+                fontSize="xs"
                 fontWeight="bold" 
                 mb={2}
             >
                 My Resumes:
             </Text>
-            <Box>
+            <Box
+            display="flex"
+            flexDirection="column"
+            rowGap="0.6rem"
+            >
                 {uploadedFiles.length === 0 ? (
                     <Text>No resumes.</Text> // Message if no files are found
                 ) : (
                     uploadedFiles.map((file) => (
+                        <box
+                        >
                         <PDFCard 
                             key={file.id}
                             title={file.name}
                             size={`${(file.size / 1024).toFixed(2)} KB`} // Convert size to KB
                             handleDeleteFile={handleDeleteFile} 
                         />
+                        </box>
                     ))
                 )}
             </Box>

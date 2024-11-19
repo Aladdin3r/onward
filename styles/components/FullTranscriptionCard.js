@@ -1,64 +1,98 @@
 import { Box, Text, VStack, Divider, HStack } from "@chakra-ui/react";
+import HighlightFillerWords from "@/styles/components/HighlightFillerWords";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabaseClient";
 
-const TranscriptionComponent = () => {
+export default function TranscriptionComponent() {
+  const [transcript, setTranscript] = useState(null);
+  const [videoSrc, setVideoSrc] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetching the most recent transcription
+        const { data: transcriptData, error: transcriptError } = await supabase
+          .from("transcriptions")
+          .select("text, video_id")
+          .order("created_at", { ascending: false })
+          .limit(1);
+
+        if (transcriptError) {
+          console.error("Error fetching transcription:", transcriptError);
+          throw transcriptError;
+        }
+
+        if (transcriptData && transcriptData.length > 0) {
+          setTranscript(transcriptData[0].text);
+          const videoUrl = transcriptData[0].video_id; // Directly use video_id as the URL
+
+          if (!videoUrl) {
+            console.error("No video_id in transcription data.");
+            setError("No video URL found in transcription data.");
+            return;
+          }
+
+          console.log("Fetched video URL: ", videoUrl); // Debugging statement
+
+          setVideoSrc(videoUrl); // Set videoSrc with the full URL from the database
+
+          // Set loading to false after data is fetched
+          setLoading(false);
+        } else {
+          setTranscript("No transcript available.");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error.message);
+        setError("Error fetching transcript.");
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <Box mt={0} width="100%">
-    <Text fontWeight="semibold" fontSize="20px" mb={0} ml={1} zIndex={1} position="relative" >
+      <Text
+        fontWeight="semibold"
+        fontSize="20px"
+        mb={0}
+        ml={1}
+        zIndex={1}
+        position="relative"
+      >
         Full Transcription
-    </Text>
-    <Box mt={2}  border="1px" borderColor="#E6EAF2" borderRadius="15" boxShadow="md">
-      <Box p={4} bg="white" borderRadius="15">
-        <VStack spacing={4} align="stretch">
-          <HStack spacing={4} align="flex-start">
-            <Text fontWeight="bold" color="gray.600" minW="120px">
-              Interviewer
-            </Text>
-            <Box>
-              <Text color="#959595" fontSize="14px" fontWeight="normal" minW="80px">
-                00:01:10.000
+      </Text>
+      <Box
+        mt={2}
+        border="1px"
+        borderColor="#E6EAF2"
+        borderRadius="15"
+        boxShadow="md"
+      >
+        <Box p={4} bg="white" borderRadius="15">
+          <VStack spacing={4} align="stretch">
+            <HStack spacing={4} align="flex-start">
+              <Text fontWeight="bold" color="purple.500" minW="120px">
+                You
               </Text>
-              <Text>
-                Thank you for joining us today. To start, could you tell us a bit about your background and experience in nursing?
-              </Text>
-            </Box>
-          </HStack>
+              <Box>
+                {transcript ? (
+                  <HighlightFillerWords answer={transcript} />
+                ) : (
+                  <Text fontSize="xxs" color="brand.nightBlack">
+                    Loading transcript...
+                  </Text>
+                )}
+              </Box>
+            </HStack>
 
-          <Divider />
-
-          <HStack spacing={4} align="flex-start">
-            <Text fontWeight="bold" color="purple.500" minW="120px">
-              You
-            </Text>
-            <Box>
-              <Text color="#959595" fontSize="14px" fontWeight="normal" minW="80px">
-                00:01:35.000
-              </Text>
-              <Text>
-                Of course. I've been a registered nurse for about five years, primarily working in a hospital setting. I started my career in the <Text as="span" color="red.500" fontWeight="bold">medical–surgical unit</Text>, where I developed a strong foundation in patient care, clinical skills, and teamwork. Over the years, I've also worked in the emergency department, which has allowed me to enhance my critical thinking and adaptability, especially in high-pressure situations. I'm passionate about providing compassionate, patient-centered care and always strive to advocate for my patients' needs.
-              </Text>
-            </Box>
-          </HStack>
-
-          <Divider />
-
-          <HStack spacing={4} align="flex-start">
-            <Text fontWeight="bold" color="gray.600" minW="120px">
-              Interviewer
-            </Text>
-            <Box>
-              <Text color="#959595" fontSize="14px" fontWeight="normal" minW="80px">
-                00:01:10.000
-              </Text>
-              <Text>
-                Thank you for joining us today. To start, could you tell us a bit about your background and experience in nursing?
-              </Text>
-            </Box>
-          </HStack>
-        </VStack>
+            <Divider />
+          </VStack>
+        </Box>
       </Box>
     </Box>
-    </Box>
   );
-};
-
-export default TranscriptionComponent;
+}

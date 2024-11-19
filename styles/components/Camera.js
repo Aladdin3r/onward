@@ -34,39 +34,36 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
   const startCamera = async () => {
     try {
       const constraints = {
-        video: true,  // Enable video
+        video: true, // Enable video
         audio: {
-          echoCancellation: true, // Prevent echo
-          noiseSuppression: true,  // Reduce background noise
-          autoGainControl: true,   // Control volume fluctuations
+          echoCancellation: false, // Disable echo cancellation
+          noiseSuppression: false, // Disable noise suppression
+          autoGainControl: false,  // Disable auto gain control
         },
       };
-
+  
       const newStream = await navigator.mediaDevices.getUserMedia(constraints);
       videoRef.current.srcObject = newStream;
+      videoRef.current.muted = true; // Ensure the speaker stays muted
       setStream(newStream);
-
-      // Create audio context and gain node to manage audio volume
+  
+      // Optionally, set up the audio context for fine-grained audio control (can be skipped)
       const newAudioContext = new (window.AudioContext || window.webkitAudioContext)();
       const audioTracks = newStream.getAudioTracks();
       if (audioTracks.length > 0) {
         const audioSource = newAudioContext.createMediaStreamSource(newStream);
         const newGainNode = newAudioContext.createGain();
-        newGainNode.gain.setValueAtTime(0, newAudioContext.currentTime); // Mute the microphone initially
+        newGainNode.gain.setValueAtTime(1, newAudioContext.currentTime); // Default to full gain
         audioSource.connect(newGainNode);
         newGainNode.connect(newAudioContext.destination);
         setAudioContext(newAudioContext);
         setGainNode(newGainNode);
       }
-
-      // Log to check available tracks
-      newStream.getTracks().forEach(track => {
-        console.log(track.kind, track.label); // Log video and audio tracks
-      });
     } catch (error) {
       console.error("Error accessing webcam:", error);
     }
   };
+  
 
   const stopCamera = () => {
     if (stream) {
@@ -128,7 +125,7 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
   const saveRecordingToSupabase = async () => {
     const blob = new Blob(recordedChunks, { type: "video/webm" });
     const file = new File([blob], "recorded-video.webm", { type: "video/webm" });
-
+  
     // Upload the file to Supabase
     const { data, error } = await supabase
       .storage
@@ -137,7 +134,7 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
         cacheControl: "3600",
         upsert: false,
       });
-
+  
     if (error) {
       console.error("Error uploading video:", error.message);
     } else {
@@ -146,14 +143,40 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
         .storage
         .from("onward-video")
         .getPublicUrl(data.path);
-
+  
       if (urlError) {
         console.error("Error fetching public URL:", urlError.message);
       } else {
-        setSavedVideoUrl(urlData.publicUrl); // Pass the URL to the parent component
+        // Fetch the latest transcription data from the 'transcriptions' table
+        const { data: transcriptionData, error: transcriptionError } = await supabase
+          .from('transcriptions')
+          .select('id, text, video_id')
+          .order('created_at', { ascending: false })
+          .limit(1)  // Fetch the latest transcription
+          .single();
+  
+        if (transcriptionError) {
+          console.error("Error fetching transcription data:", transcriptionError.message);
+        } else {
+          // Update the transcription row with the video URL
+          const { error: updateError } = await supabase
+            .from('transcriptions')
+            .update({
+              video_id: urlData.publicUrl,  // Save the video URL to the transcription row
+            })
+            .eq('id', transcriptionData.id);  // Match the correct transcription row by ID
+  
+          if (updateError) {
+            console.error("Error updating transcription data with video URL:", updateError.message);
+          } else {
+            console.log("Video URL saved successfully to the transcription table");
+            setSavedVideoUrl(urlData.publicUrl); // Pass the URL to the parent component
+          }
+        }
       }
     }
   };
+  
 
   
   const toggleMic = async () => {
@@ -177,16 +200,16 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
   };
 
   return (
-    <div style={{ textAlign: "center", padding: "2em", width: "100%", maxWidth: "100%" }}>
+    <div style={{ textAlign: "center", padding: "2em", width: "100%", maxWidth: "100%", backgroundColor: "white"}}>
       <div
         style={{
           position: "relative",
           width: "80%",
           maxWidth: "1000px",
           height: "calc(100vw * 9 / 16)",
-          maxHeight: "600px",
+          maxHeight: "400px",
           margin: "0 auto",
-          backgroundColor: "#f0f0f0",
+          backgroundColor: "white",
           overflow: "hidden",
         }}
       >
