@@ -18,6 +18,7 @@ export default function FileUpload({
     handleFileSelect,
     selectedFiles,
 }) {
+    
     const [uploadedFiles, setUploadedFiles] = useState(initialUploadedFiles);
     const toast = useToast();
 
@@ -43,7 +44,7 @@ export default function FileUpload({
             }
 
             const files = data.map(file => ({
-                id: uuidv4(),
+                id: file.name,
                 name: file.name,
                 size: file.metadata?.size || 0,
             }));
@@ -145,6 +146,8 @@ export default function FileUpload({
         }
     };
 
+    
+
     return (
         <Flex 
             flexDir="row" 
@@ -188,7 +191,7 @@ export default function FileUpload({
                     <UploadedFiles 
                         files={uploadedFiles} 
                         handleDeleteFile={handleDeleteFile} 
-                        selectedFiles={selectedFiles} 
+                        selectedFiles={selectedFiles}
                         handleFileSelect={handleFileSelect}    
                     />
                 </Flex>

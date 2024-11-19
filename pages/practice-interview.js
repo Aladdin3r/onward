@@ -33,9 +33,12 @@ export default function PracticeInterview() {
     useEffect(() => {
       const savedSelections = JSON.parse(localStorage.getItem("selectedFiles"));
       if (savedSelections) {
-          setSelectedFiles(savedSelections);
+          console.log("Restored selections from local storage:", savedSelections);
+          setSelectedFiles(savedSelections); 
       }
   }, []);
+  
+  
 
     // handle file selection
     const handleFileSelect = (file, type) => {
@@ -47,11 +50,10 @@ export default function PracticeInterview() {
                 const fileType = type === "resume" ? "resumes" : "jobPosts";
     
                 console.log("Current Selection:", updatedSelection[fileType]);
-    
-                // Allow only one file per type
                 updatedSelection[fileType] = [{ id: file.id, name: file.name }];
     
-                console.log("Updated Selection After Change:", updatedSelection);
+                // Allow only one file per type
+                updatedSelection[fileType] = [{ id: file.name, name: file.name }];
     
                 // Persist to localStorage
                 localStorage.setItem("selectedFiles", JSON.stringify(updatedSelection));
