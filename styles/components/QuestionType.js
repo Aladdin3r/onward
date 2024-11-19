@@ -10,7 +10,7 @@ import {
     CardFooter
 } from '@chakra-ui/react'
 
-export default function QuestionType({ selectedQuestions, setSelectedQuestions }) {
+export default function QuestionType({ selectedQuestionType, setSelectedQuestionType }) {
     return(
         <>
         <Card 
@@ -29,8 +29,8 @@ export default function QuestionType({ selectedQuestions, setSelectedQuestions }
                         Type of Questions
                     </Text>
                     <CheckboxGroup
-                        value={selectedQuestions}
-                        onChange={(values) => setSelectedQuestions(values)}
+                        value={selectedQuestionType}
+                        onChange={(values) => setSelectedQuestionType(values)}
                     >
                         <Flex 
                             direction={{ base: "row"}}
@@ -39,33 +39,32 @@ export default function QuestionType({ selectedQuestions, setSelectedQuestions }
                             justify={"center"}
                         >
                             <Box flex="1" >
-                                <Checkbox size={"lg"} my={3}>
-                                    <Text fontSize={{base: "xxxs", "2xl":"xs"}}>Behavioural Questions</Text>
+                                <Checkbox size={"lg"} my={3} value="Behavioural">
+                                    <Text fontSize={{base: "xxxs", "2xl":"xs"}} value="Behavioural">Behavioural Questions</Text>
                                 </Checkbox>
-                                <Checkbox size={"lg"} my={3}>
-                                    <Text fontSize={{base: "xxxs", "2xl":"xs"}}>Situational Questions</Text>
+                                <Checkbox size={"lg"} my={3} value="Situational">
+                                    <Text fontSize={{base: "xxxs", "2xl":"xs"}} >Situational Questions</Text>
                                 </Checkbox>
-                                <Checkbox size={"lg"} my={3}>
-                                    <Text fontSize={{base: "xxxs", "2xl":"xs"}}>Technical Questions</Text>
+                                <Checkbox size={"lg"} my={3} value="Technical">
+                                    <Text fontSize={{base: "xxxs", "2xl":"xs"}} >Technical Questions</Text>
                                 </Checkbox>
-                                <Checkbox size={"lg"} my={3}>
-                                    <Text fontSize={{base: "xxxs", "2xl":"xs"}}>Competency Questions</Text>
+                                <Checkbox size={"lg"} my={3} value="Competency">
+                                    <Text fontSize={{base: "xxxs", "2xl":"xs"}} >Competency Questions</Text>
                                 </Checkbox>
                             </Box>
                             <Box flex="1">
-                                <Checkbox size={"lg"} my={3}>
+                                <Checkbox size={"lg"} my={3} value="Cultural">
                                     <Text fontSize={{base: "xxxs", "2xl":"xs"}}>Cultural Questions</Text>
                                 </Checkbox>
-                                <Checkbox size={"lg"} my={3}>
-                                    <Text fontSize={{base: "xxxs", "2xl":"xs"}}>Career Goals Questions</Text>
+                                <Checkbox size={"lg"} my={3} value="Career Goals">
+                                    <Text fontSize={{base: "xxxs", "2xl":"xs"}} >Career Goals Questions</Text>
                                 </Checkbox>
-                                <Checkbox size={"lg"} my={3}>
-                                    <Text fontSize={{base: "xxxs", "2xl":"xs"}}>Legal / Regulation Questions</Text>
+                                <Checkbox size={"lg"} my={3} value="Regulations">
+                                    <Text fontSize={{base: "xxxs", "2xl":"xs"}} >Legal / Regulation Questions</Text>
                                 </Checkbox>
                             </Box>
                         </Flex>
                     </CheckboxGroup>
-                    
                 </Flex>
             </CardBody>
         </Card>

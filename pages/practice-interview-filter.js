@@ -23,7 +23,9 @@ export default function PracticeInterviewFilter() {
     const router = useRouter();
     const [selectedFiles, setSelectedFiles] = useState({ resumes: [], jobPosts: [] });
     const [fileURLs, setFileURLs] = useState({ resumes: [], jobPosts: [] });
-    const [selectedQuestions, setSelectedQuestions] = useState([]);
+    const [selectedNumber, setSelectedNumber] = useState(5); // default to 5
+    const [selectedLength, setSelectedLength] = useState(10); // default to 10
+    const [selectedQuestionType, setSelectedQuestionType] = useState([]);
     const [error, setError] = useState("");
 
         const handleStartClick  = () => {
@@ -37,6 +39,23 @@ export default function PracticeInterviewFilter() {
                 pathname: '/practice-interview',
             });
         };
+
+        const handleNumberOfQuestionChange = (value) => {
+            setSelectedNumber(value);
+            console.log("Selected number of question", value);
+        };
+
+        const handleLengthOfPracticeChange = (value) => {
+            setSelectedLength(value);
+            console.log("Selected length of practice", value);
+        };
+
+        const handleQuestionTypeChange = (types) => {
+            setSelectedQuestionType(types);
+            console.log("Selected question types:", types)
+        }
+
+
 
     // get slected file url
     const getPublicURLs = async (selectedFiles) => {
@@ -132,9 +151,17 @@ export default function PracticeInterviewFilter() {
                             flexDirection={{ base: "column", xl: "row" }} 
                             justifyContent={"space-between"}
                             gap={"5%"}
-                        >
-                            <QuestionTime />
-                            <QuestionType />
+                        > 
+                            <QuestionTime 
+                                selectedNumber={selectedNumber}
+                                onNumberChange={handleNumberOfQuestionChange}
+                                selectedLength={selectedLength}
+                                onLengthChange={handleLengthOfPracticeChange}
+                            />
+                            <QuestionType 
+                                 selectedQuestionType={selectedQuestionType}
+                                 setSelectedQuestionType={handleQuestionTypeChange}
+                            />
                         </Flex>
                         {/* bottom buttons */}
                         <Flex 

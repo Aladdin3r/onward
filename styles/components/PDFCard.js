@@ -1,6 +1,7 @@
 import { Flex, Box, Text, CloseButton, Image } from "@chakra-ui/react";
 
-export default function PDFCard({ title, size, isSelected, handleDeleteFile, handleFileSelect, file, type }) {
+export default function PDFCard({ title, size, isSelected, handleDeleteFile, handleFileSelect, file }) {
+    
   return (
       <Flex 
         p={4} w="100%" h="65px" 
