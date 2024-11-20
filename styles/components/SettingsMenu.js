@@ -110,7 +110,7 @@ const SettingsMenu = () => {
         <Divider orientation="vertical" borderColor="brand.pastelBlue" borderRadius={99} borderWidth="2px" mt={5} height="540px" />
 
         {/* Right-side content area */}
-        <Box w="45%" p={5} shadow="sm" borderRadius="lg" mb={4} mr={20} border="1px solid" borderColor="gray.200"   h={activeSection === "Privacy Policy" || activeSection === "Terms & Conditions" ? "100%" : "55%"}>
+        <Box w="45%" p={5} shadow="sm" borderRadius="lg" mb={4} mr={20} border="1px solid" borderColor="gray.200"   h={activeSection === "Privacy Policy" || activeSection === "Terms & Conditions" || activeSection === "FAQ" ? "100%" : "55%"} overflowY={activeSection === "Privacy Policy" || activeSection === "Terms & Conditions" || activeSection === "FAQ" ? "auto" : "none"}>
           <SettingsContent activeSection={activeSection} />
         </Box>
       </Box>
