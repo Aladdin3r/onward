@@ -21,7 +21,7 @@ import RecordCamera from './Camera';
 import { supabase } from '@/lib/supabaseClient';
 import { createClient } from '@supabase/supabase-js';
 
-export default function AnswerPractice({ videoSrc, thumbnail, onShowVideoChange }) {
+export default function AnswerPractice({ onShowVideoChange, question }) {
     const router = useRouter();
     const [showVideo, setShowVideo] = useState(false); // default is text
     const [activeButton, setActiveButton] = useState('text');
@@ -89,12 +89,8 @@ export default function AnswerPractice({ videoSrc, thumbnail, onShowVideoChange 
                     flexDirection="column"
                     alignItems="center"
                 >
-                    <QuestionPractice 
-                        showArrows={false}
-                        borderTopRadius={15}
-                        borderBottomRadius={0}
-                        width="80%"
-                    />
+                    {/* Display Current Question */}
+                    <QuestionPractice question={question} />
                     <Flex 
                         gap="1.1rem" 
                         p="4" 

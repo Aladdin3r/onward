@@ -17,7 +17,7 @@ import interviewQuestions from '@/data/interviewQuestions';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-export default function QuestionPractice({ questions = [], questionTypes = [], borderTopRadius, borderBottomRadius, questionWidth }) {
+export default function QuestionPractice({ questions = [], questionTypes = [], question, borderTopRadius, borderBottomRadius, questionWidth }) {
 
     return (
         <>
@@ -29,25 +29,37 @@ export default function QuestionPractice({ questions = [], questionTypes = [], b
                     m={0}
                     p={0}>
                         <CardBody textAlign={"left"}>
-                            <Stack spacing='4' divider={<StackDivider />}>
-                                {questions.length > 0 ? (
-                                    questions.map((question, index) => (
+                            <Stack spacing="4" divider={<StackDivider />}>
+                                {/* Handle single question or multiple questions */}
+                                {question ? (
+                                    /* Single question display */
+                                    <Box>
+                                        <Heading size="18pt">
+                                            {question.category || "General Question"}
+                                        </Heading>
+                                        <Text pt="2" fontSize="18pt">
+                                            {question.question || "No question text available"}
+                                        </Text>
+                                    </Box>
+                                ) : questions && questions.length > 0 ? (
+                                    questions.map((q, index) => (
                                         <Box key={index}>
                                             {/* Display question type */}
-                                            <Heading size='18pt'>
-                                                {questionTypes[index] || "General Question"}
+                                            <Heading size="18pt">
+                                                {q.category || questionTypes[index] || "General Question"}
                                             </Heading>
                                             {/* Display question */}
-                                            <Text pt='2' fontSize='18pt'>
-                                                {question}
+                                            <Text pt="2" fontSize="18pt">
+                                                {q.question || q} {/* Handles both string and object cases */}
                                             </Text>
                                         </Box>
                                     ))
                                 ) : (
-                                <Text pt='2' fontSize='18pt'>No questions available. Please try again.</Text>
-                            )}
-                        </Stack>
-                    </CardBody>
+                                    <Text pt="2" fontSize="18pt">No questions available. Please try again.</Text>
+                                )}
+                            </Stack>
+                        </CardBody>
+
                 </Card>
 
                 {/* conditionally show the arrow buttons so can be hidden in answer page */}

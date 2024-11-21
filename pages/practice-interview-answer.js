@@ -2,22 +2,46 @@ import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import "@/styles/theme";
 import { Heading, Box, CardBody, Text, Stack, Card, Link, Flex, Button } from "@chakra-ui/react";
-import ProgressBar from "@/styles/components/ProgressBar";
-import Popup from "@/styles/components/Popup.js";
-import ViewAllPopup from "@/styles/components/ViewAllPopup"; // Import the new ViewAllPopup component
-import { useDisclosure } from '@chakra-ui/react';
 import { useRouter } from 'next/router'; // Import useRouter
-import Layout from "@/styles/components/Layout";
 import AnswerPractice from "@/styles/components/AnswerPractice"
-import { useState } from "react";
-import interviewQuestions from '@/data/interviewQuestions'; 
+import { useState, useEffect } from "react";
 import LayoutSim from "@/styles/components/LayoutSim";
 
 export default function PracticeAnswer() {
-
     const [showVideo, setShowVideo] = useState(false);
+    const [questions, setQuestions] = useState([]);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const router = useRouter();
-    // const { question } = router.query;
+
+    useEffect(() => {
+        const storedQuestions = localStorage.getItem("questions");
+        if (storedQuestions) {
+            try {
+                const parsedQuestions = JSON.parse(storedQuestions);
+                setQuestions(parsedQuestions);
+                console.log("First Question Index: 0"); // Log the first question index
+                if (parsedQuestions.length > 0) {
+                    console.log("First Question:", parsedQuestions[0]); // Log the first question content
+                } else {
+                    console.warn("Questions array is empty.");
+                }
+            } catch (error) {
+                console.error("Error parsing questions from localStorage:", error);
+            }
+        }
+    }, []);
+
+    // navigation buttons
+    const handleNextClick = () => {
+        if (currentQuestionIndex < questions.length - 1) {
+            setCurrentQuestionIndex((prevIndex) => {
+                const newIndex = prevIndex + 1;
+                console.log("Next Question Index:", newIndex); // Log the new index
+                console.log("Next Question:", questions[newIndex]); // Log the next question content
+                return newIndex;
+            });
+        }
+    };
 
     const handleAnalysisClick = () => {
         router.push({
@@ -30,8 +54,6 @@ export default function PracticeAnswer() {
             pathname: '/practice-interview',
         });
     };
-
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
     return (
         <>
@@ -49,7 +71,42 @@ export default function PracticeAnswer() {
                 >
                     {/* Answer cards */}
                     <Flex flexDirection={"row"} ml={"0rem"} mt={"3rem"}>
-                        <AnswerPractice question={interviewQuestions[currentQuestionIndex]} onShowVideoChange={setShowVideo}/>
+                        {questions.length > 0 ? (
+                            <AnswerPractice
+                                question={questions[currentQuestionIndex]}
+                                onShowVideoChange={() => {}}
+                        />
+                        ) : (
+                            <Text>No questions available. Please try again.</Text>
+                        )}
+                    </Flex>
+
+                    {/* question navigation buttons */}
+                    <Flex flexDirection="row" justify="space-between" mt="auto" px="4em" mb="20px">
+                        <Button
+                            bg="brand.pureWhite"
+                            size="xxs"
+                            p={2}
+                            border="1px"
+                            borderColor="red"
+                            onClick={handleEndClick}
+                            _hover={{ bg: "brand.pureWhite", borderColor: "red" }}
+                        >
+                            End
+                        </Button>
+
+                        <Button
+                            bg="brand.pureWhite"
+                            size="xxs"
+                            p={2}
+                            border="1px"
+                            borderColor={currentQuestionIndex < questions.length - 1 ? "green" : "gray"}
+                            onClick={handleNextClick}
+                            disabled={currentQuestionIndex === questions.length - 1} // Disable on the last question
+                            _hover={{ bg: "brand.pureWhite", borderColor: "green" }}
+                        >
+                            Next
+                        </Button>
                     </Flex>
 
                     {/* Bottom Buttons */}
