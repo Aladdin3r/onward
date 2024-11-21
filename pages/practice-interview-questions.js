@@ -5,15 +5,38 @@ import { Heading, Box, CardBody, Text, Stack, Card, Link, Flex, Button } from "@
 import { useRouter } from 'next/router'; // Import useRouter
 import QuestionPractice from "@/styles/components/QuestionPractice";
 import LayoutSim from "@/styles/components/LayoutSim";
-
 import { Image } from "@chakra-ui/react";
-
 import ProgressBar from "@/styles/components/ProgressBar";
+import { useState, useEffect } from "react";
 
 export default function PracticeInterviewQuestion() {
     const router = useRouter();
-    const { question } = router.query;
-   
+    const [questions, setQuestions] = useState([]);
+    const [questionTypes, setQuestionTypes] = useState([])
+
+    useEffect(() => {
+        const storedQuestions = localStorage.getItem("questions");
+        console.log("Stored Questions from localStorage:", storedQuestions);
+
+        if (storedQuestions) {
+            try {
+                const parsedQuestions = JSON.parse(storedQuestions); // Parse stored questions
+                console.log("Parsed Questions:", parsedQuestions);
+
+                if (Array.isArray(parsedQuestions)) {
+                    setQuestions(parsedQuestions.map((q) => q.question)); // Extract "question" fields
+                    setQuestionTypes(parsedQuestions.map((q) => q.category)); // Extract "category" fields
+                } else {
+                    console.error("Parsed questions is not an array.");
+                }
+            } catch (error) {
+                console.error("Error parsing stored questions:", error);
+            }
+        }
+    }, []);
+    
+
+    // start and end button
     const handleEndClick = () => {
         router.push({
             pathname: '/practice-interview-filter'
@@ -72,14 +95,8 @@ export default function PracticeInterviewQuestion() {
                     >
                         <Box>
                             <QuestionPractice
-                                showArrows={"true"}
-                                borderRadius={"15"}
-                                questionWidth={"80%"}
-                            />
-                        </Box>
-                        <Box>
-                            <QuestionPractice
-                                showArrows={"true"}
+                                questions={questions} 
+                                questionTypes={questionTypes} 
                                 borderRadius={"15"}
                                 questionWidth={"80%"}
                             />
