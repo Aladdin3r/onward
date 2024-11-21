@@ -28,34 +28,25 @@ export default function PracticeInterviewFilter() {
     const [selectedQuestionType, setSelectedQuestionType] = useState([]);
     const [error, setError] = useState("");
 
-        const handleStartClick  = () => {
-            router.push({
-                pathname: '/practice-interview-questions',
-            });
-        };
+    const handleNumberOfQuestionChange = (value) => {
+        setSelectedNumber(value);
+        console.log("Selected number of question", value);
+    };
+
+    const handleLengthOfPracticeChange = (value) => {
+        setSelectedLength(value);
+        console.log("Selected length of practice", value);
+    };
+
+    const handleQuestionTypeChange = (types) => {
+        setSelectedQuestionType(types);
+        console.log("Selected question types:", types)
+    }
+
+    useEffect(() => {
+        console.log("Updated selectedQuestionType:", selectedQuestionType);
+    }, [selectedQuestionType]);
         
-        const handleBackClick = () => {
-            router.push({
-                pathname: '/practice-interview',
-            });
-        };
-
-        const handleNumberOfQuestionChange = (value) => {
-            setSelectedNumber(value);
-            console.log("Selected number of question", value);
-        };
-
-        const handleLengthOfPracticeChange = (value) => {
-            setSelectedLength(value);
-            console.log("Selected length of practice", value);
-        };
-
-        const handleQuestionTypeChange = (types) => {
-            setSelectedQuestionType(types);
-            console.log("Selected question types:", types)
-        }
-
-
 
     // get slected file url
     const getPublicURLs = async (selectedFiles) => {
@@ -117,6 +108,166 @@ export default function PracticeInterviewFilter() {
     
         fetchURLs();
     }, []);
+
+
+    // AI stuff 
+
+    // sending file to roughly functoin
+    const UploadFiles = async (resumes, jobPosts) => {
+        try {
+            const uploadPromises = [];
+    
+            if (resumes.length > 0) {
+                uploadPromises.push(
+                    fetch("https://api.roughlyai.com/ttfiles/api/prompt_response", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            handler: "api_upload",
+                            key: "Onward/Resumes/",
+                            upload_data: resumes.map((file) => file.url),
+                            fn: resumes.map((file) => file.name),
+                            api_key: process.env.NEXT_PUBLIC_ROUGHLY_API_KEY,
+                        }),
+                    })
+                );
+            }
+    
+            if (jobPosts.length > 0) {
+                uploadPromises.push(
+                    fetch("https://api.roughlyai.com/ttfiles/api/prompt_response", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            handler: "api_upload",
+                            key: "Onward/JobPosts/",
+                            upload_data: jobPosts.map((file) => file.url),
+                            fn: jobPosts.map((file) => file.name),
+                            api_key: process.env.NEXT_PUBLIC_ROUGHLY_API_KEY,
+                        }),
+                    })
+                );
+            }
+    
+            const responses = await Promise.all(uploadPromises);
+    
+            const pollingResults = await Promise.all(
+                responses.map(async (resp) => {
+                    const { data: _url } = await resp.json();
+                    return await PollingResponse(_url);
+                })
+            );
+    
+            return pollingResults;
+        } catch (error) {
+            console.error("Error uploading files:", error);
+            throw error;
+        }
+    };
+
+    // prompt function
+    const GenerateQuestionsAndTalkingPoints = async (jobPosts, resumes, selectedNumber, selectedQuestionType) => {
+        try {
+            console.log("Sending API request with:", {
+                selectedNumber,
+                selectedQuestionType
+            }); // debugging
+            const formattedQuestionTypes = selectedQuestionType.length
+                ? selectedQuestionType.join(", ")
+                : "all types";
+
+            const jobQuestionPrompt = `Generate ${selectedNumber} nursing interview questions consisting only of ${selectedQuestionType} questions based on the job posting, description, and duties. 
+                Return the questions in valid JSON format without any additional formatting or backticks, and ensure the output is a JSON array. 
+                Each object in the array should have the following fields:
+                - question: The interview question.
+                - category: Behavioural Question, Situational Question, Technical Question, Competency Question, Cultural Question, Career Goals, or Legal/Regulation Questions
+                - additionalInfo: A brief explanation of what the question is assessing.`
+            
+                        console.log("Job Question Prompt:", jobQuestionPrompt);
+
+            const jobPostResponse = await fetch("https://api.roughlyai.com/ttfiles/api/prompt_response", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    handler: "api_call",
+                    key: "Onward/JobPosts/",
+                    api_key: process.env.NEXT_PUBLIC_ROUGHLY_API_KEY,
+                    question: jobQuestionPrompt,
+                    numsimular: selectedNumber,
+                }),
+            });
+    
+            const resumeResponse = await fetch("https://api.roughlyai.com/ttfiles/api/prompt_response", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    handler: "api_call",
+                    key: "Onward/Resumes/",
+                    api_key: process.env.NEXT_PUBLIC_ROUGHLY_API_KEY,
+                    question: `Generate talking points that align resumes to the job description as an array 
+                        in valid JSON format without any additional formatting or backticks, and ensure the output is a JSON array.`,
+                    numsimular: 5, // default 5
+                }),
+            });
+    
+            const jobPostQuestions = await PollingResponse((await jobPostResponse.json()).data);
+            const resumeTalkingPoints = await PollingResponse((await resumeResponse.json()).data);
+    
+            return { jobPostQuestions, resumeTalkingPoints };
+        } catch (error) {
+            console.error("Error generating questions and talking points:", error);
+            throw error;
+        }
+    };
+    
+
+    // next & back buttons
+    const handleStartClick = async () => {
+        try {
+            const storedFiles = JSON.parse(localStorage.getItem("selectedFiles"));
+            const urls = await getPublicURLs(storedFiles);
+            setFileURLs(urls);
+
+            const uploadProgress = await UploadFiles(urls.resumes, urls.jobPosts);
+            console.log("Upload progress:", uploadProgress);
+
+            // Generate questions and talking points
+            const { jobPostQuestions, resumeTalkingPoints } = await GenerateQuestionsAndTalkingPoints(
+                urls.jobPosts,
+                urls.resumes,
+                selectedNumber,
+                selectedQuestionType
+            );
+
+            console.log("Generated Questions:", jobPostQuestions);
+
+            // **[CHANGE]**: Parse the JSON response properly and save it
+            const parsedQuestions = JSON.parse(jobPostQuestions.answer); // Parse the JSON string
+            console.log("Parsed Questions:", parsedQuestions);
+
+            // Save parsed questions and talking points to localStorage
+            localStorage.setItem("questions", JSON.stringify(parsedQuestions));
+            localStorage.setItem("talkingPoints", JSON.stringify(resumeTalkingPoints));
+
+            router.push('/practice-interview-questions');
+        } catch (error) {
+            console.error("Error in handleStartClick:", error);
+        }
+    };
+    
+    const handleBackClick = () => {
+        router.push({
+            pathname: '/practice-interview',
+        });
+    };    
     
 
     return (
@@ -206,3 +357,27 @@ export default function PracticeInterviewFilter() {
         </>
     );
 }
+
+const PollingResponse = async (_url)=>{
+    const _response = await new Promise((resolve)=>{
+      const GetProgress = async (tries = 0) => {
+        if (tries === 10) {
+          console.log("too long");
+          resolve(false)
+        }
+        const _progress = await fetch(_url);
+        const _progJson = await _progress.json();
+        console.log("progress in json", _progJson);
+        if (_progJson.progress === 2) {
+          resolve(_progJson)
+        } else {
+          //try again
+          await setTimeout(() => GetProgress(tries + 1), 2000)
+        }
+      }
+  
+      GetProgress();
+    });
+  
+    return _response;
+  }

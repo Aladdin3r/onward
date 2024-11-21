@@ -30,7 +30,10 @@ export default function QuestionType({ selectedQuestionType, setSelectedQuestion
                     </Text>
                     <CheckboxGroup
                         value={selectedQuestionType}
-                        onChange={(values) => setSelectedQuestionType(values)}
+                        onChange={(values) => {
+                            console.log("Selected Question Types:", values);
+                            setSelectedQuestionType(values);
+                        }}
                     >
                         <Flex 
                             direction={{ base: "row"}}
