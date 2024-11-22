@@ -280,7 +280,7 @@ export default function PracticeInterviewFilter() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <Layout showTopNav={true} pageTitle="Practice Interview">
+            <Layout showTopNav={true} pageTitle="Practice">
 
                 <div className={styles.page} style={{ position: "relative" }}>
                     <Flex 
