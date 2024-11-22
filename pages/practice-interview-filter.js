@@ -330,6 +330,7 @@ export default function PracticeInterviewFilter() {
               align="center"
               justify="center"
               position="absolute"
+              direction="column"
               top="0"
               left="0"
               width="100%"
@@ -338,6 +339,7 @@ export default function PracticeInterviewFilter() {
               zIndex="10"
             >
               <LoadingSpinner />
+              <Text>Generating your Questions...</Text>
             </Flex>
           )}
           <Flex
