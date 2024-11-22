@@ -60,6 +60,20 @@ export default function AnswerPractice({ onShowVideoChange, question }) {
         localStorage.setItem("questions", JSON.stringify(updatedQuestions)); // save to localStorage
         console.log(`Answer saved for question ${index + 1}:`, updatedQuestions[index].answer);
     };
+
+    const handleAnalysisClick = async () => {
+        const videoURL = savedVideoUrl;
+        const transcriptionText = transcription;
+        debugger;
+        const transcriptionEntry = {text:transcriptionText, video_id:videoURL};
+        let {error} = await supabase.from("transcriptions").insert(transcriptionEntry);
+        if (error) {
+            throw error;
+        }
+        router.push({
+            pathname: '/practiceOverview',
+        });
+    };
     
 
     const handleVoiceClick = () => {
