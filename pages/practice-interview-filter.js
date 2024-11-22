@@ -202,13 +202,14 @@ export default function PracticeInterviewFilter() {
         ? selectedQuestionType.join(", ")
         : "all types";
 
-      const jobQuestionPrompt = `Generate ${selectedNumber} nursing interview questions consisting only of ${selectedQuestionType} questions based on the job posting, description, and duties. 
-                Return the questions in valid JSON format without any additional formatting or backticks, and ensure the output is a JSON array. 
-                Each object in the array should have the following fields:
+      const jobQuestionPrompt = `Generate a unique set of ${selectedNumber} interview questions that's a mix of general interview questions and questions specific to the job posting. 
+                Only generate ${selectedQuestionType} type questions. Avoid repeating exact questions or overly similar phrasing from prior sets. Return the questions in valid JSON format, without any additional formatting or backticks. 
+                Each object in the array should include:
                 - question: The interview question.
-                - category: Behavioural Question, Situational Question, Technical Question, Competency Question, Cultural Question, Career Goals, or Legal/Regulation Questions
-                - additionalInfo: A brief explanation of what the question is assessing.`;
-
+                - category: Behavioural Question, Situational Question, Technical Question, Competency Question, Cultural Question, Career Goals, or Legal/Regulation Questions.
+                - type: Generic/Common or Specific.
+                - additionalInfo: A brief explanation of what the question is assessing.;
+    `
       console.log("Job Question Prompt:", jobQuestionPrompt);
 
       const jobPostResponse = await fetch(
@@ -239,8 +240,13 @@ export default function PracticeInterviewFilter() {
             handler: "api_call",
             key: "Onward/Resumes/",
             api_key: process.env.NEXT_PUBLIC_ROUGHLY_API_KEY,
-            question: `Generate talking points that align resumes to the job description as an array 
-                        in valid JSON format without any additional formatting or backticks, and ensure the output is a JSON array.`,
+            question: `Generate an array of talking points that align resumes to the job description in valid JSON format. Each object in the array should include the following fields:
+                      - "question": A talking point or prompt relevant to aligning resumes with the job description.
+                      - "category": One of the following categories: "Behavioural Question", "Situational Question", "Technical Question", "Competency Question", "Cultural Question", "Career Goals", or "Legal/Regulation Questions".
+                      - "response": Leave this field as an empty string ("").
+                      - "video_id": Leave this field as an empty string ("").
+                      - "video_url": Leave this field as an empty string ("")
+                      Output only the JSON array.`,
             numsimular: 5, // default 5
           }),
         }
@@ -323,7 +329,8 @@ export default function PracticeInterviewFilter() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Layout showTopNav={true} pageTitle="Practice Interview">
+
+      <Layout showTopNav={true} pageTitle="Practice">
         <div className={styles.page} style={{ position: "relative" }}>
           {loading && (
             <Flex

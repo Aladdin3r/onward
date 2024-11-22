@@ -18,7 +18,7 @@ const variants = {
     path: "/mock-interview"
   },
   variant3: {
-    label: "Practice Interview",
+    label: "Practice",
     icon: <Presentation size={32} />,
     path: [
       "/practice-interview",

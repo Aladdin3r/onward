@@ -34,7 +34,7 @@ export default function QuestionPractice({ questions = [], questionTypes = [], q
                                 {question ? (
                                     /* Single question display */
                                     <Box>
-                                        <Heading size="18pt">
+                                        <Heading size={{ base:"12pt", md: "16pt", "2xl": "18pt" }}>
                                             {question.category || "General Question"}
                                         </Heading>
                                         <Text pt="2" fontSize="18pt">
