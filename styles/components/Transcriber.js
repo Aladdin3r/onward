@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk';
 
 export default function Transcriber({ isRecording, setTranscription }) {
+
+  
   const recognizer = useRef(null);
   const lastRecognizedTextRef = useRef('');
 

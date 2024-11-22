@@ -22,7 +22,8 @@ export default function ProgressBar({ activeStep }) {
   return (
     <>
       <Box 
-        w={{ base: "30rem", xl: "40rem", "2xl": "80rem" }}  
+        // w={{ base: "10rem", xl: "40rem", "2xl": "80rem" }}  
+        w="70%" 
         mx="auto"  
         my="1rem" 
       >

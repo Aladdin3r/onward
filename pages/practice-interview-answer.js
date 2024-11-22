@@ -41,13 +41,19 @@ export default function PracticeAnswer() {
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex((prevIndex) => {
                 const newIndex = prevIndex + 1;
+<<<<<<< HEAD
                 console.log("Next Question Index:", newIndex);
                 console.log("Next Question:", questions[newIndex]);
+=======
+                console.log("Next Question Index:", newIndex); 
+                console.log("Next Question:", questions[newIndex]); 
+>>>>>>> d46e0e652d256e0301a1ca3a440b29cf33fe5f07
                 return newIndex;
             });
         }
     };
 
+<<<<<<< HEAD
     const handleAnalysisClick = async () => {
         const videoURL = savedVideoUrl;
         const transcriptionText = transcription;
@@ -56,6 +62,21 @@ export default function PracticeAnswer() {
         if (error) {
             throw error;
         }
+=======
+    const handlePrevClick = () => {
+        if (currentQuestionIndex > 0) {
+            setCurrentQuestionIndex((prevIndex) => {
+                const newIndex = prevIndex - 1;
+                console.log("Previous Question Index:", newIndex); 
+                console.log("Previous Question:", questions[newIndex]); 
+                return newIndex;
+            });
+        }
+    };
+    
+
+    const handleAnalysisClick = () => {
+>>>>>>> d46e0e652d256e0301a1ca3a440b29cf33fe5f07
         router.push({
             pathname: '/practiceOverview',
         });
@@ -203,10 +224,10 @@ export default function PracticeAnswer() {
                             p={2}
                             border="1px"
                             borderColor="red"
-                            onClick={handleEndClick}
+                            onClick={handlePrevClick}
                             _hover={{ bg: "brand.pureWhite", borderColor: "red" }}
                         >
-                            End
+                            Prev (for testing)
                         </Button>
 
                         <Button
@@ -231,6 +252,15 @@ export default function PracticeAnswer() {
                         px="4em"
                         mb="20px"
                     >
+                        <Button bg={"brand.pureWhite"} size="xxs" width={"6rem"} p={2} border={"1px"} borderColor={"red"}
+                                onClick={handleEndClick}
+                                _hover={{
+                                    bg: "brand.pureWhite",
+                                    color: "red",
+                                    border:"1px",
+                                    borderColor:"red"
+                                }}>End</Button>
+
                         {!showVideo && (
                             <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"} boxShadow={"md"} 
                                 onClick={handleAnalysisClick}
