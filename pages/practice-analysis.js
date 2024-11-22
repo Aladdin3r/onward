@@ -21,6 +21,7 @@ import LanguageToggle from "@/styles/components/LanguageToggle";
 import LayoutSim from "@/styles/components/LayoutSim";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import LoadingSpinner from "@/styles/components/LoadingSpinner";
 
 export default function PracticeAnalysis() {
   const [transcript, setTranscript] = useState(null);
@@ -237,7 +238,7 @@ export default function PracticeAnalysis() {
                     w="100%"
                   >
                     {loading ? (
-                      <p>Loading...</p>
+                        <LoadingSpinner m="0" />
                     ) : error ? (
                       <p>Error: {error}</p>
                     ) : (
