@@ -41,28 +41,13 @@ export default function PracticeAnswer() {
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex((prevIndex) => {
                 const newIndex = prevIndex + 1;
-<<<<<<< HEAD
-                console.log("Next Question Index:", newIndex);
-                console.log("Next Question:", questions[newIndex]);
-=======
                 console.log("Next Question Index:", newIndex); 
                 console.log("Next Question:", questions[newIndex]); 
->>>>>>> d46e0e652d256e0301a1ca3a440b29cf33fe5f07
                 return newIndex;
             });
         }
     };
 
-<<<<<<< HEAD
-    const handleAnalysisClick = async () => {
-        const videoURL = savedVideoUrl;
-        const transcriptionText = transcription;
-        const transcriptionEntry = {text: transcriptionText, video_id: videoURL};
-        let {error} = await supabase.from("transcriptions").insert(transcriptionEntry);
-        if (error) {
-            throw error;
-        }
-=======
     const handlePrevClick = () => {
         if (currentQuestionIndex > 0) {
             setCurrentQuestionIndex((prevIndex) => {
@@ -76,7 +61,6 @@ export default function PracticeAnswer() {
     
 
     const handleAnalysisClick = () => {
->>>>>>> d46e0e652d256e0301a1ca3a440b29cf33fe5f07
         router.push({
             pathname: '/practiceOverview',
         });
