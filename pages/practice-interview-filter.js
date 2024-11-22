@@ -329,22 +329,39 @@ export default function PracticeInterviewFilter() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-            <Layout showTopNav={true} pageTitle="Practice">
 
-                <div className={styles.page} style={{ position: "relative" }}>
-                    <Flex 
-                        // flexDirection={"column"} 
-                        // height="100vh" 
-                        // minH={{ base: "90vh", md: "100vh", xl: "78vh", "2xl":"85vh" }} 
-                        // width={"100%"}
-                        // maxW={{ base: "100%", md: "1200px", lg: "1920px" }} 
-                        // mx="auto"
-                        // flexGrow={1} 
-                        flexDirection="column"
-                        height="86vh"
-                        width="100%"
-                    >
-                     <ProgressBar activeStep={1}/>
+      <Layout showTopNav={true} pageTitle="Practice">
+        <div className={styles.page} style={{ position: "relative" }}>
+          {loading && (
+            <Flex
+              align="center"
+              justify="center"
+              position="absolute"
+              direction="column"
+              top="0"
+              left="0"
+              width="100%"
+              height="100%"
+              bg="rgba(255, 255, 255, 0.8)"
+              zIndex="10"
+            >
+              <LoadingSpinner />
+              <Text>Generating your Questions...</Text>
+            </Flex>
+          )}
+          <Flex
+            // flexDirection={"column"}
+            // height="100vh"
+            // minH={{ base: "90vh", md: "100vh", xl: "78vh", "2xl":"85vh" }}
+            // width={"100%"}
+            // maxW={{ base: "100%", md: "1200px", lg: "1920px" }}
+            // mx="auto"
+            // flexGrow={1}
+            flexDirection="column"
+            height="86vh"
+            width="100%"
+          >
+            <ProgressBar activeStep={1} />
 
             {/* section for the question time & type cards */}
             <Flex
