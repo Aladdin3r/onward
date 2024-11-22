@@ -112,19 +112,19 @@ export default function PracticeAnswer() {
                     {/* Bottom Buttons */}
                     <Flex 
                         flexDirection={"row"} 
-                        justify={"space-between"} 
+                        justify={"flex-end"} 
                         mt={"auto"} 
                         px="4em"
                         mb="20px"
                     >
-                        <Button bg={"brand.pureWhite"} size="xxs" width={"6rem"} p={2} border={"1px"} borderColor={"red"}
+                        {/* <Button bg={"brand.pureWhite"} size="xxs" width={"6rem"} p={2} border={"1px"} borderColor={"red"}
                                 onClick={handleEndClick}
                                 _hover={{
                                     bg: "brand.pureWhite",
                                     color: "red",
                                     border:"1px",
                                     borderColor:"red"
-                                }}>End</Button>
+                                }}>End</Button> */}
 
                         {!showVideo && (
                         <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"} boxShadow={"md"} 
@@ -138,7 +138,7 @@ export default function PracticeAnswer() {
                         > 
                             Start Analysis
                         </Button>
-                        )};
+                        )}
                     </Flex>
                 </Flex>
             </LayoutSim>
