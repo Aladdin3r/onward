@@ -111,6 +111,7 @@ export default function PracticeInterviewQuestion() {
                         mt={"auto"} 
                         px="4em"
                         mb="20px"
+                        marginTop="30px"
                     >
                     <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"} boxShadow={"md"} 
                         onClick={handleEndClick}

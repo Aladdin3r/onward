@@ -7,70 +7,91 @@ import {
   Text,
   VStack,
   Flex,
-  Button,
   SimpleGrid,
   Tag,
   Divider,
   Container,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import VideoPlayer from "@/styles/components/VideoPlayer";
-import QuestionProgressIndicator from "@/styles/components/QuestionProgressIndicator";
-import HighlightFillerWords from "@/styles/components/HighlightFillerWords";
-import LanguageToggle from "@/styles/components/LanguageToggle";
-import LayoutSim from "@/styles/components/LayoutSim";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import LoadingSpinner from "@/styles/components/LoadingSpinner";
+import HighlightFillerWords from "@/styles/components/HighlightFillerWords";
+import LayoutSim from "@/styles/components/LayoutSim";
+import QuestionProgressIndicator from "@/styles/components/QuestionProgressIndicator";
 
-export default function PracticeAnalysis() {
-  const [transcript, setTranscript] = useState(null);
-  const [videoSrc, setVideoSrc] = useState(null); // New state for video source URL
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+export default function VideoWithTranscriptions() {
+  const [videoUrl, setVideoUrl] = useState(null); // State for video URL
+  const [transcript, setTranscript] = useState([]); // State for transcriptions
+  const [error, setError] = useState(null); // State for error handling
+  const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchVideoAndTranscriptions = async () => {
       try {
-        // Fetching the most recent transcription
-        const { data: transcriptData, error: transcriptError } = await supabase
-          .from("transcriptions")
-          .select("text, video_id")
-          .order("created_at", { ascending: false })
-          .limit(1);
-
-        if (transcriptError) {
-          console.error("Error fetching transcription:", transcriptError);
-          throw transcriptError;
-        }
-
-        if (transcriptData && transcriptData.length > 0) {
-          setTranscript(transcriptData[0].text);
-          const videoUrl = transcriptData[0].video_id; // Directly use video_id as the URL
-
-          if (!videoUrl) {
-            console.error("No video_id in transcription data.");
-            setError("No video URL found in transcription data.");
-            return;
-          }
-
-          console.log("Fetched video URL: ", videoUrl); // Debugging statement
-
-          setVideoSrc(videoUrl); // Set videoSrc with the full URL from the database
-
-          // Set loading to false after data is fetched
+        // Fetch the latest video from the 'onward-video' bucket
+        const { data: videoData, error: videoError } = await supabase.storage
+          .from("onward-video")
+          .list("videos", {
+            limit: 1,
+            offset: 0,
+            sortBy: { column: "created_at", order: "desc" }, // Sort by created_at for the most recent video
+          });
+  
+        if (videoError) {
+          console.error("Error fetching video list:", videoError.message);
+          setError("Failed to fetch video list.");
           setLoading(false);
-        } else {
-          setTranscript("No transcript available.");
+          return;
         }
+  
+        const videoPath = videoData?.[0]?.name;
+        if (videoPath && videoPath !== "emptyFolderPlaceholder") {
+          const { data: urlData, error: urlError } = await supabase.storage
+            .from("onward-video")
+            .getPublicUrl(`videos/${videoPath}`);
+  
+          if (urlError) {
+            console.error("Error fetching video URL:", urlError.message);
+            setError("Failed to load video.");
+          } else {
+            setVideoUrl(urlData.publicUrl);
+          }
+        } else {
+          setError("No valid video found.");
+          setLoading(false);
+          return;
+        }
+  
+        // Now fetch the latest transcription from the 'transcriptions' table
+        const { data: transcriptionData, error: transcriptionError } =
+          await supabase
+            .from("transcriptions")
+            .select("text")
+            .order("created_at", { ascending: false }) // Order by created_at for the latest transcription
+            .limit(1); // Fetch only the latest transcription
+  
+        if (transcriptionError) {
+          console.error(
+            "Error fetching transcriptions:",
+            transcriptionError.message
+          );
+          setError("Failed to fetch transcriptions.");
+        } else {
+          setTranscript(transcriptionData || []);
+        }
+  
+        setLoading(false);
       } catch (error) {
-        console.error("Error fetching data:", error.message);
-        setError("Error fetching transcript.");
+        console.error("Error fetching video or transcriptions:", error.message);
+        setError("Error fetching video or transcriptions.");
         setLoading(false);
       }
     };
-
-    fetchData();
-  }, []);
+  
+    fetchVideoAndTranscriptions();
+  }, []); // Empty dependency array ensures this only runs once on mount
+  
 
   return (
     <>
@@ -101,7 +122,6 @@ export default function PracticeAnalysis() {
                 >
                   Response Analysis
                 </Heading>
-                <LanguageToggle />
               </Flex>
 
               <Flex gap="2.5rem" alignItems="flex-start" px={4}>
@@ -112,7 +132,6 @@ export default function PracticeAnalysis() {
                   alignItems="stretch"
                   width="50%"
                 >
-                  {/* Overview Section */}
                   <Text
                     fontSize={{ base: "xxs", lg: "xs", "2xl": "sm" }}
                     color="nightBlack"
@@ -143,7 +162,6 @@ export default function PracticeAnalysis() {
                     </Text>
                   </Box>
 
-                  {/* Styled Blue Bottom Area Positioned as Layered Section */}
                   <Flex gap={1} mx={"auto"}>
                     <QuestionProgressIndicator totalSteps={5} currentStep={0} />
                   </Flex>
@@ -159,8 +177,12 @@ export default function PracticeAnalysis() {
                       </Text>
                     </Box>
                     <Box p={4} maxW="820px">
-                      {transcript ? (
-                        <HighlightFillerWords answer={transcript} />
+                      {transcript && transcript.length > 0 ? (
+                        <Text fontSize="xxs" color="brand.nightBlack">
+                          {transcript.map((item, index) => (
+                            <span key={index}>{item.text} </span> // Assuming transcript items have a "text" property
+                          ))}
+                        </Text>
                       ) : (
                         <Text fontSize="xxs" color="brand.nightBlack">
                           Loading transcript...
@@ -237,13 +259,24 @@ export default function PracticeAnalysis() {
                     w="100%"
                   >
                     {loading ? (
-                      <p>Loading...</p>
+                      <Box height="400px">
+                        <LoadingSpinner />
+                      </Box>
                     ) : error ? (
-                      <p>Error: {error}</p>
+                      <Box height="400px">
+                        <Text fontSize="xl" color="red.500">
+                          {error}
+                        </Text>
+                      </Box>
                     ) : (
-                      <>
-                        <VideoPlayer width="100%" height="100%" />
-                      </>
+                      videoUrl && (
+                        <video
+                          src={videoUrl}
+                          controls
+                          width="100%"
+                          style={{ borderRadius: "8px" }}
+                        />
+                      )
                     )}
                   </Box>
 
@@ -300,10 +333,11 @@ export default function PracticeAnalysis() {
                           fontSize={{ base: "xxs", lg: "xs", "2xl": "sm" }}
                           color="brand.nightBlack"
                         >
-                          Prioritizing Critical Tasks
+                          Effective Communication:
                         </Text>
                         <Text fontSize="xxxs" color="brand.nightBlack">
-                          Ask how to prioritize patient care in a crisis.
+                          Focus on teamwork and clear communication in urgent
+                          situations.
                         </Text>
                       </Box>
                     </VStack>

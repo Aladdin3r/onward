@@ -134,7 +134,7 @@ const SettingsContent = ({ activeSection }) => {
           <VStack align="start" spacing={4}>
             <Text fontWeight="bold" fontSize="md">Terms & Conditions</Text>
             <Box 
-            maxH="590px" // Maximum height for the box
+            w="100%"
             overflowY="auto"
           >
             <Text fontSize="xxxs">

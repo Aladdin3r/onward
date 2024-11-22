@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Box, Stack, Text, Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverCloseButton, PopoverBody, Flex } from '@chakra-ui/react';
+import { Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Box, Stack, Text, Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverCloseButton, PopoverBody, Flex, Image } from '@chakra-ui/react';
 import { Info } from "@phosphor-icons/react";
 
 export default function Popup({ 
@@ -30,12 +30,15 @@ export default function Popup({
         <ModalOverlay />
         <ModalContent 
           textAlign="center"
+          alignItems="center"
           minW={{ base: "90%", md: "70%", lg: "50%" }}
           maxW="750px"
           minH="450px"
-          p={4}
+          bg="#ffffff" 
+          py="3.4em"
+          borderRadius="16px"
         >
-          <ModalHeader>
+          {/* <ModalHeader>
             <Flex alignItems="center" justifyContent="center" position="relative">
               <Popover>
                 <PopoverTrigger>
@@ -69,41 +72,68 @@ export default function Popup({
               </Popover>
               <Text fontSize="lg" fontWeight="semibold">{heading}</Text>
             </Flex>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
+          </ModalHeader> */}
+          <ModalCloseButton 
+          color="#575656"
+          />
+          <ModalBody
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          >
             <Box 
-              display="flex" 
-              flexDirection={{ base: "column", md: "row" }} 
+              // display="flex" 
+              // flexDirection={{ base: "column", md: "row" }} 
+              // justifyContent="center"
+              // width="100%"
+              // gap={{ base: 4, md: 8 }}
+              display="flex"
+              flexDirection="row"
               justifyContent="center"
-              width="100%"
-              gap={{ base: 4, md: 8 }}
+              columnGap="3em"
             >
               {/* Left Content Box */}
-              <Box flex="1" mb={6} maxW="370px">
+              <Box flex="1" maxW="370px">
                 <Stack spacing={4}>
                   <Box 
-                    bg="brand.blueberryCreme" 
+                    bg="#ffffff"
                     boxShadow="0px 0px 10px rgba(0, 0, 0, 0.1)" 
                     p={7} 
-                    borderRadius="md" 
+                    borderRadius="16px"
                     display="flex" 
                     flexDir="column" 
                     alignItems="center"
+                    border="solid 1px #E6EAF2"
                   >
-                    <Text fontSize="sm" fontWeight="bold" mb={2} textAlign="center">
-                      Practice a <em>realistic</em> interview scenario in a simulated environment.
+                    <Image
+                      src="/images/practice-card-select.svg"
+                      alt="Practice Card select"
+                      width="100%"
+                      height="auto"
+                      // objectFit="contain" 
+                    />
+                    <Text
+                    fontSize="1.3em"
+                    fontWeight="semibold"
+                    color="#343333"
+                    mt="0.8rem"
+                    >Practice Questions</Text>
+                    <Text color="#575656"fontSize="1.1em" fontWeight="semibold" mb={2} textAlign="center">
+                    Focus on refining your answers and building confidence
                     </Text>
                     {button1Text && button1Action && (
                       <Button 
-                        variant="smPrimary" 
-                        fontSize="sm" 
-                        h="2.5rem" 
-                        minW="fit-content"
-                        mt={3} 
-                        onClick={button1Action}
-                        p={8}
-                      >
+                      bg="#EA4A7D"
+                      color="#ffffff"
+                      borderRadius="8px"
+                      fontSize="xs" 
+                      w="100%"
+                      h="61px" 
+                      minW="fit-content"
+                      mt={3} 
+                      onClick={button1Action}
+                      p={8}
+                    >
                         {button1Text}
                       </Button>
                     )}
@@ -112,25 +142,42 @@ export default function Popup({
               </Box>
 
               {/* Right Content Box */}
-              <Box flex="1" mb={6} maxW="370px">
+              <Box flex="1" mb={0} maxW="370px">
                 <Stack spacing={4}>
                   <Box 
-                    bg="brand.blueberryCreme" 
+                    bg="#ffffff" 
                     boxShadow="0px 0px 10px rgba(0, 0, 0, 0.1)" 
                     p={7} 
-                    borderRadius="md" 
+                    borderRadius="16px"
                     display="flex" 
                     flexDir="column" 
                     alignItems="center"
+                    border="solid 1px #E6EAF2"
                   >
-                    <Text fontSize="sm" fontWeight="bold" mb={2} textAlign="center">
-                      Focus on <em>refining</em> your answers and building confidence.
+                    <Image
+                      src="/images/mock-card-select.svg"
+                      alt="Practice Card select"
+                      width="100%"
+                      height="auto"
+                      // objectFit="contain" 
+                    />
+                    <Text
+                      fontSize="1.3em"
+                      fontWeight="semibold"
+                      color="#343333"
+                      mt="0.8rem"
+                    >Mock Interview</Text>
+                    <Text color="#575656"fontSize="1.1em" fontWeight="semibold" mb={2} textAlign="center">
+                    Practice a realistic interview scenario in a simulated environment.
                     </Text>
                     {button2Text && button2Action && (
                       <Button 
-                        variant="smPrimary" 
-                        fontSize="sm" 
-                        h="2.5rem" 
+                        bg="#EA4A7D"
+                        color="#ffffff"
+                        borderRadius="8px"
+                        fontSize="xs" 
+                        w="100%"
+                        h="61px" 
                         minW="fit-content"
                         mt={3} 
                         onClick={button2Action}

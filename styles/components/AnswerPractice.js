@@ -227,7 +227,7 @@ export default function AnswerPractice({ onShowVideoChange, question }) {
                             <Button><Stop size={24} /></Button>
                             <Button><Pause size={24} /></Button>
                         </Flex> */}
-                 <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"} boxShadow={"md"}
+                 {/* <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"} boxShadow={"md"}
                         onClick={handleAnalysisClick}
                         _hover={{
                             bg: "white",
@@ -237,7 +237,7 @@ export default function AnswerPractice({ onShowVideoChange, question }) {
                         }}
                     > 
                        Start Analysis
-                    </Button>
+                    </Button> */}
                     </Flex>
                 )}
             </Flex>

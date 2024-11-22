@@ -12,37 +12,42 @@ const HistoryContainer = ({ limit = 3 }) => {
                 .storage
                 .from("onward-video")
                 .list("videos", { limit: 100 });
-
+    
             if (error) {
                 console.error("Error fetching video list:", error);
                 return;
             }
-
-            const filteredFileList = fileList.filter(file => !file.name.includes("emptyFolder") && !file.name.startsWith("."));
-
+    
+            // Filter out unwanted files
+            const filteredFileList = fileList
+                .filter(file => !file.name.includes("emptyFolder") && !file.name.startsWith("."))
+                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)); // Sort by creation date, newest first
+    
+            // Map file data to video data
             const videosData = await Promise.all(filteredFileList.map(async (file) => {
                 const { data, error } = supabase
                     .storage
                     .from("onward-video")
                     .getPublicUrl(`videos/${file.name}`);
-
+    
                 if (error || !data.publicUrl) {
                     console.error("Error fetching video URL:", error);
                     return null;
                 }
-
+    
                 return {
                     file_name: file.name,
-                    upload_date: new Date().toISOString().slice(0, 10), // Placeholder date
+                    upload_date: file.created_at || new Date().toISOString().slice(0, 10), // Use file's `created_at` if available
                     video_url: data.publicUrl,
                 };
             }));
-
+    
             setVideos(videosData.filter(Boolean)); // Remove nulls from failed fetches
         };
-
+    
         fetchVideos();
     }, []);
+    
 
     const videosToShow = limit === 0 || limit === null ? videos : videos.slice(0, limit); // Show all if no limit
 
@@ -118,12 +123,7 @@ const HistoryContainer = ({ limit = 3 }) => {
                                         {new Date(video.upload_date).toLocaleDateString()}
                                     </Text>
                                 </Text>
-                                <Text fontSize="20px" fontWeight="700">
-                                    Length: 
-                                    <Text as="span" fontWeight="400" lineHeight="27px" fontSize="20px">
-                                        insert vid length time here from supabase
-                                    </Text>
-                                </Text>
+                                
                             </Flex>
                         </Flex>
                     </Box>
