@@ -11,7 +11,7 @@ import {
     Button,
     Textarea
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import VideoPlayer from './VideoPlayer';
 import QuestionPractice from './QuestionPractice';
@@ -26,11 +26,41 @@ export default function AnswerPractice({ onShowVideoChange, question }) {
     const [showVideo, setShowVideo] = useState(false); // default is text
     const [activeButton, setActiveButton] = useState('text');
     const [isRecording, setIsRecording] = useState(false); 
-    const [transcription, setTranscription] = useState('');
     const [editableTranscription, setEditableTranscription] = useState('');
     const [typedAnswer, setTypedAnswer] = useState('');
+    const [transcription, setTranscription] = useState('');
     const [savedVideoUrl, setSavedVideoUrl] = useState(null); // Track saved video URL
-  
+    const [response, setResponse] = useState("");
+    const [questions, setQuestions] = useState([]);
+    
+    useEffect(() => {
+        const storedQuestions = localStorage.getItem("questions");
+        if (storedQuestions) {
+            try {
+                const parsedQuestions = JSON.parse(storedQuestions);
+    
+                // add `answer` field to question array 
+                const enrichedQuestions = parsedQuestions.map((question) => ({
+                    ...question,
+                    answer: question.answer || { transcription: "", video: "" }, 
+                }));
+    
+                setQuestions(enrichedQuestions);
+                localStorage.setItem("questions", JSON.stringify(enrichedQuestions));
+            } catch (error) {
+                console.error("Error parsing questions from localStorage:", error);
+            }
+        }
+    }, []);
+
+    const saveAnswer = (index, transcriptionText, videoURL) => {
+        const updatedQuestions = [...questions];
+        updatedQuestions[index].answer = { transcription: transcriptionText, video: videoURL }; // update the answer
+        setQuestions(updatedQuestions);
+        localStorage.setItem("questions", JSON.stringify(updatedQuestions)); // save to localStorage
+        console.log(`Answer saved for question ${index + 1}:`, updatedQuestions[index].answer);
+    };
+    
 
     const handleVoiceClick = () => {
         setShowVideo(true);
@@ -54,20 +84,16 @@ export default function AnswerPractice({ onShowVideoChange, question }) {
         setEditableTranscription(event.target.value); // update editable transcription
     };
     
-    const handleAnalysisClick = async () => {
-        const videoURL = savedVideoUrl;
-        const transcriptionText = transcription;
-        debugger;
-        const transcriptionEntry = {text:transcriptionText, video_id:videoURL};
-        let {error} = await supabase.from("transcriptions").insert(transcriptionEntry);
-        if (error) {
-            throw error;
+    const handleNextClick = () => {
+        if (currentQuestionIndex < questions.length - 1) {
+            saveAnswer(
+                currentQuestionIndex,
+                transcription, 
+                savedVideoUrl  
+            );
+            setCurrentQuestionIndex((prevIndex) => prevIndex + 1); // move to the next question
         }
-        router.push({
-            pathname: '/practiceOverview',
-        });
     };
-
     return (
         <>
             <Flex 
@@ -111,7 +137,7 @@ export default function AnswerPractice({ onShowVideoChange, question }) {
                         
                         <Flex flexDirection="row" gap="2rem">
                             <Button 
-                                width="7rem" 
+                                width={isRecording ? "10rem%" : "7rem" }
                                 onClick={handleVoiceClick}
                                 bg={activeButton === 'voice' ? 'brand.oceanBlue' : 'brand.pureWhite'}
                                 color={activeButton === 'voice' ? 'brand.pureWhite' : 'brand.oceanBlue'}
@@ -120,7 +146,7 @@ export default function AnswerPractice({ onShowVideoChange, question }) {
                                 _hover={{ boxShadow: '0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)' }}
                             >
                                 <Text fontSize="xxs">
-                                    {isRecording ? 'Finish' : 'Voice'}
+                                    {isRecording ? 'Stop Recording' : 'Voice'}
                                 </Text>
                             </Button>
                             <Button 

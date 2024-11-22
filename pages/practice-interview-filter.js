@@ -180,13 +180,14 @@ export default function PracticeInterviewFilter() {
                 ? selectedQuestionType.join(", ")
                 : "all types";
 
-            const jobQuestionPrompt = `Generate ${selectedNumber} nursing interview questions consisting only of ${selectedQuestionType} questions based on the job posting, description, and duties. 
-                Return the questions in valid JSON format without any additional formatting or backticks, and ensure the output is a JSON array. 
-                Each object in the array should have the following fields:
-                - question: The interview question.
-                - category: Behavioural Question, Situational Question, Technical Question, Competency Question, Cultural Question, Career Goals, or Legal/Regulation Questions
-                - additionalInfo: A brief explanation of what the question is assessing.`
-            
+            const jobQuestionPrompt = `Generate a unique set of ${selectedNumber} interview questions that's a mix of general interview questions and questions specific to the job posting. 
+                Only generate ${selectedQuestionType} type questions. Avoid repeating exact questions or overly similar phrasing from prior sets. Return the questions in valid JSON format, without any additional formatting or backticks. 
+                Each object in the array should include:
+                    - question: The interview question.
+                    - category: Behavioural Question, Situational Question, Technical Question, Competency Question, Cultural Question, Career Goals, or Legal/Regulation Questions.
+                    - type: Generic/Common or Specific.
+                    - additionalInfo: A brief explanation of what the question is assessing.
+                `
                         console.log("Job Question Prompt:", jobQuestionPrompt);
 
             const jobPostResponse = await fetch("https://api.roughlyai.com/ttfiles/api/prompt_response", {

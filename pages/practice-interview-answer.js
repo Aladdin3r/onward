@@ -36,12 +36,24 @@ export default function PracticeAnswer() {
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex((prevIndex) => {
                 const newIndex = prevIndex + 1;
-                console.log("Next Question Index:", newIndex); // Log the new index
-                console.log("Next Question:", questions[newIndex]); // Log the next question content
+                console.log("Next Question Index:", newIndex); 
+                console.log("Next Question:", questions[newIndex]); 
                 return newIndex;
             });
         }
     };
+
+    const handlePrevClick = () => {
+        if (currentQuestionIndex > 0) {
+            setCurrentQuestionIndex((prevIndex) => {
+                const newIndex = prevIndex - 1;
+                console.log("Previous Question Index:", newIndex); 
+                console.log("Previous Question:", questions[newIndex]); 
+                return newIndex;
+            });
+        }
+    };
+    
 
     const handleAnalysisClick = () => {
         router.push({
@@ -89,10 +101,10 @@ export default function PracticeAnswer() {
                             p={2}
                             border="1px"
                             borderColor="red"
-                            onClick={handleEndClick}
+                            onClick={handlePrevClick}
                             _hover={{ bg: "brand.pureWhite", borderColor: "red" }}
                         >
-                            End
+                            Prev (for testing)
                         </Button>
 
                         <Button
