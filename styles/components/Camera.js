@@ -16,6 +16,22 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
   const toast = useToast(); // Initialize toast
 
   useEffect(() => {
+    // Start recording and camera as soon as the component loads
+    setIsCameraOn(true);
+    startRecording();
+
+    return () => {
+      // Cleanup on component unmount
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
+      if (audioContext) {
+        audioContext.close(); // Cleanup audio context
+      }
+    };
+  }, []); // Empty dependency array ensures this runs only once on mount
+
+  useEffect(() => {
     // Start or stop the camera when the isCameraOn state changes
     if (isCameraOn && !stream) {
       startCamera();
@@ -63,7 +79,6 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
       console.error("Error accessing webcam:", error);
     }
   };
-  
 
   const stopCamera = () => {
     if (stream) {
@@ -80,13 +95,13 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
   const startRecording = () => {
     if (!isCameraOn) {
       // Show toast when trying to start recording without the camera on
-      toast({
-        title: "Camera Off",
-        description: "To record, turn the camera on.",
-        status: "warning",
-        duration: 3000,
-        isClosable: true,
-      });
+      // toast({
+      //   title: "Camera Off",
+      //   description: "To record, turn the camera on.",
+      //   status: "warning",
+      //   duration: 3000,
+      //   isClosable: true,
+      // });
       return; // Prevent recording if camera is off
     }
 
@@ -100,6 +115,14 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
       };
       mediaRecorderRef.current.start();
       setIsRecording(true);
+      // Warn user to start recording to see feedback
+      toast({
+        title: "Recording Started",
+        description: "Start the recording to view feedback.",
+        status: "info",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
@@ -107,6 +130,14 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
+      // Warn user to save video to see feedback
+      toast({
+        title: "Recording Stopped",
+        description: "Remember to save the video or you won't see it for feedback.",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 
@@ -171,14 +202,20 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
           } else {
             console.log("Video URL saved successfully to the transcription table");
             setSavedVideoUrl(urlData.publicUrl); // Pass the URL to the parent component
+
+            toast({
+              title: "Recording Saved",
+              description: "Your recording has been successfully saved.",
+              status: "success",
+              duration: 3000,
+              isClosable: true,
+            });
           }
         }
       }
     }
   };
-  
 
-  
   const toggleMic = async () => {
     setIsMicOn((prev) => !prev);
 
@@ -208,68 +245,93 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
           maxWidth: "1000px",
           height: "calc(100vw * 9 / 16)",
           maxHeight: "400px",
-          margin: "0 auto",
-          backgroundColor: "white",
-          overflow: "hidden",
+          margin: "auto",
         }}
       >
         <video
           ref={videoRef}
           autoPlay
-          muted={!isMicOn} // Muting the video if mic is off
+          playsInline
           style={{
+            objectFit: "cover",
             width: "100%",
             height: "100%",
-            transform: "scaleX(-1)", // Flip the video horizontally
-            display: isCameraOn ? "block" : "none",
+            borderRadius: "10px",
           }}
         />
-        {!isCameraOn && (
-          <div
+      </div>
+
+      <div style={{ marginTop: "1rem" }}>
+        {isRecording ? (
+          <button
+            onClick={stopRecording}
             style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              backgroundColor: "grey",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              backgroundColor: "#EA4A7D",
               color: "white",
-              fontSize: "24px",
-              fontWeight: "bold",
-              zIndex: 1,
+              padding: "10px 20px",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
             }}
           >
-            Camera Off
-          </div>
+            Stop Recording
+          </button>
+        ) : (
+          <button
+            onClick={startRecording}
+            style={{
+              backgroundColor: "#4CAF50", // Green for start recording
+              color: "white",
+              padding: "10px 20px",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            Start Recording
+          </button>
         )}
       </div>
 
-      <div style={{ display: "flex", justifyContent: "center", gap: "20px", marginTop: "20px", zIndex: 100 }}>
-        <button onClick={() => setIsCameraOn((prev) => !prev)}>
-          {isCameraOn ? <VideoCamera size={32} /> : <VideoCameraSlash size={32} />}
+      <div style={{ marginTop: "1rem" }}>
+        {/* <button
+          onClick={saveRecordingLocally}
+          style={{
+            backgroundColor: "#007BFF", // Blue for saving locally
+            color: "white",
+            padding: "10px 20px",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+            marginRight: "10px",
+          }}
+        >
+          Save Locally
+        </button> */}
+        <button
+          onClick={saveRecordingToSupabase}
+          style={{
+            backgroundColor: "#FFD700", // Gold for saving to Supabase
+            color: "black",
+            padding: "10px 20px",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+        >
+          Save to Supabase
         </button>
-        <button onClick={toggleMic}>
-          {isMicOn ? <Microphone size={32} /> : <MicrophoneSlash size={32} />}
-        </button>
-        {isRecordingEnabled && (isRecording ? (
-          <button onClick={stopRecording}>Stop Recording</button>
-        ) : (
-          <button onClick={startRecording}>Start Recording</button>
-        ))}
       </div>
 
-      {recordedChunks.length > 0 && (
-        <div style={{ marginTop: "20px" }}>
-          <button onClick={saveRecordingLocally}>Save to Computer</button>
-          <button onClick={saveRecordingToSupabase} style={{ marginLeft: "10px" }}>
-            Save to Browser
-          </button>
-        </div>
-      )}
+      <div style={{ marginTop: "1rem" }}>
+        <button onClick={toggleMic}>
+          {isMicOn ? (
+            <Microphone size={32} color="#007BFF" />
+          ) : (
+            <MicrophoneSlash size={32} color="#007BFF" />
+          )}
+        </button>
+      </div>
     </div>
   );
 }
-
