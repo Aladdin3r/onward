@@ -18,7 +18,7 @@ const RatingBox = () => {
   };
 
   return (
-    <Box p={8} borderRadius="md" w={550}>
+    <Box p={8} borderRadius="md" w={490}>
       <Text mb={35} fontWeight="bold" fontSize="sm">
         Leave us a review
       </Text>
@@ -51,7 +51,7 @@ const RatingBox = () => {
                 variant={'xsPrimary'}
                 fontSize="12pt"
                 px={4}
-                py={6}
+                py={5}
                 ml={"225px"}
               >
                 Submit

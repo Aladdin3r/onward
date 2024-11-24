@@ -199,7 +199,7 @@ const SettingsContent = ({ activeSection }) => {
       case "Contact us":
         return (
           <VStack align="start" spacing={4}>
-            <Text fontWeight="bold" fontSize="md">Contact Us</Text>
+            <Text fontWeight="bold" fontSize="md" mt={6}>Contact Us</Text>
             <Text fontSize="xs">Looking for some help? Our agents respond to emails on weekdays:<br/>9:00am - 4:30pm PST</Text>
             <HStack mt={50}>
               <Envelope size={32} weight="bold" />
