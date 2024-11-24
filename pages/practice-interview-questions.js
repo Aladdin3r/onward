@@ -134,7 +134,7 @@ export default function PracticeInterviewQuestion() {
                             boxShadow:"md"
                         }}
                     >
-                        Answer
+                        Start Simulator
                     </Button>
                     </Flex>
                 </Flex>
