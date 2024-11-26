@@ -20,6 +20,7 @@ export default function QuestionPractice({
   borderTopRadius,
   borderBottomRadius,
   questionWidth,
+  showControls = true, // New prop to toggle the visibility of controls
 }) {
   const [audioUrl, setAudioUrl] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false); // Track if the audio is playing
@@ -60,17 +61,14 @@ export default function QuestionPractice({
 
   useEffect(() => {
     if (audioUrl && !isPlaying) {
-      // If there was a previously playing audio, pause it before creating a new one
       if (audioRef.current) {
         audioRef.current.pause();
         setIsPlaying(false); // Reset the playing state before starting new audio
       }
 
-      // Create a new Audio object and play it
       const newAudio = new Audio(audioUrl);
       audioRef.current = newAudio; // Store the new audio instance in the ref
 
-      // Handle promise rejection from audio.play()
       newAudio.play().catch((err) => {
         console.error("Audio play failed:", err);
         setIsPlaying(false); // Ensure state is reset on error
@@ -78,20 +76,17 @@ export default function QuestionPractice({
 
       setIsPlaying(true); // Set playing state to true
 
-      // Cleanup function to reset the playing state when the audio ends
       newAudio.onended = () => {
         setIsPlaying(false);
       };
 
-      // Cleanup to stop the audio if the component unmounts or the URL changes
       return () => {
         newAudio.pause();
         setIsPlaying(false);
       };
     }
-  }, [audioUrl, isPlaying]); // Depend on audioUrl and isPlaying to control playback
+  }, [audioUrl, isPlaying]);
 
-  // Handle muting/unmuting audio
   const toggleMute = () => {
     if (audioRef.current) {
       audioRef.current.muted = !isMuted;
@@ -99,7 +94,6 @@ export default function QuestionPractice({
     }
   };
 
-  // Handle replaying the audio
   const replayAudio = () => {
     if (audioRef.current) {
       audioRef.current.currentTime = 0; // Reset to the beginning of the audio
@@ -111,11 +105,7 @@ export default function QuestionPractice({
   };
 
   return (
-    <Flex
-      flexDirection={"column"}
-      justifyContent={"center"}
-      alignItems={"center"}
-    >
+    <Flex flexDirection={"column"} justifyContent={"center"} alignItems={"center"}>
       <Card
         borderTopRadius={borderTopRadius}
         borderBottomRadius={borderBottomRadius}
@@ -125,7 +115,6 @@ export default function QuestionPractice({
       >
         <CardBody textAlign={"left"}>
           <Stack spacing="4" divider={<StackDivider />}>
-            {/* Handle single question or multiple questions */}
             {question ? (
               <Box>
                 <Heading size={{ base: "12pt", md: "16pt", "2xl": "18pt" }}>
@@ -143,7 +132,6 @@ export default function QuestionPractice({
                   </Heading>
                   <Text pt="2" fontSize="18pt">
                     {q.question || q}{" "}
-                    {/* Handles both string and object cases */}
                   </Text>
                 </Box>
               ))
@@ -154,42 +142,38 @@ export default function QuestionPractice({
             )}
           </Stack>
 
-          {/* Buttons for muting and replaying the audio */}
-          <Flex mt="4" justify="flex-end" gap="2">
-            <Button
-              onClick={toggleMute}
-              bg={
-                 "text" ? "brand.pureWhite" : "brand.oceanBlue"
-              }
-              color={
-               "text" ? "brand.oceanBlue" : "brand.pureWhite"
-              }
-              fontSize="xs"
-              borderColor="brand.oceanBlue"
-              border="1px"
-              _hover={{
-                boxShadow:
-                  "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)",
-              }}
-            >
-              {isMuted ? "Unmute" : "Mute"}
-            </Button>
-            <Button onClick={replayAudio}
-            bg={
-                "text" ? "brand.oceanBlue" : "brand.pureWhite"
-             }
-             color={
-              "text" ? "brand.pureWhite" : "brand.oceanBlue"
-             }
-             fontSize="xs"
-             borderColor="brand.oceanBlue"
-             border="1px"
-             _hover={{
-               boxShadow:
-                 "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)",
-             }}
-            ><ArrowCounterClockwise size={20} /></Button>
-          </Flex>
+          {showControls && ( // Conditionally render buttons
+            <Flex mt="4" justify="flex-end" gap="2">
+              <Button
+                onClick={toggleMute}
+                bg={"text" ? "brand.pureWhite" : "brand.oceanBlue"}
+                color={"text" ? "brand.oceanBlue" : "brand.pureWhite"}
+                fontSize="xs"
+                borderColor="brand.oceanBlue"
+                border="1px"
+                _hover={{
+                  boxShadow:
+                    "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)",
+                }}
+              >
+                {isMuted ? "Unmute" : "Mute"}
+              </Button>
+              <Button
+                onClick={replayAudio}
+                bg={"text" ? "brand.oceanBlue" : "brand.pureWhite"}
+                color={"text" ? "brand.pureWhite" : "brand.oceanBlue"}
+                fontSize="xs"
+                borderColor="brand.oceanBlue"
+                border="1px"
+                _hover={{
+                  boxShadow:
+                    "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)",
+                }}
+              >
+                <ArrowCounterClockwise size={20} />
+              </Button>
+            </Flex>
+          )}
         </CardBody>
       </Card>
     </Flex>
