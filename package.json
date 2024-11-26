@@ -56,6 +56,8 @@
 
     "dotenv": "^16.4.5",
 
+    "elevenlabs-js": "^1.2.6",
+
     "framer-motion": "^11.11.9",
 
     "lottie-react": "^2.4.0",
@@ -69,6 +71,8 @@
     "next": "^15.0.3",
 
     "next-google-fonts": "^2.2.0",
+
+    "openai": "^4.73.1",
 
     "pdf-parse": "^1.1.1",
 
