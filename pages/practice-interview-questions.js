@@ -100,6 +100,7 @@ export default function PracticeInterviewQuestion() {
                                 questionTypes={questionTypes} 
                                 borderRadius={"15"}
                                 questionWidth={"80%"}
+                                showControls={false}
                             />
                         </Box>
                     </Flex>
