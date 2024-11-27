@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
-import { Microphone, MicrophoneSlash } from "@phosphor-icons/react";
-import { useToast } from "@chakra-ui/react";
+import { useToast, Button, Box } from "@chakra-ui/react";
 import { supabase } from "@/lib/supabaseClient";
+import { StopCircle, PlayCircle } from "@phosphor-icons/react";
 
 export default function RecordCamera({
   isRecordingAvailable,
@@ -188,61 +188,74 @@ export default function RecordCamera({
             width: "100%",
             height: "100%",
             borderRadius: "10px",
+            transform: "scaleX(-1)",
           }}
         />
       </div>
 
+    <Box 
+    display="flex"
+    flexDirection="row"
+    gap={3}
+    justifyContent="center"
+    alignItems="center"
+    >
       {isRecordingAvailable && (
-        <div style={{ marginTop: "1rem" }}>
+        <div style={{ marginTop: "1rem", display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
           {isRecording ? (
-            <button
-              onClick={stopRecording}
-              style={{
-                backgroundColor: "#EA4A7D",
-                color: "white",
-                padding: "10px 20px",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
+            <Box
+              backgroundColor="#4CAF50"
+              borderRadius="full"
             >
-              Stop Recording
-            </button>
+              <Button
+                onClick={stopRecording}
+                variant="unstyled"
+                color="white"
+                aria-label="Stop Recording"
+                width="100%"
+                height="100%"
+              >
+                <PlayCircle size={32} />
+              </Button>
+            </Box>
           ) : (
-            <button
-              onClick={startRecording}
-              style={{
-                backgroundColor: "#4CAF50",
-                color: "white",
-                padding: "10px 20px",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
+            <Box
+              backgroundColor="#EA4A4D"
+              borderRadius="full"
             >
-              Start Recording
-            </button>
+              <Button
+                onClick={startRecording}
+                variant="unstyled"
+                color="white"
+                aria-label="Start Recording"
+                width="100%"
+                height="100%"
+              >
+                <StopCircle size={32}/>
+              </Button>
+            </Box>
           )}
         </div>
       )}
 
-      {isSaveEnabled && ( // Conditionally render save button
+      {isSaveEnabled && (
         <div style={{ marginTop: "1rem" }}>
-          <button
+          <Button
             onClick={saveRecordingToSupabase}
-            style={{
-              backgroundColor: "#FFD700",
-              color: "black",
-              padding: "10px 20px",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
+            bg="brand.pureWhite"
+            size="xxs"
+            p={2}
+            border="2px"
+            borderColor="green.500"
+            fontSize="10pt"
+            fontWeight="normal"
           >
-            Save to Supabase
-          </button>
+            Save to get Feedback
+          </Button>
         </div>
       )}
+      </Box>
     </div>
+
   );
 }
