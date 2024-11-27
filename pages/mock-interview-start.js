@@ -96,7 +96,7 @@ export default function MockInterviewQuestionPage() {
 
           {/* Video Player */}
           <Flex justify="center" mb={8} mt={20} position="relative" height="500px" width="100%">
-            <RecordCamera isMicOn={true} isCameraOn={false} isRecordingEnabled={false} />
+            <RecordCamera isMicOn={true} isCameraOn={false} isRecordingAvailable={true} isRecordingEnabled={false} />
           </Flex>
 
           {/* Hidden Audio Player */}
