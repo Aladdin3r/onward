@@ -21,7 +21,7 @@ export default function Popup({
         onClick={onOpen}
         w={{ md: "xxs", lg: "12rem", xl: "18rem", "2xl": "md" }}
         h={{ md: "2rem", lg: "2.5rem", xl: "3rem", "2xl": "4rem" }}
-        m={{ base: "3", lg: "4", xl: "5", "2xl": "5" }}
+        // m={{ base: "3", lg: "4", xl: "5", "2xl": "5" }}
       >
         {title}
       </Button>
