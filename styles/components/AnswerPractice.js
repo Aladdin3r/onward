@@ -299,7 +299,7 @@ export default function AnswerPractice({ question, questions, onShowVideoChange,
                         borderRadius={15}
                     >
                         {/* <RecordCamera setSavedVideoUrl={setSavedVideoUrl} /> */}
-                        <RecordCamera setSavedVideoUrl={(url) => handleVideoSave(url)} />
+                        <RecordCamera isRecordingAvailable={true} setSavedVideoUrl={(url) => handleVideoSave(url)} />
 
                         <Button
                             bg="brand.blushPink"
