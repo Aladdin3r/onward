@@ -28,7 +28,7 @@ export default function MyResumesCard() {
                 name: file.name,
                 // If you want a public URL to the file
                 url: supabase.storage.from("onward-resume").getPublicUrl(`uploads/${file.name}`).publicURL,
-                size: file.size // Get file size for display
+                size: file.metadata?.size || 0,
             }));
 
             // Set the files in state
