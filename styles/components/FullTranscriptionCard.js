@@ -74,15 +74,22 @@ export default function TranscriptionComponent() {
       >
         <Box p={4} bg="white" borderRadius="15">
           <VStack spacing={4} align="stretch">
-            <HStack spacing={4} align="flex-start">
-              <Text fontWeight="bold" color="purple.500" minW="120px">
+            <HStack spacing={4} align="flex-start" display="flex">
+              {/* <Text fontWeight="bold" color="purple.500" minW="120px">
                 You
-              </Text>
-              <Box>
+              </Text > */}
+              <Box 
+              display="flex"
+              flex="1"
+              overflow="auto"
+              wordWrap="break-word"
+              whiteSpace="pre-wrap"
+              height="auto"
+              >
                 {transcript ? (
                   <HighlightFillerWords answer={transcript} />
                 ) : (
-                  <Text fontSize="xxs" color="brand.nightBlack">
+                  <Text fontSize="xxs" color="brand.nightBlack" display="flex" flexWrap="wrap" height="auto">
                     Loading transcript...
                   </Text>
                 )}
