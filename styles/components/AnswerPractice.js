@@ -18,19 +18,19 @@ import RecordCamera from "./Camera";
 import Transcriber from "./Transcriber";
 import { supabase } from "@/lib/supabaseClient";
 
-export default function AnswerPractice({ question, questions, onShowVideoChange, saveAnswer = () => {} }) {
+export default function AnswerPractice({ questions, onShowVideoChange }) {
     const router = useRouter();
     const [showVideo, setShowVideo] = useState(false); // Video response
     const [activeButton, setActiveButton] = useState('text'); // Default is text response
     const [isRecording, setIsRecording] = useState(false);
     const [editableTranscription, setEditableTranscription] = useState('');
-    // const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [transcription, setTranscription] = useState('');
     const [savedVideoUrl, setSavedVideoUrl] = useState(null);
-    const [defaultVoice, setDefaultVoice] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [answers, setAnswers] = useState({});
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [answers, setAnswers] = useState([]);
 
+
+    const currentQuestion = questions[currentQuestionIndex];
 
     useEffect(() => {
         // Initialize the default voice as "Google US English"
@@ -39,52 +39,88 @@ export default function AnswerPractice({ question, questions, onShowVideoChange,
         if (googleUSVoice) {
             setDefaultVoice(googleUSVoice);
         }
-
-        const sessionId = localStorage.getItem("sessionId");
     }, []);
+
+    const handleSaveAnswer = (responseText) => {
+        setAnswers((prevAnswers) => {
+            const updatedAnswers = [...prevAnswers];
+            updatedAnswers[currentQuestionIndex] = {
+                questionId: currentQuestionIndex + 1, // 1-based index
+                question: currentQuestion?.question || "",
+                response: responseText,
+            };
+            return updatedAnswers;
+        });
+        console.log("Saved answer:", { questionId: currentQuestionIndex + 1, responseText });
+    };    
     
-    const uploadAnswerToSession = async (sessionId, questionId, file) => {
+
+    const saveAllAnswersToFile = async () => {
         try {
-            const bucketName = "onward-responses"; // Replace with your Supabase bucket name
-            const filePath = `uploads/${sessionId}/question-${questionId}.txt`; // Path for the uploaded file
+            const sessionId = localStorage.getItem("sessionId");
+            if (!sessionId) {
+                console.error("Session ID not found.");
+                return;
+            }
     
-            console.log(`Uploading to bucket: ${bucketName}, path: ${filePath}`);
+            const bucketName = "onward-responses";
+            const filePath = `uploads/${sessionId}/all-answers.json`;
     
-            // Upload file to Supabase
-            const { data, error } = await supabase.storage
+            const file = new Blob([JSON.stringify(answers, null, 2)], { type: "application/json" });
+    
+            const { error } = await supabase.storage
                 .from(bucketName)
                 .upload(filePath, file, { upsert: true });
     
-            if (error) {
-                console.error("Error uploading file:", error.message);
-                return null;
-            }
+            if (error) throw new Error(error.message);
     
-            // Generate public URL for the uploaded file
-            const { data: publicUrlData } = supabase.storage
-                .from(bucketName)
-                .getPublicUrl(filePath);
-    
-            console.log("File uploaded successfully. Public URL:", publicUrlData.publicUrl);
-            return publicUrlData.publicUrl;
+            console.log("All answers saved successfully to a single file.");
         } catch (err) {
-            console.error("Upload failed:", err.message);
-            return null;
+            console.error("Error saving all answers:", err.message);
+        }
+    };
+    
+    
+    // API stuff
+    const UploadFiles = async (resumes) => {
+        try {
+          const uploadPromises = [];
+    
+          if (resumes.length > 0) {
+            uploadPromises.push(
+              fetch("https://api.roughlyai.com/ttfiles/api/prompt_response", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  handler: "api_upload",
+                  key: "Onward/Resumes/",
+                  upload_data: resumes.map((file) => file.url),
+                  fn: resumes.map((file) => file.name),
+                  api_key: process.env.NEXT_PUBLIC_ROUGHLY_API_KEY,
+                }),
+              })
+            );
+          }
+
+          const responses = await Promise.all(uploadPromises);
+    
+          const pollingResults = await Promise.all(
+            responses.map(async (resp) => {
+              const { data: _url } = await resp.json();
+              return await PollingResponse(_url);
+            })
+          );
+    
+          return pollingResults;
+        } catch (error) {
+          console.error("Error uploading files:", error);
+          throw error;
         }
     };
 
-    // const saveAnswer = (responseType, responseText, questionId, videoUrl = null) => {
-    //     setAnswers((prevAnswers) => ({
-    //         ...prevAnswers,
-    //         [questionId]: {
-    //             responseType,
-    //             responseText,
-    //             videoUrl,
-    //         },
-    //     }));
-    // };    
-
-    const UploadTranscription = async (transcriptionText, questionId, videoURL = null) => {
+    const UploadResponses = async (transcriptionText, questionId, videoURL = null) => {
         try {
             const response = await fetch("https://api.roughlyai.com/ttfiles/api/prompt_response", {
                 method: "POST",
@@ -115,101 +151,122 @@ export default function AnswerPractice({ question, questions, onShowVideoChange,
             throw error;
         }
     };
-
-  const handleVoiceClick = () => {
-    setShowVideo(true);
-    setActiveButton("voice");
-    setIsRecording(!isRecording); // Toggle recording state
-    onShowVideoChange(true);
-  };
-
-  const handleTextClick = () => {
-    setShowVideo(false);
-    setActiveButton("text");
-    setEditableTranscription(transcription); // Switch to editable transcription
-    onShowVideoChange(false);
-  };
-
-        // Handle typing
-        const handleEditableChange = (event) => {
-            const updatedText = event.target.value;
-            setEditableTranscription(updatedText);
-            saveAnswer(question.id, "text", updatedText); // Save typed response
-        };
     
-        // Handle transcription
-        const handleTranscription = (transcribedText) => {
-            setTranscription(transcribedText);
-            saveAnswer(question.id, "voice", transcribedText); // Save transcribed response
-        };
-    
-        
-    
-
-    // const handleAnalysisClick = async () => {
-    //     const videoURL = savedVideoUrl;
-    //     const transcriptionText = transcription;
-
-    //     const transcriptionEntry = { text: transcriptionText, video_id: videoURL };
-    //     const { error } = await supabase.from('transcriptions').insert(transcriptionEntry);
-
-    //     if (error) throw error;
-
-    //     const localResponses = JSON.parse(localStorage.getItem('responses')) || {};
-    //     localResponses[question.id] = {
-    //         response: editableTranscription || transcriptionText, 
-    //         videoUrl: videoURL, 
-    //     };
-    //     localStorage.setItem('responses', JSON.stringify(localResponses));
-
-    //     console.log('Responses saved to localStorage:', localResponses);
-
-    //     if (currentQuestionIndex < questions.length - 1) {
-    //         setCurrentQuestionIndex((prevIndex) => {
-    //             const newIndex = prevIndex + 1;
-    //             console.log("Next Question Index:", newIndex); 
-    //             console.log("Next Question:", questions[newIndex]); 
-    //             return newIndex;
-    //         });
-    //     }
-    // };
-
-    const handleNextQuestion = async () => {
-        const sessionId = localStorage.getItem("sessionId"); // Get session ID from localStorage
-        const questionId = question.id; // Get the current question ID
-    
-        // Prepare the answer content
-        const responseText =
-          activeButton === "text" ? editableTranscription : transcription;
-        const videoUrl = savedVideoUrl;
-    
-        // Save the answer
+    // API prompts
+    const GenerateTalkingPoints = async (resumes) => {
         try {
-            if (!responseText) {
-                alert("Please provide a response before proceeding.");
-                return;
+            const savedQuestions = JSON.parse(localStorage.getItem("questions"));
+
+            if (!savedQuestions || savedQuestions.length === 0) {
+                throw new Error("No questions found. Please refresh or generate questions before analyzing.");
             }
-    
-        const publicUrl = await uploadAnswerToSession(
-            sessionId,
-            questionId,
-            responseText
-        );
-    
-        console.log("Answer saved with URL:", publicUrl);
-    
-          // Navigate to the next question
-        const currentIndex = questions.findIndex((q) => q.id === questionId);
-            if (currentIndex < questions.length - 1) {
-            const nextQuestion = questions[currentIndex + 1];
-            router.push(`/practice-interview/${nextQuestion.id}`);
-            } else {
-            router.push("/practiceOverview"); // Navigate to overview when all questions are answered
-            }
+
+            const talkingPointsPrompt = `Generate an array of talking points that align resume to the job description in valid JSON format. 
+            Include the following interview questions: ${JSON.stringify(savedQuestions)}. 
+            Return only a JSON array. Avoid any additional text, formatting, or line breaks outside of the JSON array. 
+            The JSON must be valid and parsable where each object follows this structure:
+                - "talkingPoints": A talking point relevant to aligning resumes with the job description.
+                - "category": Behavioral Question, Situational Question, Technical Question, etc.
+                - "response": Leave this field as an empty string ("").
+                - "video_id": Leave this field as an empty string ("").
+                - "video_url": Leave this field as an empty string ("").
+                Do not include \`\`\`json`;
+
+            console.log("Talking Points Prompt:", talkingPointsPrompt);
+
+            // Make API call
+            const resumeResponse = await fetch("https://api.roughlyai.com/ttfiles/api/prompt_response", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    handler: "api_call",
+                    key: "Onward/Resumes/",
+                    api_key: process.env.NEXT_PUBLIC_ROUGHLY_API_KEY,
+                    question: talkingPointsPrompt,
+                    numsimular: 5, 
+                }),
+            });
+
+            const resumeTalkingPoints = await PollingResponse(
+                (
+                    await resumeResponse.json()
+                ).data
+            );
+
+            console.log("Parsed Talking Points:", resumeTalkingPoints);
+
+            return { resumeTalkingPoints };
         } catch (error) {
-            console.error("Error saving answer or navigating:", error);
+            console.error("Error generating talking points:", error);
+            throw error;
         }
     };
+
+    const 
+
+    // button handlers
+    const handleNextClick = async () => {
+        const responseText = activeButton === "text" ? editableTranscription : transcription;
+    
+        // Save current answer
+        handleSaveAnswer(responseText);
+    
+        if (currentQuestionIndex < questions.length - 1) {
+            const nextIndex = currentQuestionIndex + 1;
+            setCurrentQuestionIndex(nextIndex);
+    
+            // Update editable transcription for the next question
+            const nextAnswer = answers[nextIndex]?.response || "";
+            setEditableTranscription(nextAnswer);
+        } else {
+            console.log("All questions answered. Saving all answers...");
+            await saveAllAnswersToFile(); // Save all answers to a single file
+            router.push("/practiceOverview");
+        }
+    };
+    
+    const handlePrevClick = () => {
+        if (currentQuestionIndex > 0) {
+            const prevIndex = currentQuestionIndex - 1;
+            setCurrentQuestionIndex(prevIndex);
+    
+            // Update editable transcription for the previous question
+            const prevAnswer = answers[prevIndex]?.response || "";
+            setEditableTranscription(prevAnswer);
+        }
+    };    
+    
+
+    const handleVoiceClick = () => {
+        setShowVideo(true);
+        setActiveButton("voice");
+        setIsRecording(!isRecording); // Toggle recording state
+        onShowVideoChange(true);
+    };
+
+    const handleTextClick = () => {
+        setShowVideo(false);
+        setActiveButton("text");
+        setEditableTranscription(transcription); // Switch to editable transcription
+        onShowVideoChange(false);
+    };
+
+    // Handle typing
+    const handleEditableChange = (event) => {
+        const updatedText = event.target.value;
+        setEditableTranscription(updatedText);
+    
+        handleSaveAnswer(updatedText);
+    };
+    
+    const handleTranscription = (transcribedText) => {
+        setTranscription(transcribedText);
+    
+        handleSaveAnswer(transcribedText);
+    };
+    
 
     const handleAnalysisClick = async () => {
         const videoURL = savedVideoUrl;
@@ -222,190 +279,194 @@ export default function AnswerPractice({ question, questions, onShowVideoChange,
 
         if (error) throw error;
 
+        await saveAllAnswersToFile();
+
         router.push({ pathname: "/practiceOverview" });
     };
 
   return (
     <>
-      <Flex
-        flexDirection="row"
-        gap="2rem"
-        mx="auto"
-        justifyContent="center"
-        alignItems="flex-start"
-        width="100%"
-        maxWidth={showVideo ? "100%" : "60%"}
-      >
-        {/* Question and Answer Section */}
-        <Box
-          width="100%"
-          maxW={showVideo ? "60%" : "100%"}
-          transition="width 0.3s ease"
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
+        <Flex
+            flexDirection="row"
+            gap="2rem"
+            mx="auto"
+            justifyContent="center"
+            alignItems="flex-start"
+            width="100%"
+            maxWidth={showVideo ? "100%" : "60%"}
         >
-          {/* Display Question */}
-          <QuestionPractice question={question} />
-          <Flex
-            gap="1.1rem"
-            p="4"
-            bg="brand.pureWhite"
-            borderRadiusBottom={15}
-            boxShadow="md"
-            flexDirection="column"
-            divider={<StackDivider />}
-            width="100%"
-          >
-            <Heading size="18pt" textAlign="left">
-              Response Type:
-            </Heading>
-            <Divider orientation="horizontal" mb={4} />
+        
+            {/* Question and Answer Section */}
+            <Box
+                width="100%"
+                maxW={showVideo ? "60%" : "100%"}
+                transition="width 0.3s ease"
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+            >
+                {/* Display Question */}
+                <QuestionPractice question={currentQuestion}/>
+                <Flex
+                    gap="1.1rem"
+                    p="4"
+                    bg="brand.pureWhite"
+                    borderRadiusBottom={15}
+                    boxShadow="md"
+                    flexDirection="column"
+                    divider={<StackDivider />}
+                    width="100%"
+                >
+                    <Heading size="18pt" textAlign="left">
+                        Response Type:
+                    </Heading>
+                    <Divider orientation="horizontal" mb={4} />
 
-            {/* Response Type Buttons */}
-            <Flex flexDirection="row" gap="2rem">
-              <Button
-                width={isRecording ? "10rem%" : "7rem"}
-                onClick={handleVoiceClick}
-                bg={
-                  activeButton === "voice"
-                    ? "brand.oceanBlue"
-                    : "brand.pureWhite"
-                }
-                color={
-                  activeButton === "voice"
-                    ? "brand.pureWhite"
-                    : "brand.oceanBlue"
-                }
-                borderColor="brand.oceanBlue"
-                border="1px"
-                _hover={{
-                  boxShadow:
-                    "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)",
-                }}
-              >
-                <Text fontSize="xxs">
-                  {isRecording ? "Stop Recording" : "Voice"}
-                </Text>
-              </Button>
-              <Button
-                width="7rem"
-                onClick={handleTextClick}
-                bg={
-                  activeButton === "text"
-                    ? "brand.oceanBlue"
-                    : "brand.pureWhite"
-                }
-                color={
-                  activeButton === "text"
-                    ? "brand.pureWhite"
-                    : "brand.oceanBlue"
-                }
-                borderColor="brand.oceanBlue"
-                border="1px"
-                _hover={{
-                  boxShadow:
-                    "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)",
-                }}
-              >
-                <Text fontSize="xxs">Text</Text>
-              </Button>
-              <Transcriber
-                isRecording={isRecording}
-                setTranscription={setTranscription}
-                setEditableTranscription={setEditableTranscription}
-              />
-            </Flex>
-          </Flex>
-
-          {/* Answer Section */}
-          <Box
-            p="4"
-            bg="brand.blueberryCreme"
-            boxShadow="md"
-            borderBottomRadius={15}
-            maxH="35rem"
-            width="100%"
-          >
-            <Card borderRadius="15" textAlign="left">
-              <CardBody>
-                <Stack spacing="4" divider={<StackDivider />}>
-                  <Box>
-                    <Heading size="18pt">Your Response:</Heading>
-                  </Box>
-                  {/* Answer Box */}
-                  <Box overflowY="auto" height="10rem" w="100%">
-                    {activeButton === "text" ? (
-                      <Textarea
-                        value={editableTranscription}
-                        onChange={handleEditableChange}
-                        placeholder="Type your answer here"
-                        size="sm"
-                        height="10rem"
-                        resize="vertical"
-                      />
-                    ) : (
-                      <Text pt="2" fontSize="14pt">
-                        {transcription}
-                      </Text>
-                    )}
-                  </Box>
-                </Stack>
-              </CardBody>
-            </Card>
-          </Box>
-        </Box>
-
-                {/* Video Section */}
-                {showVideo && (
-                    <Flex
-                        flexDirection="column"
-                        width="60%"
-                        py="2rem"
-                        boxShadow="md"
-                        justifyContent="center"
-                        alignItems="center"
-                        borderRadius={15}
-                    >
-                        {/* <RecordCamera setSavedVideoUrl={setSavedVideoUrl} /> */}
-                        <RecordCamera setSavedVideoUrl={(url) => handleVideoSave(url)} />
-
+                    {/* Response Type Buttons */}
+                    <Flex flexDirection="row" gap="2rem">
                         <Button
-                            bg="brand.blushPink"
-                            size="xs"
-                            color="white"
-                            py="1.5rem"
-                            px="5rem"
-                            boxShadow="md"
-                            onClick={handleAnalysisClick}
+                            width={isRecording ? "10rem%" : "7rem"}
+                            onClick={handleVoiceClick}
+                            bg={
+                            activeButton === "voice"
+                                ? "brand.oceanBlue"
+                                : "brand.pureWhite"
+                            }
+                            color={
+                            activeButton === "voice"
+                                ? "brand.pureWhite"
+                                : "brand.oceanBlue"
+                            }
+                            borderColor="brand.oceanBlue"
+                            border="1px"
                             _hover={{
-                                bg: 'white',
-                                color: 'brand.blushPink',
-                                border: '1px',
-                                boxShadow: 'md',
+                            boxShadow:
+                                "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)",
                             }}
                         >
-                            Start Analysis
+                            <Text fontSize="xxs">
+                            {isRecording ? "Stop Recording" : "Voice"}
+                            </Text>
                         </Button>
                         <Button
-                            bg="brand.blushPink"
-                            size="xs"
-                            color="white"
-                            py="1.5rem"
-                            px="5rem"
-                            boxShadow="md"
-                            onClick={handleNextQuestion}
+                            width="7rem"
+                            onClick={handleTextClick}
+                            bg={
+                            activeButton === "text"
+                                ? "brand.oceanBlue"
+                                : "brand.pureWhite"
+                            }
+                            color={
+                            activeButton === "text"
+                                ? "brand.pureWhite"
+                                : "brand.oceanBlue"
+                            }
+                            borderColor="brand.oceanBlue"
+                            border="1px"
                             _hover={{
-                                bg: 'white',
-                                color: 'brand.blushPink',
-                                border: '1px',
-                                boxShadow: 'md',
+                            boxShadow:
+                                "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)",
                             }}
                         >
-                            Next Question
+                            <Text fontSize="xxs">Text</Text>
                         </Button>
+                        <Transcriber
+                            isRecording={isRecording}
+                            setTranscription={setTranscription}
+                            setEditableTranscription={setEditableTranscription}
+                        />
                     </Flex>
-                )}
+                </Flex>
+            {/* Answer Section */}
+                <Box
+                    p="4"
+                    bg="brand.blueberryCreme"
+                    boxShadow="md"
+                    borderBottomRadius={15}
+                    maxH="35rem"
+                    width="100%"
+                >
+                    <Card borderRadius="15" textAlign="left">
+                        <CardBody>
+                            <Stack spacing="4" divider={<StackDivider />}>
+                                <Box>
+                                    <Heading size="18pt">Your Response:</Heading>
+                                </Box>
+                                {/* Answer Box */}
+                                <Box overflowY="auto" height="10rem" w="100%">
+                                    {activeButton === "text" ? (
+                                    <Textarea
+                                        value={editableTranscription}
+                                        onChange={handleEditableChange}
+                                        placeholder="Type your answer here"
+                                        size="sm"
+                                        height="10rem"
+                                        resize="vertical"
+                                    />
+                                    ) : (
+                                    <Text pt="2" fontSize="14pt">
+                                        {transcription}
+                                    </Text>
+                                    )}
+                                </Box>
+                            </Stack>
+                        </CardBody>
+                    </Card>
+                </Box>
+            </Box>
+
+            {/* Video Section */}
+            {showVideo && (
+                <Flex
+                    flexDirection="column"
+                    width="60%"
+                    py="2rem"
+                    boxShadow="md"
+                    justifyContent="center"
+                    alignItems="center"
+                    borderRadius={15}
+                >
+                    {/* <RecordCamera setSavedVideoUrl={setSavedVideoUrl} /> */}
+                    <RecordCamera setSavedVideoUrl={(url) => handleVideoSave(url)} />
+                    <Button
+                        bg="brand.blushPink"
+                        size="xs"
+                        color="white"
+                        py="1.5rem"
+                        px="5rem"
+                        boxShadow="md"
+                        onClick={handleAnalysisClick}
+                        _hover={{
+                            bg: 'white',
+                            color: 'brand.blushPink',
+                            border: '1px',
+                            boxShadow: 'md',
+                        }}
+                    >
+                        Start Analysis
+                    </Button>
+                    
+                    {/* Navigation Buttons */}
+                    <Button
+                        onClick={handlePrevClick}
+                        disabled={currentQuestionIndex === 0}
+                        bg="brand.pureWhite"
+                        border="1px"
+                        borderColor="red"
+                        _hover={{ bg: "red", color: "white" }}
+                    >
+                        Previous
+                    </Button>
+                    <Button
+                        onClick={handleNextClick}
+                        bg="brand.oceanBlue"
+                        color="white"
+                        _hover={{ bg: "blue.500" }}
+                    >
+                        {currentQuestionIndex === questions.length - 1 ? "Finish" : "Next"}
+                    </Button>
+                </Flex>
+                    )}
             </Flex>
         </>
     );
