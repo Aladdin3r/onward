@@ -77,7 +77,7 @@ export default function QuestionType({
               >
                 Type of Questions
                 <Box
-                  ml={4}
+                  ml={1}
                   as="span"
                   cursor="pointer"
                   onClick={() => setInfoVisible(!isInfoVisible)}
