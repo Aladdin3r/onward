@@ -18,7 +18,7 @@ import RecordCamera from "./Camera";
 import Transcriber from "./Transcriber";
 import { supabase } from "@/lib/supabaseClient";
 
-export default function AnswerPractice({ question, questions, onShowVideoChange, saveAnswer }) {
+export default function AnswerPractice({ question, questions, onShowVideoChange, saveAnswer = () => {} }) {
     const router = useRouter();
     const [showVideo, setShowVideo] = useState(false); // Video response
     const [activeButton, setActiveButton] = useState('text'); // Default is text response
@@ -39,7 +39,39 @@ export default function AnswerPractice({ question, questions, onShowVideoChange,
         if (googleUSVoice) {
             setDefaultVoice(googleUSVoice);
         }
+
+        const sessionId = localStorage.getItem("sessionId");
     }, []);
+    
+    const uploadAnswerToSession = async (sessionId, questionId, file) => {
+        try {
+            const bucketName = "onward-responses"; // Replace with your Supabase bucket name
+            const filePath = `uploads/${sessionId}/question-${questionId}.txt`; // Path for the uploaded file
+    
+            console.log(`Uploading to bucket: ${bucketName}, path: ${filePath}`);
+    
+            // Upload file to Supabase
+            const { data, error } = await supabase.storage
+                .from(bucketName)
+                .upload(filePath, file, { upsert: true });
+    
+            if (error) {
+                console.error("Error uploading file:", error.message);
+                return null;
+            }
+    
+            // Generate public URL for the uploaded file
+            const { data: publicUrlData } = supabase.storage
+                .from(bucketName)
+                .getPublicUrl(filePath);
+    
+            console.log("File uploaded successfully. Public URL:", publicUrlData.publicUrl);
+            return publicUrlData.publicUrl;
+        } catch (err) {
+            console.error("Upload failed:", err.message);
+            return null;
+        }
+    };
 
     // const saveAnswer = (responseType, responseText, questionId, videoUrl = null) => {
     //     setAnswers((prevAnswers) => ({
@@ -142,19 +174,56 @@ export default function AnswerPractice({ question, questions, onShowVideoChange,
     //     }
     // };
 
-  const handleAnalysisClick = async () => {
-    const videoURL = savedVideoUrl;
-    const transcriptionText = transcription;
+    const handleNextQuestion = async () => {
+        const sessionId = localStorage.getItem("sessionId"); // Get session ID from localStorage
+        const questionId = question.id; // Get the current question ID
+    
+        // Prepare the answer content
+        const responseText =
+          activeButton === "text" ? editableTranscription : transcription;
+        const videoUrl = savedVideoUrl;
+    
+        // Save the answer
+        try {
+            if (!responseText) {
+                alert("Please provide a response before proceeding.");
+                return;
+            }
+    
+        const publicUrl = await uploadAnswerToSession(
+            sessionId,
+            questionId,
+            responseText
+        );
+    
+        console.log("Answer saved with URL:", publicUrl);
+    
+          // Navigate to the next question
+        const currentIndex = questions.findIndex((q) => q.id === questionId);
+            if (currentIndex < questions.length - 1) {
+            const nextQuestion = questions[currentIndex + 1];
+            router.push(`/practice-interview/${nextQuestion.id}`);
+            } else {
+            router.push("/practiceOverview"); // Navigate to overview when all questions are answered
+            }
+        } catch (error) {
+            console.error("Error saving answer or navigating:", error);
+        }
+    };
 
-    const transcriptionEntry = { text: transcriptionText, video_id: videoURL };
-    const { error } = await supabase
-      .from("transcriptions")
-      .insert(transcriptionEntry);
+    const handleAnalysisClick = async () => {
+        const videoURL = savedVideoUrl;
+        const transcriptionText = transcription;
 
-    if (error) throw error;
+        const transcriptionEntry = { text: transcriptionText, video_id: videoURL };
+        const { error } = await supabase
+        .from("transcriptions")
+        .insert(transcriptionEntry);
 
-    router.push({ pathname: "/practiceOverview" });
-  };
+        if (error) throw error;
+
+        router.push({ pathname: "/practiceOverview" });
+    };
 
   return (
     <>
@@ -325,7 +394,7 @@ export default function AnswerPractice({ question, questions, onShowVideoChange,
                             py="1.5rem"
                             px="5rem"
                             boxShadow="md"
-                            onClick={handleAnalysisClick}
+                            onClick={handleNextQuestion}
                             _hover={{
                                 bg: 'white',
                                 color: 'brand.blushPink',

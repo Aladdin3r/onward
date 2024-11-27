@@ -15,7 +15,6 @@ export default function PracticeAnswer() {
     const [fileURLs, setFileURLs] = useState({ resumes: [], jobPosts: [] });
     const [loading, setLoading] = useState(false);
     const router = useRouter();
-
     
     useEffect(() => {
         const storedQuestions = localStorage.getItem("questions");
@@ -56,8 +55,7 @@ export default function PracticeAnswer() {
               })
             );
           }
-    
-    
+
           const responses = await Promise.all(uploadPromises);
     
           const pollingResults = await Promise.all(
@@ -72,8 +70,8 @@ export default function PracticeAnswer() {
           console.error("Error uploading files:", error);
           throw error;
         }
-      };
-      
+    };
+    
     const GenerateTalkingPoints = async (resumes) => {
         try {
             const savedQuestions = JSON.parse(localStorage.getItem("questions"));
@@ -148,6 +146,10 @@ export default function PracticeAnswer() {
         }
     };
     
+    const saveAnswer = (responseType, responseText, questionId, videoUrl = null) => {
+        console.log("Saving answer:", { responseType, responseText, questionId, videoUrl });
+        // Your logic to save the answer
+    };
 
     const handleAnalysisClick = async () => {
         try {
@@ -204,6 +206,7 @@ export default function PracticeAnswer() {
                     <Flex flexDirection={"row"} ml={"0rem"} mt={"3rem"}>
                         {questions.length > 0 ? (
                             <AnswerPractice
+                                questions={questions}
                                 question={questions[currentQuestionIndex]}
                                 onShowVideoChange={() => {}}
                             />
