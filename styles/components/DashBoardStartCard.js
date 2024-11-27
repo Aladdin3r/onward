@@ -31,6 +31,7 @@ export default function DashboardCard() {
           flexDirection="column"
           alignItems="center"
           justifyContent="center"
+          rowGap="1em"
           p={{ base: 2, md: 6 }}
           width={{ base: "60%", md: "50%", lg: "50%", xl: "60%", "2xl":"140%" }}
 
@@ -38,9 +39,9 @@ export default function DashboardCard() {
           <Image
             src="/images/dashboard-img.png"
             alt="Dashboard Start Card"
-            width="100%"
-            height="auto"
-            objectFit="contain" 
+            w="100%"
+            h="auto"
+            // objectFit="contain" 
           />
 
           <Popup 
