@@ -204,7 +204,6 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
         }
     };
 
-    const 
 
     // button handlers
     const handleNextClick = async () => {
@@ -283,6 +282,71 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
 
         router.push({ pathname: "/practiceOverview" });
     };
+
+    const handleFinishClick = async () => {
+        try {
+            const sessionId = localStorage.getItem("sessionId");
+            const resumeData = JSON.parse(localStorage.getItem("selectedFileURLs"))?.resumes;
+    
+            if (!sessionId) {
+                console.error("Session ID not found.");
+                return;
+            }
+    
+            if (!resumeData || resumeData.length === 0) {
+                console.error("No resumes found in local storage.");
+                return;
+            }
+    
+            console.log("Resumes retrieved from local storage:", resumeData);
+    
+            // Step 1: Save all answers to Supabase
+            console.log("Saving all answers to Supabase...");
+            const answersFilePath = await saveAllAnswersToFile();
+            if (!answersFilePath) {
+                console.error("Failed to save answers to Supabase.");
+                return;
+            }
+    
+            // Step 2: Generate public URL for answers file
+            const { data: answersPublicUrlData, error: answersPublicUrlError } = supabase.storage
+                .from("onward-responses")
+                .getPublicUrl(answersFilePath);
+    
+            if (answersPublicUrlError) {
+                console.error("Error generating public URL for answers file:", answersPublicUrlError.message);
+                return;
+            }
+    
+            const answersPublicUrl = answersPublicUrlData.publicUrl;
+            console.log("Answers public URL:", answersPublicUrl);
+    
+            // Step 3: Fetch public URL of the resume file
+            const uploadedResumeUrl = resumeData[0]?.url; // Assuming the resume is already uploaded and URL is stored
+            console.log("Resume public URL:", uploadedResumeUrl);
+    
+            if (!uploadedResumeUrl) {
+                console.error("Resume public URL not found.");
+                return;
+            }
+    
+            // Step 4: Upload files to the API
+            console.log("Uploading files to the API...");
+            const uploadResults = await UploadFiles([{ url: answersPublicUrl, name: "all-answers.json" }, ...resumeData]);
+            console.log("File upload results:", uploadResults);
+    
+            // Step 5: Send API prompt
+            console.log("Sending API prompt to generate talking points...");
+            const apiResponse = await GenerateTalkingPoints(resumeData);
+            console.log("API response:", apiResponse);
+    
+            // Navigate to the practice overview page
+            router.push("/practiceOverview");
+        } catch (error) {
+            console.error("Error in handleFinishClick:", error.message);
+        }
+    };
+    
 
   return (
     <>
