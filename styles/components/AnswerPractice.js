@@ -18,14 +18,71 @@ import RecordCamera from "./Camera";
 import Transcriber from "./Transcriber";
 import { supabase } from "@/lib/supabaseClient";
 
-export default function AnswerPractice({ onShowVideoChange, question }) {
-  const router = useRouter();
-  const [showVideo, setShowVideo] = useState(false); // Video response
-  const [activeButton, setActiveButton] = useState("text"); // Default is text response
-  const [isRecording, setIsRecording] = useState(false);
-  const [editableTranscription, setEditableTranscription] = useState("");
-  const [transcription, setTranscription] = useState("");
-  const [savedVideoUrl, setSavedVideoUrl] = useState(null);
+export default function AnswerPractice({ question, questions, onShowVideoChange, saveAnswer }) {
+    const router = useRouter();
+    const [showVideo, setShowVideo] = useState(false); // Video response
+    const [activeButton, setActiveButton] = useState('text'); // Default is text response
+    const [isRecording, setIsRecording] = useState(false);
+    const [editableTranscription, setEditableTranscription] = useState('');
+    // const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [transcription, setTranscription] = useState('');
+    const [savedVideoUrl, setSavedVideoUrl] = useState(null);
+    const [defaultVoice, setDefaultVoice] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [answers, setAnswers] = useState({});
+
+
+    useEffect(() => {
+        // Initialize the default voice as "Google US English"
+        const voicesList = speechSynthesis.getVoices();
+        const googleUSVoice = voicesList.find(voice => voice.name === "Google US");
+        if (googleUSVoice) {
+            setDefaultVoice(googleUSVoice);
+        }
+    }, []);
+
+    // const saveAnswer = (responseType, responseText, questionId, videoUrl = null) => {
+    //     setAnswers((prevAnswers) => ({
+    //         ...prevAnswers,
+    //         [questionId]: {
+    //             responseType,
+    //             responseText,
+    //             videoUrl,
+    //         },
+    //     }));
+    // };    
+
+    const UploadTranscription = async (transcriptionText, questionId, videoURL = null) => {
+        try {
+            const response = await fetch("https://api.roughlyai.com/ttfiles/api/prompt_response", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    handler: "api_upload",
+                    key: "Onward/Transcriptions/",
+                    upload_data: [transcriptionText],
+                    fn: [`transcription_${questionId}.txt`],
+                    video_url: videoURL,
+                    question_id: questionId,
+                    api_key: process.env.NEXT_PUBLIC_ROUGHLY_API_KEY,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.status} ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            console.log("Transcription uploaded successfully:", data);
+
+            return data;
+        } catch (error) {
+            console.error("Error uploading transcription:", error);
+            throw error;
+        }
+    };
 
   const handleVoiceClick = () => {
     setShowVideo(true);
@@ -41,9 +98,49 @@ export default function AnswerPractice({ onShowVideoChange, question }) {
     onShowVideoChange(false);
   };
 
-  const handleEditableChange = (event) => {
-    setEditableTranscription(event.target.value); // Update text area content
-  };
+        // Handle typing
+        const handleEditableChange = (event) => {
+            const updatedText = event.target.value;
+            setEditableTranscription(updatedText);
+            saveAnswer(question.id, "text", updatedText); // Save typed response
+        };
+    
+        // Handle transcription
+        const handleTranscription = (transcribedText) => {
+            setTranscription(transcribedText);
+            saveAnswer(question.id, "voice", transcribedText); // Save transcribed response
+        };
+    
+        
+    
+
+    // const handleAnalysisClick = async () => {
+    //     const videoURL = savedVideoUrl;
+    //     const transcriptionText = transcription;
+
+    //     const transcriptionEntry = { text: transcriptionText, video_id: videoURL };
+    //     const { error } = await supabase.from('transcriptions').insert(transcriptionEntry);
+
+    //     if (error) throw error;
+
+    //     const localResponses = JSON.parse(localStorage.getItem('responses')) || {};
+    //     localResponses[question.id] = {
+    //         response: editableTranscription || transcriptionText, 
+    //         videoUrl: videoURL, 
+    //     };
+    //     localStorage.setItem('responses', JSON.stringify(localResponses));
+
+    //     console.log('Responses saved to localStorage:', localResponses);
+
+    //     if (currentQuestionIndex < questions.length - 1) {
+    //         setCurrentQuestionIndex((prevIndex) => {
+    //             const newIndex = prevIndex + 1;
+    //             console.log("Next Question Index:", newIndex); 
+    //             console.log("Next Question:", questions[newIndex]); 
+    //             return newIndex;
+    //         });
+    //     }
+    // };
 
   const handleAnalysisClick = async () => {
     const videoURL = savedVideoUrl;
@@ -190,38 +287,57 @@ export default function AnswerPractice({ onShowVideoChange, question }) {
           </Box>
         </Box>
 
-        {/* Video Section */}
-        {showVideo && (
-          <Flex
-            flexDirection="column"
-            width="60%"
-            py="2rem"
-            boxShadow="md"
-            justifyContent="center"
-            alignItems="center"
-            borderRadius={15}
-          >
-            <RecordCamera setSavedVideoUrl={setSavedVideoUrl} />
-            <Button
-              bg="brand.blushPink"
-              size="xs"
-              color="white"
-              py="1.5rem"
-              px="5rem"
-              boxShadow="md"
-              onClick={handleAnalysisClick}
-              _hover={{
-                bg: "white",
-                color: "brand.blushPink",
-                border: "1px",
-                boxShadow: "md",
-              }}
-            >
-              Start Analysis
-            </Button>
-          </Flex>
-        )}
-      </Flex>
-    </>
-  );
+                {/* Video Section */}
+                {showVideo && (
+                    <Flex
+                        flexDirection="column"
+                        width="60%"
+                        py="2rem"
+                        boxShadow="md"
+                        justifyContent="center"
+                        alignItems="center"
+                        borderRadius={15}
+                    >
+                        {/* <RecordCamera setSavedVideoUrl={setSavedVideoUrl} /> */}
+                        <RecordCamera setSavedVideoUrl={(url) => handleVideoSave(url)} />
+
+                        <Button
+                            bg="brand.blushPink"
+                            size="xs"
+                            color="white"
+                            py="1.5rem"
+                            px="5rem"
+                            boxShadow="md"
+                            onClick={handleAnalysisClick}
+                            _hover={{
+                                bg: 'white',
+                                color: 'brand.blushPink',
+                                border: '1px',
+                                boxShadow: 'md',
+                            }}
+                        >
+                            Start Analysis
+                        </Button>
+                        <Button
+                            bg="brand.blushPink"
+                            size="xs"
+                            color="white"
+                            py="1.5rem"
+                            px="5rem"
+                            boxShadow="md"
+                            onClick={handleAnalysisClick}
+                            _hover={{
+                                bg: 'white',
+                                color: 'brand.blushPink',
+                                border: '1px',
+                                boxShadow: 'md',
+                            }}
+                        >
+                            Next Question
+                        </Button>
+                    </Flex>
+                )}
+            </Flex>
+        </>
+    );
 }

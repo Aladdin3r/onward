@@ -78,7 +78,6 @@ export default function PracticeInterviewFilter() {
             `Fetching public URL for file: ${filePath} in bucket: ${bucketName}`
           );
 
-          // Use the correct destructuring approach
           const { data, error } = supabase.storage
             .from(bucketName)
             .getPublicUrl(filePath);
@@ -98,17 +97,20 @@ export default function PracticeInterviewFilter() {
       }
 
       console.log("Final Selected File URLs:", selectedFileURLs);
+
+       // save the selected file URLs to localStorage
+      localStorage.setItem("selectedFileURLs", JSON.stringify(selectedFileURLs));
       return selectedFileURLs;
     } catch (error) {
       console.error("Error fetching public URLs:", error);
     }
   };
 
-  // Fetch URLs when the component mounts
+  // fetch URLs when the component mounts
   useEffect(() => {
     const fetchURLs = async () => {
       try {
-        // Retrieve selected files from localStorage
+        // retrieve selected files from localStorage
         const storedFiles = JSON.parse(localStorage.getItem("selectedFiles"));
         console.log("Stored Files from Local Storage:", storedFiles);
 
@@ -187,7 +189,7 @@ export default function PracticeInterviewFilter() {
   };
 
   // prompt function
-  const GenerateQuestionsAndTalkingPoints = async (
+  const GenerateQuestions = async (
     jobPosts,
     resumes,
     selectedNumber,
@@ -202,16 +204,19 @@ export default function PracticeInterviewFilter() {
         ? selectedQuestionType.join(", ")
         : "all types";
 
-      const jobQuestionPrompt = `Generate a unique set of ${selectedNumber} interview questions that's a mix of general interview questions and questions specific to the job posting. 
-                Only generate ${selectedQuestionType} type questions. Avoid repeating exact questions or overly similar phrasing from prior sets. Return the questions in valid JSON format, without any additional formatting or backticks. 
-                Each object in the array should include:
-                - question: The interview question.
-                - category: Behavioural Question, Situational Question, Technical Question, Competency Question, Cultural Question, Career Goals, or Legal/Regulation Questions.
-                - type: Generic/Common or Specific.
-                - additionalInfo: A brief explanation of what the question is assessing.;
-    `
+      const jobQuestionPrompt = `Generate a unique set of ${selectedNumber} interview questions, ensuring a mix of ${selectedQuestionType}.
+        If Common Interview Questions are selected, include exactly 1 common question every 5 questions, positioned at the start of the array. 
+        These can be general interview questions not specific to nursing.
+        The remaining questions should be divided proportionally and strictly draw from the specified categories in ${selectedQuestionType},
+        ensuring relevance to the job posting.
+        Avoid repeating questions or overly similar phrasing from prior sets.
+        Return the questions in valid JSON format, without any additional formatting or backticks, where each object follows this structure:
+          - question: The interview question.
+          - category: Behavioural Question, Situational Question, Technical Question, Competency Question, Cultural Question, Career Goals Question, Legal/Regulation Question, Common Interview Question
+          - additionalInfo: A brief explanation of what the question is assessing.;`
       console.log("Job Question Prompt:", jobQuestionPrompt);
 
+      // Make API call
       const jobPostResponse = await fetch(
         "https://api.roughlyai.com/ttfiles/api/prompt_response",
         {
@@ -229,41 +234,41 @@ export default function PracticeInterviewFilter() {
         }
       );
 
-      const resumeResponse = await fetch(
-        "https://api.roughlyai.com/ttfiles/api/prompt_response",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            handler: "api_call",
-            key: "Onward/Resumes/",
-            api_key: process.env.NEXT_PUBLIC_ROUGHLY_API_KEY,
-            question: `Generate an array of talking points that align resumes to the job description in valid JSON format. Each object in the array should include the following fields:
-                      - "question": A talking point or prompt relevant to aligning resumes with the job description.
-                      - "category": One of the following categories: "Behavioural Question", "Situational Question", "Technical Question", "Competency Question", "Cultural Question", "Career Goals", or "Legal/Regulation Questions".
-                      - "response": Leave this field as an empty string ("").
-                      - "video_id": Leave this field as an empty string ("").
-                      - "video_url": Leave this field as an empty string ("")
-                      Output only the JSON array.`,
-            numsimular: 5, // default 5
-          }),
-        }
-      );
+      // const resumeResponse = await fetch(
+      //   "https://api.roughlyai.com/ttfiles/api/prompt_response",
+      //   {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({
+      //       handler: "api_call",
+      //       key: "Onward/Resumes/",
+      //       api_key: process.env.NEXT_PUBLIC_ROUGHLY_API_KEY,
+      //       question: `Generate an array of talking points that align resumes to the job description in valid JSON format. Each object in the array should include the following fields:
+      //                 - "talkingPoints": A talking point or prompt relevant to aligning resumes with the job description.
+      //                 - category: Behavioural Question, Situational Question, Technical Question, Competency Question, Cultural Question, Career Goals Question, Legal/Regulation Question, Common Interview Question
+      //                 - "response": Leave this field as an empty string ("").
+      //                 - "video_id": Leave this field as an empty string ("").
+      //                 - "video_url": Leave this field as an empty string ("")
+      //                 Output only the JSON array.`,
+      //       numsimular: 5, // default 5
+      //     }),
+      //   }
+      // );
 
       const jobPostQuestions = await PollingResponse(
         (
           await jobPostResponse.json()
         ).data
       );
-      const resumeTalkingPoints = await PollingResponse(
-        (
-          await resumeResponse.json()
-        ).data
-      );
+      // const resumeTalkingPoints = await PollingResponse(
+      //   (
+      //     await resumeResponse.json()
+      //   ).data
+      // );
 
-      return { jobPostQuestions, resumeTalkingPoints };
+      return { jobPostQuestions };
     } catch (error) {
       console.error("Error generating questions and talking points:", error);
       throw error;
@@ -278,12 +283,13 @@ export default function PracticeInterviewFilter() {
       const urls = await getPublicURLs(storedFiles);
       setFileURLs(urls);
 
+     
       const uploadProgress = await UploadFiles(urls.resumes, urls.jobPosts);
       console.log("Upload progress:", uploadProgress);
 
-      // Generate questions and talking points
-      const { jobPostQuestions, resumeTalkingPoints } =
-        await GenerateQuestionsAndTalkingPoints(
+      // Generate questions 
+      const { jobPostQuestions } =
+        await GenerateQuestions(
           urls.jobPosts,
           urls.resumes,
           selectedNumber,
@@ -292,16 +298,15 @@ export default function PracticeInterviewFilter() {
 
       console.log("Generated Questions:", jobPostQuestions);
 
-      // **[CHANGE]**: Parse the JSON response properly and save it
       const parsedQuestions = JSON.parse(jobPostQuestions.answer); // Parse the JSON string
       console.log("Parsed Questions:", parsedQuestions);
 
       // Save parsed questions and talking points to localStorage
       localStorage.setItem("questions", JSON.stringify(parsedQuestions));
-      localStorage.setItem(
-        "talkingPoints",
-        JSON.stringify(resumeTalkingPoints)
-      );
+      // localStorage.setItem(
+      //   "talkingPoints",
+      //   JSON.stringify(resumeTalkingPoints)
+      // );
 
       router.push("/practice-interview-questions");
     } catch (error) {

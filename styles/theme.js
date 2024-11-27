@@ -14,11 +14,11 @@ const overrides = {
     ...chakraTheme,
     fonts,
     breakpoints: {
-        sm: "320px",    // mobile
+        sm: "300px",    // mobile
         md: "768px",    // tablet
         lg: "1024px",   // laptop
         xl: "1280px",   // desktop (smaller screens)
-        "2xl": "1920px" // desktop (larger screens)
+        "2xl": "1650px" // desktop (larger screens)
     },
     containerSize: {
         // base: "100%",      // For mobile/small screens
