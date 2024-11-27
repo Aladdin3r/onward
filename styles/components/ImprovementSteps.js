@@ -1,5 +1,4 @@
 import { Box, Text, VStack, Button, HStack } from "@chakra-ui/react";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { use } from "react";
 
@@ -54,15 +53,15 @@ export default function ImprovementSteps() {
       <VStack align="left" spacing="10"> {/* Center aligned */}
         {steps.map((step, index) => (
           <HStack key={index} align="start" spacing="3">
-            <Image
-              src="/stepsIcon.png"
+            <img
+              src="/stepsIcon.svg"
               alt="Step Icon"
-              width={49} 
+              width={49}
               height={49}
             />
 
             <Box>
-              <Text fontWeight="semibold" color="gray.800" textAlign="left"> {/* Change to left for individual text alignment */}
+              <Text fontWeight="semibold" color="gray.800" textAlign="left">
                 {step.title}
                 {/* {step.alert && (
                   <Text as="span" color="red.500" ml="1">
