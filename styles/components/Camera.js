@@ -204,7 +204,7 @@ export default function RecordCamera({
         <div style={{ marginTop: "1rem", display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
           {isRecording ? (
             <Box
-              backgroundColor="#4CAF50"
+              backgroundColor="#EA4A4D"
               borderRadius="full"
             >
               <Button
@@ -215,12 +215,12 @@ export default function RecordCamera({
                 width="100%"
                 height="100%"
               >
-                <PlayCircle size={32} />
+                Stop
               </Button>
             </Box>
           ) : (
             <Box
-              backgroundColor="#EA4A4D"
+              backgroundColor="#4CAF50"
               borderRadius="full"
             >
               <Button
@@ -230,8 +230,9 @@ export default function RecordCamera({
                 aria-label="Start Recording"
                 width="100%"
                 height="100%"
+                fontSize="xs"
               >
-                <StopCircle size={32}/>
+                Start
               </Button>
             </Box>
           )}

@@ -257,7 +257,7 @@ export default function PracticeAnswer() {
                                     borderColor:"red"
                                 }}>End</Button>
 
-                        {!showVideo && (
+                        {/* {!showVideo && (
                             <Button bg={"brand.blushPink"} size="xs" color={"white"} py={"1.5rem"} px={"5rem"} boxShadow={"md"} 
                                 onClick={handleAnalysisClick}
                                 _hover={{
@@ -269,7 +269,7 @@ export default function PracticeAnswer() {
                             > 
                                Start Analysis
                             </Button>
-                        )}
+                        )} */}
                     </Flex>
                 </Flex>
             </LayoutSim>
