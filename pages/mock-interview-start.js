@@ -1,23 +1,18 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import "@/styles/theme";
-import { Box, Flex, Text, Button, IconButton, Stack, Center } from "@chakra-ui/react";
-import { Microphone, MicrophoneSlash, VideoCamera, VideoCameraSlash } from "@phosphor-icons/react";
+import { Box, Flex, Text, Button, Center } from "@chakra-ui/react";
 import RecordCamera from "@/styles/components/Camera";
 import { useRouter } from "next/router";
 import Layout from "@/styles/components/LayoutSim";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import nursingInterviewQuestions from "@/data/interviewQuestions";
 
 export default function MockInterviewQuestionPage() {
   const router = useRouter();
   const { question: initialQuestion } = router.query;
   const [currentQuestion, setCurrentQuestion] = useState(initialQuestion);
-
-  // State for microphone and camera
-  const [isMicOn, setIsMicOn] = useState(true); // Default: mic on
-  const [isCameraOn, setIsCameraOn] = useState(false); // Default: camera off
-
+  const audioRef = useRef(null);  // To control the audio playback
 
   useEffect(() => {
     if (!initialQuestion) {
@@ -25,8 +20,6 @@ export default function MockInterviewQuestionPage() {
     }
   }, [initialQuestion]);
 
-
-// HERE: YET TO IMPLEMENT SPOKEN QUESTIONS WITH REPEAT BUTTON + HIDE THE QUESTION FROM INTERVIEWEE'S VIEW!
   const getRandomQuestion = () => {
     const randomCategory = nursingInterviewQuestions[Math.floor(Math.random() * nursingInterviewQuestions.length)];
     return randomCategory.questions[Math.floor(Math.random() * randomCategory.questions.length)];
@@ -36,13 +29,40 @@ export default function MockInterviewQuestionPage() {
     setCurrentQuestion(getRandomQuestion());
   };
 
-  // const toggleMic = () => {
-  //   setIsMicOn((prev) => !prev);
-  // };
+  // Fetch and play audio for the question
+  useEffect(() => {
+    if (currentQuestion) {
+      const fetchAudio = async () => {
+        try {
+          const response = await fetch("/api/textToSpeech", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              text: currentQuestion,  // Send the question text to the backend
+              voice: "deepgram",  // Specify the Deepgram voice option (you can change it to a different voice if needed)
+            }),
+          });
 
-  // const toggleCamera = () => {
-  //   setIsCameraOn((prev) => !prev);
-  // };
+          if (response.ok) {
+            const audioBlob = await response.blob();
+            const audioUrl = URL.createObjectURL(audioBlob); // Create URL for audio playback
+            if (audioRef.current) {
+              audioRef.current.src = audioUrl; // Set the audio source
+              audioRef.current.play(); // Automatically play the audio when it's ready
+            }
+          } else {
+            console.error("Error fetching audio:", response.statusText);
+          }
+        } catch (error) {
+          console.error("Error fetching audio:", error);
+        }
+      };
+
+      fetchAudio();
+    }
+  }, [currentQuestion]);
 
   return (
     <>
@@ -66,7 +86,6 @@ export default function MockInterviewQuestionPage() {
           alignItems="center"
         >
           {/* Question Prompt */}
-          {/* HERE: YET TO IMPLEMENT SPOKEN QUESTIONS WITH REPEAT BUTTON + HIDE THE QUESTION FROM INTERVIEWEE'S VIEW! */}
           <Center>
             <Box bg="white" mt={4} px={6} py={4} borderRadius="md" boxShadow="sm" width="70%">
               <Text fontSize="sm" fontWeight="semibold" textAlign="center">
@@ -77,57 +96,25 @@ export default function MockInterviewQuestionPage() {
 
           {/* Video Player */}
           <Flex justify="center" mb={8} mt={20} position="relative" height="500px" width="100%">
-            <RecordCamera isMicOn={isMicOn} isCameraOn={isCameraOn} isRecordingEnabled={false} />
+            <RecordCamera isMicOn={true} isCameraOn={false} isRecordingEnabled={false} />
           </Flex>
 
+          {/* Hidden Audio Player */}
+          <audio ref={audioRef} style={{ display: "none" }} /> {/* This player will be hidden */}
+
           {/* Bottom Control Bar */}
-          <Box width="100%" py={2} bg="white" boxShadow="md" position="fixed" bottom={0} zIndex="9999" >
+          <Box width="100%" py={2} bg="white" boxShadow="md" position="fixed" bottom={0} zIndex="9999">
             <Flex justify="space-between" align="center" maxW="800px" mx="auto" px={4}>
               {/* End Button */}
-              <Button colorScheme="red" size="sm" px={8} py={6} onClick={() => router.push('/')}>
+              <Button
+                colorScheme="red"
+                size="sm"
+                px={8}
+                py={6}
+                onClick={() => router.push("/")}
+              >
                 End
               </Button>
-
-              {/* Mic and Video Icon Buttons */}
-                {/* HERE: Noticed these are not made functional yet? Currently the Camera component's ones work, so hiding them out for now...*/}
-
-              <Stack direction="row" spacing={10}>
-                {/* Microphone Toggle Button */}
-                {/* <IconButton
-                  px={4}
-                  py={8}
-                  aria-label="Toggle Microphone"
-                  icon={
-                    isMicOn ? (
-                      <Microphone size={35} color="black" weight="fill" />
-                    ) : (
-                      <MicrophoneSlash size={35} color="black" weight="fill" />
-                    )
-                  }
-                  bg="white"
-                  boxShadow="md"
-                  borderRadius="full"
-                  onClick={toggleMic} // Toggle mic
-                /> */}
-
-                {/* Camera Toggle Button */}
-                {/* <IconButton
-                  px={4}
-                  py={8}
-                  aria-label="Toggle Video"
-                  icon={
-                    isCameraOn ? (
-                      <VideoCamera size={35} color="black" weight="fill" />
-                    ) : (
-                      <VideoCameraSlash size={35} color="black" weight="fill" />
-                    )
-                  }
-                  bg="white"
-                  boxShadow="md"
-                  borderRadius="full"
-                  onClick={() => setIsCameraOn((prev) => !prev)} // Toggle camera
-                /> */}
-              </Stack>
 
               {/* Next Question Button */}
               <Button
