@@ -47,11 +47,11 @@ export default function DashboardCard() {
             title="Start Practicing!" 
             heading="Select an Interview Type:" 
             content1="Practice a realistic interview scenario in a simulated environment."
-            button1Text="Mock Interview" 
-            button1Action={handleMockInterview}  // Navigate to the mock interview page
+            button1Text="Practice Interview" 
+            button1Action={handlePracticeInterview}  // Navigate to the mock interview page
             content2="Focus on refining your answers and building confidence" 
-            button2Text="Practice Interview" 
-            button2Action={handlePracticeInterview} // Navigate to the practice interview page
+            button2Text="Mock Interview" 
+            button2Action={handleMockInterview} // Navigate to the practice interview page
             isOpen={isStartPracticingOpen} 
             onOpen={onStartPracticingOpen} 
             onClose={onStartPracticingClose} 
