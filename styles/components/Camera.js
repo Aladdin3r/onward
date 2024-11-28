@@ -1,9 +1,14 @@
 import { useState, useRef, useEffect } from "react";
-import { Microphone, MicrophoneSlash, VideoCamera, VideoCameraSlash } from "@phosphor-icons/react";
-import { useToast } from "@chakra-ui/react"; // Import useToast from Chakra UI
-import { supabase } from "@/lib/supabaseClient"; // Import Supabase client
+import { useToast, Button, Box } from "@chakra-ui/react";
+import { supabase } from "@/lib/supabaseClient";
+import { StopCircle, PlayCircle } from "@phosphor-icons/react";
 
-export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoUrl }) {
+export default function RecordCamera({
+  isRecordingAvailable,
+  isRecordingEnabled = true,
+  isSaveEnabled = true, // New prop
+  setSavedVideoUrl,
+}) {
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const [isRecording, setIsRecording] = useState(false);
@@ -13,33 +18,29 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
   const [stream, setStream] = useState(null);
   const [audioContext, setAudioContext] = useState(null);
   const [gainNode, setGainNode] = useState(null);
-  const toast = useToast(); // Initialize toast
+  const toast = useToast();
 
   useEffect(() => {
-    // Start recording and camera as soon as the component loads
     setIsCameraOn(true);
     startRecording();
 
     return () => {
-      // Cleanup on component unmount
       if (stream) {
         stream.getTracks().forEach((track) => track.stop());
       }
       if (audioContext) {
-        audioContext.close(); // Cleanup audio context
+        audioContext.close();
       }
     };
-  }, []); // Empty dependency array ensures this runs only once on mount
+  }, []);
 
   useEffect(() => {
-    // Start or stop the camera when the isCameraOn state changes
     if (isCameraOn && !stream) {
       startCamera();
     } else if (!isCameraOn && stream) {
       stopCamera();
     }
 
-    // Cleanup function to stop the camera stream when the component is unmounted or camera is turned off
     return () => {
       if (stream) {
         stream.getTracks().forEach((track) => track.stop());
@@ -50,26 +51,25 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
   const startCamera = async () => {
     try {
       const constraints = {
-        video: true, // Enable video
+        video: true,
         audio: {
-          echoCancellation: false, // Disable echo cancellation
-          noiseSuppression: false, // Disable noise suppression
-          autoGainControl: false,  // Disable auto gain control
+          echoCancellation: false,
+          noiseSuppression: false,
+          autoGainControl: false,
         },
       };
-  
+
       const newStream = await navigator.mediaDevices.getUserMedia(constraints);
       videoRef.current.srcObject = newStream;
-      videoRef.current.muted = true; // Ensure the speaker stays muted
+      videoRef.current.muted = true;
       setStream(newStream);
-  
-      // Optionally, set up the audio context for fine-grained audio control (can be skipped)
+
       const newAudioContext = new (window.AudioContext || window.webkitAudioContext)();
       const audioTracks = newStream.getAudioTracks();
       if (audioTracks.length > 0) {
         const audioSource = newAudioContext.createMediaStreamSource(newStream);
         const newGainNode = newAudioContext.createGain();
-        newGainNode.gain.setValueAtTime(1, newAudioContext.currentTime); // Default to full gain
+        newGainNode.gain.setValueAtTime(1, newAudioContext.currentTime);
         audioSource.connect(newGainNode);
         newGainNode.connect(newAudioContext.destination);
         setAudioContext(newAudioContext);
@@ -87,35 +87,26 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
       setIsCameraOn(false);
       setStream(null);
       if (audioContext) {
-        audioContext.close(); // Cleanup audio context
+        audioContext.close();
       }
     }
   };
 
   const startRecording = () => {
     if (!isCameraOn) {
-      // Show toast when trying to start recording without the camera on
-      // toast({
-      //   title: "Camera Off",
-      //   description: "To record, turn the camera on.",
-      //   status: "warning",
-      //   duration: 3000,
-      //   isClosable: true,
-      // });
-      return; // Prevent recording if camera is off
+      return;
     }
 
     if (stream) {
       mediaRecorderRef.current = new MediaRecorder(stream);
       mediaRecorderRef.current.ondataavailable = (event) => {
         if (event.data.size > 0) {
-          console.log("Recording data available:", event.data);
           setRecordedChunks((prev) => [...prev, event.data]);
         }
       };
       mediaRecorderRef.current.start();
       setIsRecording(true);
-      // Warn user to start recording to see feedback
+
       toast({
         title: "Recording Started",
         description: "Start the recording to view feedback.",
@@ -130,7 +121,7 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
-      // Warn user to save video to see feedback
+
       toast({
         title: "Recording Stopped",
         description: "Remember to save the video or you won't see it for feedback.",
@@ -141,103 +132,43 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
     }
   };
 
-  const saveRecordingLocally = () => {
-    const blob = new Blob(recordedChunks, { type: "video/webm" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.style.display = "none";
-    a.href = url;
-    a.download = "recorded-video.webm"; // Save to the local machine
-    document.body.appendChild(a);
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
   const saveRecordingToSupabase = async () => {
     const blob = new Blob(recordedChunks, { type: "video/webm" });
     const file = new File([blob], "recorded-video.webm", { type: "video/webm" });
-  
-    // Upload the file to Supabase
-    const { data, error } = await supabase
-      .storage
-      .from("onward-video") // Ensure correct bucket name
+
+    const { data, error } = await supabase.storage
+      .from("onward-video")
       .upload(`videos/${Date.now()}-recorded-video.webm`, file, {
         cacheControl: "3600",
         upsert: false,
       });
-  
+
     if (error) {
       console.error("Error uploading video:", error.message);
     } else {
-      // Fetch the public URL of the uploaded video
       const { data: urlData, error: urlError } = await supabase
         .storage
         .from("onward-video")
         .getPublicUrl(data.path);
-  
+
       if (urlError) {
         console.error("Error fetching public URL:", urlError.message);
       } else {
-        // Fetch the latest transcription data from the 'transcriptions' table
-        const { data: transcriptionData, error: transcriptionError } = await supabase
-          .from('transcriptions')
-          .select('id, text, video_id')
-          .order('created_at', { ascending: false })
-          .limit(1)  // Fetch the latest transcription
-          .single();
-  
-        if (transcriptionError) {
-          console.error("Error fetching transcription data:", transcriptionError.message);
-        } else {
-          // Update the transcription row with the video URL
-          const { error: updateError } = await supabase
-            .from('transcriptions')
-            .update({
-              video_id: urlData.publicUrl,  // Save the video URL to the transcription row
-            })
-            .eq('id', transcriptionData.id);  // Match the correct transcription row by ID
-  
-          if (updateError) {
-            console.error("Error updating transcription data with video URL:", updateError.message);
-          } else {
-            console.log("Video URL saved successfully to the transcription table");
-            setSavedVideoUrl(urlData.publicUrl); // Pass the URL to the parent component
+        setSavedVideoUrl(urlData.publicUrl);
 
-            toast({
-              title: "Recording Saved",
-              description: "Your recording has been successfully saved.",
-              status: "success",
-              duration: 3000,
-              isClosable: true,
-            });
-          }
-        }
-      }
-    }
-  };
-
-  const toggleMic = async () => {
-    setIsMicOn((prev) => !prev);
-
-    if (stream) {
-      const audioTrack = stream.getAudioTracks()[0];
-      if (audioTrack) {
-        audioTrack.enabled = !audioTrack.enabled; // Enable/Disable audio
-      }
-
-      // Adjust the gain to unmute or mute the microphone
-      if (gainNode) {
-        if (isMicOn) {
-          gainNode.gain.setValueAtTime(0, audioContext.currentTime); // Mute the mic
-        } else {
-          gainNode.gain.setValueAtTime(1, audioContext.currentTime); // Unmute the mic
-        }
+        toast({
+          title: "Recording Saved",
+          description: "Your recording has been successfully saved.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     }
   };
 
   return (
-    <div style={{ textAlign: "center", padding: "2em", width: "100%", maxWidth: "100%", backgroundColor: "white"}}>
+    <div style={{ textAlign: "center", padding: "2em", width: "100%", maxWidth: "100%", backgroundColor: "white" }}>
       <div
         style={{
           position: "relative",
@@ -257,81 +188,75 @@ export default function RecordCamera({ isRecordingEnabled = true, setSavedVideoU
             width: "100%",
             height: "100%",
             borderRadius: "10px",
+            transform: "scaleX(-1)",
           }}
         />
       </div>
 
-      <div style={{ marginTop: "1rem" }}>
-        {isRecording ? (
-          <button
-            onClick={stopRecording}
-            style={{
-              backgroundColor: "#EA4A7D",
-              color: "white",
-              padding: "10px 20px",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-          >
-            Stop Recording
-          </button>
-        ) : (
-          <button
-            onClick={startRecording}
-            style={{
-              backgroundColor: "#4CAF50", // Green for start recording
-              color: "white",
-              padding: "10px 20px",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-          >
-            Start Recording
-          </button>
-        )}
-      </div>
-
-      <div style={{ marginTop: "1rem" }}>
-        {/* <button
-          onClick={saveRecordingLocally}
-          style={{
-            backgroundColor: "#007BFF", // Blue for saving locally
-            color: "white",
-            padding: "10px 20px",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-            marginRight: "10px",
-          }}
-        >
-          Save Locally
-        </button> */}
-        <button
-          onClick={saveRecordingToSupabase}
-          style={{
-            backgroundColor: "#FFD700", // Gold for saving to Supabase
-            color: "black",
-            padding: "10px 20px",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          Save to Supabase
-        </button>
-      </div>
-
-      <div style={{ marginTop: "1rem" }}>
-        <button onClick={toggleMic}>
-          {isMicOn ? (
-            <Microphone size={32} color="#007BFF" />
+    <Box 
+    display="flex"
+    flexDirection="row"
+    gap={3}
+    justifyContent="center"
+    alignItems="center"
+    >
+      {isRecordingAvailable && (
+        <div style={{ marginTop: "1rem", display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+          {isRecording ? (
+            <Box
+              backgroundColor="#EA4A4D"
+              borderRadius="full"
+            >
+              <Button
+                onClick={stopRecording}
+                variant="unstyled"
+                color="white"
+                aria-label="Stop Recording"
+                width="100%"
+                height="100%"
+              >
+                Stop
+              </Button>
+            </Box>
           ) : (
-            <MicrophoneSlash size={32} color="#007BFF" />
+            <Box
+              backgroundColor="#4CAF50"
+              borderRadius="full"
+            >
+              <Button
+                onClick={startRecording}
+                variant="unstyled"
+                color="white"
+                aria-label="Start Recording"
+                width="100%"
+                height="100%"
+                fontSize="xs"
+              >
+                Start
+              </Button>
+            </Box>
           )}
-        </button>
-      </div>
+        </div>
+      )}
+
+      {isSaveEnabled && (
+        <div style={{ marginTop: "1rem" }}>
+          <Button
+            onClick={saveRecordingToSupabase}
+            bg="brand.pureWhite"
+            size="xxs"
+            p={2}
+            border="2px"
+            borderColor="green.500"
+            fontSize="10pt"
+            fontWeight="normal"
+          >
+            Save to get Feedback
+          </Button>
+        </div>
+      )}
+      </Box>
     </div>
+
   );
 }

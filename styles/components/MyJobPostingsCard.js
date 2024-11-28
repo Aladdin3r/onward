@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from "@/lib/supabaseClient"; // Make sure to import your Supabase client
 import PDFCard from './PDFCard'; // Import PDFCard component
 
-export default function MyResumesCard() {
+export default function MyJobPostingsCard() {
     const [uploadedFiles, setUploadedFiles] = useState([]); // State to hold fetched files
 
     useEffect(() => {
@@ -11,7 +11,7 @@ export default function MyResumesCard() {
         const fetchJobPostings = async () => {
             const { data: fileList, error } = await supabase
                 .storage
-                .from("onward-resume") // Your bucket name
+                .from("onward-job-posting") // Your bucket name
                 .list("uploads", { limit: 100 }); // Folder path and limit for the files to fetch
 
             if (error) {
@@ -27,7 +27,7 @@ export default function MyResumesCard() {
                 id: file.id,
                 name: file.name,
                 // If you want a public URL to the file
-                url: supabase.storage.from("onward-resume").getPublicUrl(`uploads/${file.name}`).publicURL,
+                url: supabase.storage.from("onward-job-posting").getPublicUrl(`uploads/${file.name}`).publicURL,
                 size: file.metadata?.size || 0,
             }));
 
@@ -43,7 +43,7 @@ export default function MyResumesCard() {
         try {
             const { error } = await supabase
                 .storage
-                .from("onward-resume")
+                .from("onward-job-posting")
                 .remove([`uploads/${fileName}`]); // Remove the file from the bucket
 
             if (error) {
@@ -76,7 +76,7 @@ export default function MyResumesCard() {
                 fontWeight="bold" 
                 mb={2}
             >
-                My Resumes:
+                My Job Postings:
             </Text>
             <Box
             display="flex"
@@ -84,7 +84,7 @@ export default function MyResumesCard() {
             rowGap="0.6rem"
             >
                 {uploadedFiles.length === 0 ? (
-                    <Text>No resumes.</Text> // Message if no files are found
+                    <Text>No job postings.</Text> // Message if no files are found
                 ) : (
                     uploadedFiles.map((file) => (
                         <box

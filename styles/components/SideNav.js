@@ -3,13 +3,13 @@ import PropTypes from "prop-types";
 import Link from "next/link";
 import { Box, Flex, Text, VStack, Image } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { ChalkboardTeacher, ClockCounterClockwise, UserSound, Presentation, User, Gear } from "@phosphor-icons/react";
+import { ChalkboardTeacher, ClockCounterClockwise, House, Presentation, User, Gear } from "@phosphor-icons/react";
 
 // Define each variant and associated icon, label, and path(s)
 const variants = {
   default: {
     label: "Dashboard",
-    icon: <UserSound size={32} />,
+    icon: <House size={32} />,
     path: "/"
   },
   variant2: {

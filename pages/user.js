@@ -10,6 +10,7 @@ import MyResumesCard from "@/styles/components/MyResumesCard";
 import Footer from "@/styles/components/Footer";
 import { SideNavBar } from "@/styles/components/SideNav";
 import PDFCard from "@/styles/components/PDFCard";
+import MyJobPostingsCard from "@/styles/components/MyJobPostingsCard";
 
 export default function User() {
   const [uploadedFiles, setUploadedFiles] = useState([]); // State to manage uploaded files
@@ -95,21 +96,13 @@ export default function User() {
             {/* Resumes and Job Postings Section */}
             <SimpleGrid columns={{ base: 1, md: 2 }} spacing={5}>
               {/* My Resumes Section */}
-              <Box bg="white" shadow="sm" borderRadius="lg" p={5} display="flex" flexDirection="column">
+              {/* <Box bg="white" shadow="sm" borderRadius="lg" p={5} display="flex" flexDirection="column"> */}
                 <MyResumesCard uploadedFiles={uploadedFiles} /> {/* Pass uploaded files to MyResumesCard */}
-              </Box>
+              {/* </Box> */}
               {/* My Job Postings Section */}
-              <Box bg="white" shadow="sm" borderRadius="lg" p={5} display="flex" flexDirection="column">
-                <Heading size="md" mb={3}>My Job Postings</Heading>
-                <Text fontSize="xs" color="gray.500" mt="5">Default</Text>
-                <VStack align="start" spacing={3}>
-                  <PDFCard size={"92kb of 92kb"} title={"Burnaby Hosp. Nurse"} />
-                  <Text fontSize="xs" color="gray.500">Recently Added</Text>
-                  <PDFCard size={"99kb of 99kb"} title={"Nurse Aide Resume"} />
-                  <PDFCard size={"66kb of 66kb"} title={"NewWest Hosp. Nurse"} />
-                </VStack>
-                <Link color="pink.500" fontSize="sm" mt="auto" display="inline-block">View All</Link>
-              </Box>
+              {/* <Box bg="white" shadow="sm" borderRadius="lg" p={5} display="flex" flexDirection="column"> */}
+                <MyJobPostingsCard uploadedFiles={uploadedFiles} />
+              {/* </Box> */}
             </SimpleGrid>
           </Box>
         </Layout>

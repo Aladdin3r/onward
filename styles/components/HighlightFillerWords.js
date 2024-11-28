@@ -1,32 +1,31 @@
 // HighlightFillerWords.js
 
-// look on practice-analysis page lines 75-83 to see this in use
-
-import { Text } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 
 const HighlightFillerWords = ({ answer }) => {
   const fillerWords = ["Um", "uh", "like", "um"];
   const blushPink = "brand.blushPink";
 
   return (
-    <>
+    <Box as="p" display="inline" whiteSpace="pre-wrap">
       {answer.split(" ").map((word, index) => {
-        // Check if the word is a filler word by stripping commas and periods
-        const isFiller = fillerWords.includes(word.replace(",", "").replace(".", ""));
-        
+        // Strip commas and periods to check for filler words
+        const sanitizedWord = word.replace(/[,.]/g, "");
+        const isFiller = fillerWords.includes(sanitizedWord);
+
         return (
           <Text
             as="span"
             key={index}
             color={isFiller ? blushPink : "inherit"}
-            fontWeight={isFiller ? "bold" : "normal"} // Optional bolding for emphasis
-            mr={1} // Space between words
+            fontWeight={isFiller ? "bold" : "normal"}
           >
             {word}
+            {index < answer.split(" ").length - 1 && " "} {/* Add space between words */}
           </Text>
         );
       })}
-    </>
+    </Box>
   );
 };
 

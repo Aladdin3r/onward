@@ -150,7 +150,7 @@ export default function MockInterviewQuestionPage() {
               maxW="800px"
               mt={9}
             >
-              <RecordCamera isRecordingEnabled={false} />
+              <RecordCamera isRecordingEnabled={false}  isSaveEnabled={false} />
             </Box>
 
             {/* Button Section */}
