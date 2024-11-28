@@ -12,22 +12,28 @@ import { useState, useEffect } from "react";
 export default function PracticeInterviewQuestion() {
     const router = useRouter();
     const [questions, setQuestions] = useState([]);
-    const [questionTypes, setQuestionTypes] = useState([])
+    const [questionTypes, setQuestionTypes] = useState([]);
 
     useEffect(() => {
-        const storedQuestions = localStorage.getItem("questions");
-        console.log("Stored Questions from localStorage:", storedQuestions);
+        // generate a unique session ID at the start of practice mode
+        let sessionId = localStorage.getItem("sessionId");
 
+        if (!sessionId) {
+            sessionId = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}`; 
+            localStorage.setItem("sessionId", sessionId); // save it to localStorage
+            console.log("New Unique Session ID:", sessionId);
+        } else {
+            console.log("Existing Session ID:", sessionId);
+        }
+
+        // Load questions from localStorage
+        const storedQuestions = localStorage.getItem("questions");
         if (storedQuestions) {
             try {
-                const parsedQuestions = JSON.parse(storedQuestions); // Parse stored questions
-                console.log("Parsed Questions:", parsedQuestions);
-
+                const parsedQuestions = JSON.parse(storedQuestions);
                 if (Array.isArray(parsedQuestions)) {
-                    setQuestions(parsedQuestions.map((q) => q.question)); // Extract "question" fields
-                    setQuestionTypes(parsedQuestions.map((q) => q.category)); // Extract "category" fields
-                } else {
-                    console.error("Parsed questions is not an array.");
+                    setQuestions(parsedQuestions.map((q) => q.question));
+                    setQuestionTypes(parsedQuestions.map((q) => q.category));
                 }
             } catch (error) {
                 console.error("Error parsing stored questions:", error);

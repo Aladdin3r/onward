@@ -67,38 +67,42 @@ export default function PracticeInterview() {
     };  
 
     // handle file uplaod
-  const handleFileUpload = async (file, type) => {
-    console.log(`${type} file uploaded:`, file);
-    try {
-        const bucketName = type === "resume" ? "onward-resume" : "onward-job-posting";
-        const filePath = `uploads/${file.name}`;
+    const sessionId = Date.now(); // Generate a unique session ID at the start of the session
+
+    const handleResponseUpload = async (file, questionId) => {
+      console.log(`Response file uploaded:`, file);
+    
+      try {
+        
+        const bucketName = "onward-responses"; 
+        const filePath = `uploads/${sessionId}/response-${questionId}-${file.name}`; // Group by session and question
         console.log(`Uploading to bucket: ${bucketName}, path: ${filePath}`);
-
-      // upload to Supabase and get the URL
-      const { data, error } = await supabase.storage
-        .from(bucketName)
-        .upload(filePath, file, { upsert: true });
-  
-      if (error) {
-        console.error("Error uploading file:", error.message);
-        return;
+    
+        // Upload the response file to Supabase
+        const { data, error } = await supabase.storage
+          .from(bucketName)
+          .upload(filePath, file, { upsert: true });
+    
+        if (error) {
+          console.error("Error uploading response file:", error.message);
+          return;
+        }
+    
+        // Generate the public URL for the uploaded response
+        const publicURL = supabase.storage.from(bucketName).getPublicUrl(filePath).publicUrl;
+        console.log("Public URL:", publicURL);
+    
+        // Update state or return the public URL for further use
+        setUploadedFiles((prevFiles) => [
+          ...prevFiles,
+          { sessionId, questionId, name: file.name, url: publicURL },
+        ]);
+    
+      } catch (err) {
+        console.error("Upload failed:", err.message);
       }
-  
-      const publicURL = supabase.storage.from(bucketName).getPublicUrl(filePath).publicURL;
-      console.log(publicURL);  
-
-      setUploadedFiles((prevFiles) => {
-        const updatedFiles = { ...prevFiles };
-        const fileType = type === 'resume' ? 'resumes' : 'jobPosts';
-
-        updatedFiles[fileType] = [...updatedFiles[fileType], { id: filePath, url: publicURL }];
-        return updatedFiles;
-      });
-    } catch (err) {
-      console.error("Upload failed:", err.message);
-    }
   };
-
+    
   const handleDeleteFile = async (fileId, type) => {
     console.log("delete stuff");
     const bucketName = type === 'resume' ? 'onward-resume' : 'onward-job-posting';
