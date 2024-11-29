@@ -26,7 +26,11 @@ export default function FileUpload({
         new Uppy({
             restrictions: {
                 maxNumberOfFiles: 3,
-                allowedFileTypes: ['application/pdf', 'application/msword'],
+                allowedFileTypes: [
+                    'application/pdf', 
+                    'application/msword',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                ],
             },
         })
     );

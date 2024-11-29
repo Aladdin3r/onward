@@ -172,14 +172,14 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
                 throw new Error("No questions found. Please refresh or generate questions before analyzing.");
             }
 
-            const talkingPointsPrompt = `Generate an array of talking points that align resume to the job description in valid JSON format. 
-            Include the following interview questions: ${JSON.stringify(savedQuestions)}. 
-            Return only a JSON array. Avoid any additional text, formatting, or line breaks outside of the JSON array. 
-            The JSON must be valid and parsable where each object follows this structure:
-                - "talkingPoints": A talking point relevant to aligning resumes with the job description.
-                - "category": Behavioral Question, Situational Question, Technical Question, etc.
+            const talkingPointsPrompt = `Generate a JSON array of talking points aligning the user's resume with the job description. 
+                Include the following interview questions: ${JSON.stringify(savedQuestions)}. 
+                Return only a valid JSON array with no additional text or formatting. Each object should follow this structure:
+                {
+                "questionId": <Question Index + 1>,
+                "talkingPoints": <A relevant talking point that answers the question based on the user's resume>
+                }
                 Do not include \`\`\`json`;
-
             console.log("Talking Points Prompt:", talkingPointsPrompt);
 
             // make API call
@@ -219,70 +219,39 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
                 throw new Error("No questions found. Please refresh or generate questions before analyzing.");
             }
 
-            const analysisPrompt = `You will evaluate interview answers based on the following criteria:
-                1. **Compare the Answer to the Question**:
-                - Check if the answer sufficiently addresses the main focus and additional context/talking points of the question.
-                - Highlight areas where the answer deviates from or fails to address the intent of the question.
+            const analysisPrompt = `You are an AI interview coach helping immigrant nurses refine their answers to interview questions. 
+                Provide actionable feedback in a friendly, conversational tone, focusing on clarity, relevance, transferable skills, and confidence-building. 
+                Offer language support to help users articulate their responses professionally, especially if they struggle with English. 
+                Tailor suggestions based on the user’s resume when possible.
+                ### Focus Areas for Immigrant Nurses:
+                - Suggest professional alternatives for casual terms (e.g., "help patients" → "facilitate patient care").
+                - Explain healthcare-specific jargon or Canadian workplace norms if needed.
+                - Reassure users that pauses are acceptable when hesitating, and encourage confidence in their responses.
+                - Highlight how international experience or cross-cultural skills can be reframed to align with Canadian expectations.
 
-                2. **Evaluate Based on the STAR Method**:
-                - Ensure the answer includes all elements of the STAR method (Situation, Task, Action, Result).
-                - Identify missing or underdeveloped STAR components and suggest how the answer could better incorporate them.
+                ### Output:
+                Return JSON with:
+                - **Question Id**: The question’s ID.
+                - **Response**: User response with flagged filler, power, and non-English words.
+                - **Expectation**: What the question is assessing.
+                - **Overall Feedback**: Start with encouragement, then offer constructive suggestions for improvement.
+                - **Detailed Feedback**:
+                - **Clarity**: Suggestions to improve phrasing and reduce hesitations.
+                - **Relevance**: Alignment with the question or resume, including transferable skills.
+                - **Language Support**: Alternatives for unclear, hesitant, or non-English phrases.
+                - **Grammar & Syntax**: Suggestions for smoother, more professional communication.
+                - **Effectiveness**: Recommendations to strengthen the response.
+                - **STAR Method**: Guidance on missing elements.
 
-                3. **Keyword Highlighting**:
-                - Highlight key words or phrases in the answer that are directly relevant to the question or demonstrate alignment with the talking points.
+                - **What Worked Well**: Highlight specific strengths or intentions in the response.
+                - **Room for Improvements**: Suggest ways to include transferable skills or improve alignment with Canadian norms.
+                - **Next Steps to Success**: Actionable, confidence-building tips for improvement.
 
-                4. **Filler Words**:
-                - Identify and highlight filler words (e.g., "um," "uh," "like," "you know") or overly repetitive phrases that may detract from the clarity of the response.
-
-                5. **Constructive Feedback**:
-                - Provide specific feedback on how to improve the answer for greater efficiency and alignment with the question's intent.
-                - Suggest ways to be more concise or impactful while still addressing the question thoroughly.
-
-                **Input Format**:
-                - **Question**: (Include any additional information or talking points)
-                - **Answer**: (The interview response)
-                - **Talking Points**: (List of specific points that the answer should ideally address)
-
-                **Output Format**:
-                - **Evaluation of Alignment with the Question**:
-                - [Your Analysis Here]
-                - **STAR Method Evaluation**:
-                - **Situation**: [Present/Missing]
-                - **Task**: [Present/Missing]
-                - **Action**: [Present/Missing]
-                - **Result**: [Present/Missing]
-                - **Highlighted Key Words**:
-                - [List of highlighted words/phrases]
-                - **Highlighted Filler Words**:
-                - [List of filler words/phrases]
-                - **Constructive Feedback**:
-                - [Your Feedback Here]
-
-                **Example Input**:
-                {
-                "question": "Can you tell us about a time you resolved a conflict at work? Be sure to focus on the steps you took and the outcome.",
-                "answer": "Um, well, there was this one time when, uh, two of my team members were arguing about a project deadline. I think I, like, stepped in and tried to mediate. I told them, you know, to focus on the client’s needs, and eventually, they sorted it out.",
-                "talkingPoints": [
-                    "Emphasis on conflict resolution skills.",
-                    "Focus on specific actions taken.",
-                    "Highlight positive outcomes."
-                ]
-                }
-
-                **Example Output**:
-                {
-                "evaluationOfAlignment": "The answer touches on a conflict but lacks detail on the steps taken and the outcome.",
-                "starMethodEvaluation": {
-                    "situation": "Present but vague",
-                    "task": "Missing",
-                    "action": "Partially described but lacks detail",
-                    "result": "Missing entirely"
-                },
-                "highlightedKeywords": ["conflict", "mediate", "client’s needs"],
-                "highlightedFillerWords": ["um", "uh", "like", "you know"],
-                "constructiveFeedback": "Provide more details about the steps you took to mediate the conflict and the specific outcome of your actions. For example, describe how you identified the client’s needs and used them to de-escalate the conflict. Avoid filler words for more concise communication."
-                }
-                return in json format without any additional formatting and backticks.`;
+                ### Constraints:
+                - Use a friendly, encouraging, constructive, and supportive tone throughout.
+                - Tailor feedback to immigrant nurses by focusing on transferable skills, professional language, and cultural nuances in communication.
+                - Vary responses, avoid repetitive phrasing and maintain a conversational style.
+                return in json format without any additional formatting and backticks. Do not include \`\`\`json`;
 
             console.log("Talking Points Prompt:", analysisPrompt);
 
@@ -317,6 +286,12 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
     };
 
     // button handlers
+    const handleEndClick = () => {
+        router.push({
+            pathname: '/practice-interview'
+        });
+    };
+
     const handleNextClick = async () => {
         const responseText = activeButton === "text" ? editableTranscription : transcription;
     
@@ -429,6 +404,8 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
         // Generate analysis using the uploaded answers URL
         const { answerAnalysis } = await GenerateAnalysis(urls.answers);
             console.log("Generated Analysis:", answerAnalysis);
+        const parsedAnalysis = JSON.parse(answerAnalysis.answer);
+        localStorage.setItem("parsedAnalysis", JSON.stringify(parsedAnalysis));
 
         router.push({ pathname: "/practiceOverview" });
     };
@@ -437,184 +414,206 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
   return (
     <>
         <Flex
-            flexDirection="row"
-            gap="2rem"
-            mx="auto"
+            flexDirection="column"
             justifyContent="center"
-            alignItems="flex-start"
-            width="100%"
-            maxWidth={showVideo ? "100%" : "60%"}
         >
-        
-            {/* Question and Answer Section */}
-            <Box
+            <Flex flexDirection="row"
+                gap="2rem"
+                mx="auto"
+                justifyContent="center"
                 width="100%"
-                maxW={showVideo ? "60%" : "100%"}
-                transition="width 0.3s ease"
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
+                maxWidth={showVideo ? "100%" : "60%"}
             >
-                {/* Display Question */}
-                <QuestionPractice question={currentQuestion}/>
-                <Flex
-                    gap="1.1rem"
-                    p="4"
-                    bg="brand.pureWhite"
-                    borderRadiusBottom={15}
-                    boxShadow="md"
-                    flexDirection="column"
-                    divider={<StackDivider />}
-                    width="100%"
-                >
-                    <Heading size="18pt" textAlign="left">
-                        Response Type:
-                    </Heading>
-                    <Divider orientation="horizontal" mb={4} />
-
-                    {/* Response Type Buttons */}
-                    <Flex flexDirection="row" gap="2rem">
-                        <Button
-                            width={isRecording ? "10rem%" : "7rem"}
-                            onClick={handleVoiceClick}
-                            bg={
-                            activeButton === "voice"
-                                ? "brand.oceanBlue"
-                                : "brand.pureWhite"
-                            }
-                            color={
-                            activeButton === "voice"
-                                ? "brand.pureWhite"
-                                : "brand.oceanBlue"
-                            }
-                            borderColor="brand.oceanBlue"
-                            border="1px"
-                            _hover={{
-                            boxShadow:
-                                "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)",
-                            }}
-                        >
-                            <Text fontSize="xxs">
-                            {isRecording ? "Stop Recording" : "Voice"}
-                            </Text>
-                        </Button>
-                        <Button
-                            width="7rem"
-                            onClick={handleTextClick}
-                            bg={
-                            activeButton === "text"
-                                ? "brand.oceanBlue"
-                                : "brand.pureWhite"
-                            }
-                            color={
-                            activeButton === "text"
-                                ? "brand.pureWhite"
-                                : "brand.oceanBlue"
-                            }
-                            borderColor="brand.oceanBlue"
-                            border="1px"
-                            _hover={{
-                            boxShadow:
-                                "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)",
-                            }}
-                        >
-                            <Text fontSize="xxs">Text</Text>
-                        </Button>
-                        <Transcriber
-                            isRecording={isRecording}
-                            setTranscription={setTranscription}
-                            setEditableTranscription={setEditableTranscription}
-                        />
-                    </Flex>
-                </Flex>
-            {/* Answer Section */}
+                {/* Question and Answer Section */}
                 <Box
-                    p="4"
-                    bg="brand.blueberryCreme"
-                    boxShadow="md"
-                    borderBottomRadius={15}
-                    maxH="35rem"
                     width="100%"
+                    maxW={showVideo ? "60%" : "100%"}
+                    transition="width 0.5s ease"
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
                 >
-                    <Card borderRadius="15" textAlign="left">
-                        <CardBody>
-                            <Stack spacing="4" divider={<StackDivider />}>
-                                <Box>
-                                    <Heading size="18pt">Your Response:</Heading>
-                                </Box>
-                                {/* Answer Box */}
-                                <Box overflowY="auto" height="10rem" w="100%">
-                                    {activeButton === "text" ? (
-                                    <Textarea
-                                        value={editableTranscription}
-                                        onChange={handleEditableChange}
-                                        placeholder="Type your answer here"
-                                        size="sm"
-                                        height="10rem"
-                                        resize="vertical"
-                                    />
-                                    ) : (
-                                    <Text pt="2" fontSize="14pt">
-                                        {transcription}
-                                    </Text>
-                                    )}
-                                </Box>
-                            </Stack>
-                        </CardBody>
-                    </Card>
-                </Box>
-            </Box>
-
-                {/* Video Section */}
-                {showVideo && (
+                    {/* Display Question */}
+                    <QuestionPractice question={currentQuestion}/>
                     <Flex
-                        flexDirection="column"
-                        width="60%"
-                        py="2rem"
+                        gap="1.1rem"
+                        p="4"
+                        bg="brand.pureWhite"
+                        borderRadiusBottom={15}
                         boxShadow="md"
-                        justifyContent="center"
-                        alignItems="center"
-                        borderRadius={15}
+                        flexDirection="column"
+                        divider={<StackDivider />}
+                        width="100%"
                     >
-                        {/* <RecordCamera setSavedVideoUrl={setSavedVideoUrl} /> */}
-                        <RecordCamera isRecordingAvailable={true} setSavedVideoUrl={(url) => handleVideoSave(url)} />
+                        <Heading size="18pt" textAlign="left">
+                            Response Type:
+                        </Heading>
+                        <Divider orientation="horizontal" mb={4} />
 
-                        <Button
-                            bg="brand.blushPink"
-                            size="xs"
-                            color="white"
-                            py="1.5rem"
-                            px="5rem"
-                            boxShadow="md"
-                            onClick={handleAnalysisClick}
-                            _hover={{
-                                bg: 'white',
-                                color: 'brand.blushPink',
-                                border: '1px',
-                                boxShadow: 'md',
-                            }}
-                        >
-                            Start Analysis
-                        </Button>
-                        <Button
-                            bg="brand.blushPink"
-                            size="xs"
-                            color="white"
-                            py="1.5rem"
-                            px="5rem"
-                            boxShadow="md"
-                            onClick={handleNextClick}
-                            _hover={{
-                                bg: 'white',
-                                color: 'brand.blushPink',
-                                border: '1px',
-                                boxShadow: 'md',
-                            }}
-                        >
-                            Next Question
-                        </Button>
+                        {/* Response Type Buttons */}
+                        <Flex flexDirection="row" gap="2rem">
+                            <Button
+                                width={isRecording ? "10rem%" : "7rem"}
+                                onClick={handleVoiceClick}
+                                bg={
+                                activeButton === "voice"
+                                    ? "brand.oceanBlue"
+                                    : "brand.pureWhite"
+                                }
+                                color={
+                                activeButton === "voice"
+                                    ? "brand.pureWhite"
+                                    : "brand.oceanBlue"
+                                }
+                                borderColor="brand.oceanBlue"
+                                border="1px"
+                                _hover={{
+                                boxShadow:
+                                    "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)",
+                                }}
+                            >
+                                <Text fontSize="xxs">
+                                {isRecording ? "Stop Recording" : "Voice"}
+                                </Text>
+                            </Button>
+                            <Button
+                                width="7rem"
+                                onClick={handleTextClick}
+                                bg={
+                                activeButton === "text"
+                                    ? "brand.oceanBlue"
+                                    : "brand.pureWhite"
+                                }
+                                color={
+                                activeButton === "text"
+                                    ? "brand.pureWhite"
+                                    : "brand.oceanBlue"
+                                }
+                                borderColor="brand.oceanBlue"
+                                border="1px"
+                                _hover={{
+                                boxShadow:
+                                    "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)",
+                                }}
+                            >
+                                <Text fontSize="xxs">Text</Text>
+                            </Button>
+                            <Transcriber
+                                isRecording={isRecording}
+                                setTranscription={setTranscription}
+                                setEditableTranscription={setEditableTranscription}
+                            />
+                        </Flex>
                     </Flex>
-                )}
+                    {/* Answer Section */}
+                        <Box
+                            p="4"
+                            bg="brand.blueberryCreme"
+                            boxShadow="md"
+                            borderBottomRadius={15}
+                            maxH="35rem"
+                            width="100%"
+                        >
+                            <Card borderRadius="15" textAlign="left">
+                                <CardBody>
+                                    <Stack spacing="4" divider={<StackDivider />}>
+                                        <Box>
+                                            <Heading size="18pt">Your Response:</Heading>
+                                        </Box>
+                                        {/* Answer Box */}
+                                        <Box overflowY="auto" height="10rem" w="100%">
+                                            {activeButton === "text" ? (
+                                            <Textarea
+                                                value={editableTranscription}
+                                                onChange={handleEditableChange}
+                                                placeholder="Type your answer here"
+                                                size="sm"
+                                                height="10rem"
+                                                resize="vertical"
+                                            />
+                                            ) : (
+                                            <Text pt="2" fontSize="14pt">
+                                                {transcription}
+                                            </Text>
+                                            )}
+                                        </Box>
+                                    </Stack>
+                                </CardBody>
+                            </Card>
+                        </Box>
+                    </Box>
+
+                    {/* Video Section */}
+                    {showVideo && (
+                        <Flex
+                            flexDirection="column"
+                            width="60%"
+                            py="2rem"
+                            boxShadow="md"
+                            justifyContent="center"
+                            alignItems="center"
+                            borderRadius={15}
+                        >
+                            {/* <RecordCamera setSavedVideoUrl={setSavedVideoUrl} /> */}
+                            <RecordCamera isRecordingAvailable={true} setSavedVideoUrl={setSavedVideoUrl} />
+                        </Flex>
+                    )}
+                </Flex>
+        
+                {/* Buttons Container */}
+                <Flex
+                    justifyContent={"space-between"}
+                    my={{base: "5rem", xl: "3rem", "2xl":"5rem"}}
+                >
+                    <Button bg={"white"} size="xs" color={"red"} py={"1.5rem"} px={"5rem"} boxShadow={"md"} borderColor={"red"} borderWidth={"1px"}
+                        onClick={handleEndClick}
+                        _hover={{
+                            bg: "red",
+                            color: "white",
+                            boxShadow:"md"
+                        }}
+                    >
+                        End
+                    </Button>
+                    {/* Conditionally show Start Analysis or Next Question */}
+                    {currentQuestionIndex === questions.length - 1 ? (
+                        <Button
+                        bg="brand.blushPink"
+                        size="xs"
+                        color="white"
+                        py="1.5rem"
+                        px="5rem"
+                        boxShadow="md"
+                        onClick={handleAnalysisClick}
+                        _hover={{
+                            bg: "white",
+                            color: "brand.blushPink",
+                            border: "1px",
+                            boxShadow: "md",
+                        }}
+                        >
+                        Start Analysis
+                        </Button>
+                    ) : (
+                        <Button
+                        bg="brand.blushPink"
+                        size="xs"
+                        color="white"
+                        py="1.5rem"
+                        px="5rem"
+                        boxShadow="md"
+                        onClick={handleNextClick}
+                        _hover={{
+                            bg: "white",
+                            color: "brand.blushPink",
+                            border: "1px",
+                            boxShadow: "md",
+                        }}
+                        >
+                        Next Question
+                        </Button>
+                    )}
+                </Flex>
             </Flex>
         </>
     );
