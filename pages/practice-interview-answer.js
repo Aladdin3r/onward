@@ -110,7 +110,7 @@ export default function PracticeAnswer() {
                     width="100%"
                 >
                     {/* Answer cards */}
-                    <Flex flexDirection={"row"} ml={"0rem"} mt={"3rem"}>
+                    <Flex flexDirection={"row"} ml={"0rem"} mt={"3rem"} justifyContent={"center"}>
                         {questions.length > 0 ? (
                             // <AnswerPractice
                             //     questions={questions}

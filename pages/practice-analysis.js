@@ -24,7 +24,32 @@ export default function VideoWithTranscriptions() {
   const [videoUrl, setVideoUrl] = useState(null); // State for video URL
   const [transcript, setTranscript] = useState([]); // State for transcriptions
   const [error, setError] = useState(null); // State for error handling
+  const [analysisData, setAnalysisData] = useState(null); // Store analysis data
+  const [currentQuestionId, setCurrentQuestionId] = useState(1); // Current Question ID
   const [loading, setLoading] = useState(true); // Loading state
+
+  const GenerateAnalysis = () => {
+    const analysis = localStorage.getItem("analysisData");
+    return analysis ? JSON.parse(analysis) : null;
+  };
+
+  useEffect(() => {
+    const data = GenerateAnalysis();
+    setAnalysisData(data); // Set analysis data
+  }, []);
+
+  if (!analysisData) {
+    return (
+      <Flex justifyContent="center" alignItems="center" height="100vh">
+        <LoadingSpinner />
+      </Flex>
+    );
+  }
+
+  const currentAnalysis = analysisData.find(
+    (item) => item["Question Id"] === `Q${currentQuestionId}`
+  );
+
 
   useEffect(() => {
     const fetchVideoAndTranscriptions = async () => {
@@ -146,19 +171,11 @@ export default function VideoWithTranscriptions() {
                     boxShadow="md"
                     position="relative"
                   >
-                    <Text
-                      fontWeight="bold"
-                      mb={2}
-                      fontSize={{ base: "xxs", lg: "xs", "2xl": "sm" }}
-                      color="brand.nightBlack"
-                    >
-                      QUESTION 1
+                    <Text fontWeight="bold" mb={2} fontSize="sm" color="gray.800">
+                      {currentAnalysis["Question Id"]}
                     </Text>
-                    <Text fontSize="xxs" mb={4} color="brand.nightBlack">
-                      Can you describe a time when you were faced with an
-                      emergency situation and had to make a quick decision? How
-                      did you prioritize tasks, and what steps did you take to
-                      ensure the best possible outcome for the patient?
+                    <Text fontSize="sm" mb={4} color="gray.600">
+                      {currentAnalysis.Expectation}
                     </Text>
                   </Box>
 
