@@ -17,6 +17,7 @@ import QuestionPractice from "./QuestionPractice";
 import RecordCamera from "./Camera";
 import Transcriber from "./Transcriber";
 import { supabase } from "@/lib/supabaseClient";
+import { saveRecordingToSupabase } from "@/src/utils/actions";
 
 export default function AnswerPractice({ questions, onShowVideoChange }) {
     const router = useRouter();
@@ -285,12 +286,36 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
         }
     };
 
+
+    const handleVideoSave = async (url) => {
+      try {
+        console.log("Video URL to save:", url); // Debugging log
+        
+        // Save video and get public URL
+        const { data, error } = await saveRecordingToSupabase(url);
+        if (error) {
+          console.error("Error saving video to Supabase:", error);
+          return;
+        }
+    
+        const publicUrl = data.publicUrl; // Get the public URL from the response
+        setSavedVideoUrl(publicUrl); // Update the state with the public URL
+        console.log("Video successfully saved to Supabase:", publicUrl);
+    
+        // You can also save the URL to a database or perform other actions here
+      } catch (error) {
+        console.error("Error in handleVideoSave:", error);
+      }
+    };
+    
+  
     // button handlers
     const handleEndClick = () => {
         router.push({
             pathname: '/practice-interview'
         });
     };
+
 
     const handleNextClick = async () => {
         const responseText = activeButton === "text" ? editableTranscription : transcription;
@@ -450,6 +475,7 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
                         </Heading>
                         <Divider orientation="horizontal" mb={4} />
 
+
                         {/* Response Type Buttons */}
                         <Flex flexDirection="row" gap="2rem">
                             <Button
@@ -549,6 +575,7 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
                             flexDirection="column"
                             width="60%"
                             py="2rem"
+
                             boxShadow="md"
                             justifyContent="center"
                             alignItems="center"
@@ -594,6 +621,7 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
                         >
                         Start Analysis
                         </Button>
+
                     ) : (
                         <Button
                         bg="brand.blushPink"
@@ -614,6 +642,7 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
                         </Button>
                     )}
                 </Flex>
+
             </Flex>
         </>
     );
