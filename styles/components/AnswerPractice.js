@@ -17,6 +17,7 @@ import QuestionPractice from "./QuestionPractice";
 import RecordCamera from "./Camera";
 import Transcriber from "./Transcriber";
 import { supabase } from "@/lib/supabaseClient";
+import { saveRecordingToSupabase } from "@/src/utils/actions";
 
 export default function AnswerPractice({ question, questions, onShowVideoChange, saveAnswer }) {
     const router = useRouter();
@@ -84,6 +85,28 @@ export default function AnswerPractice({ question, questions, onShowVideoChange,
         }
     };
 
+
+    const handleVideoSave = async (url) => {
+      try {
+        console.log("Video URL to save:", url); // Debugging log
+        
+        // Save video and get public URL
+        const { data, error } = await saveRecordingToSupabase(url);
+        if (error) {
+          console.error("Error saving video to Supabase:", error);
+          return;
+        }
+    
+        const publicUrl = data.publicUrl; // Get the public URL from the response
+        setSavedVideoUrl(publicUrl); // Update the state with the public URL
+        console.log("Video successfully saved to Supabase:", publicUrl);
+    
+        // You can also save the URL to a database or perform other actions here
+      } catch (error) {
+        console.error("Error in handleVideoSave:", error);
+      }
+    };
+    
   const handleVoiceClick = () => {
     setShowVideo(true);
     setActiveButton("voice");
@@ -301,6 +324,7 @@ export default function AnswerPractice({ question, questions, onShowVideoChange,
                         {/* <RecordCamera setSavedVideoUrl={setSavedVideoUrl} /> */}
                         <RecordCamera isRecordingAvailable={true} setSavedVideoUrl={(url) => handleVideoSave(url)} />
 
+
                         <Button
                             bg="brand.blushPink"
                             size="xs"
@@ -318,7 +342,7 @@ export default function AnswerPractice({ question, questions, onShowVideoChange,
                         >
                             Start Analysis
                         </Button>
-                        <Button
+                        {/* <Button
                             bg="brand.blushPink"
                             size="xs"
                             color="white"
@@ -334,7 +358,7 @@ export default function AnswerPractice({ question, questions, onShowVideoChange,
                             }}
                         >
                             Next Question
-                        </Button>
+                        </Button> */}
                     </Flex>
                 )}
             </Flex>
