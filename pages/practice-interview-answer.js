@@ -15,7 +15,6 @@ export default function PracticeAnswer() {
     const [fileURLs, setFileURLs] = useState({ resumes: [], jobPosts: [] });
     const [loading, setLoading] = useState(false);
     const router = useRouter();
-
     
     useEffect(() => {
         const storedQuestions = localStorage.getItem("questions");
@@ -35,118 +34,28 @@ export default function PracticeAnswer() {
         }
     }, []);
 
-    const UploadFiles = async (resumes, jobPosts) => {
-        try {
-          const uploadPromises = [];
-    
-          if (resumes.length > 0) {
-            uploadPromises.push(
-              fetch("https://api.roughlyai.com/ttfiles/api/prompt_response", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  handler: "api_upload",
-                  key: "Onward/Resumes/",
-                  upload_data: resumes.map((file) => file.url),
-                  fn: resumes.map((file) => file.name),
-                  api_key: process.env.NEXT_PUBLIC_ROUGHLY_API_KEY,
-                }),
-              })
-            );
-          }
-    
-    
-          const responses = await Promise.all(uploadPromises);
-    
-          const pollingResults = await Promise.all(
-            responses.map(async (resp) => {
-              const { data: _url } = await resp.json();
-              return await PollingResponse(_url);
-            })
-          );
-    
-          return pollingResults;
-        } catch (error) {
-          console.error("Error uploading files:", error);
-          throw error;
-        }
-      };
-      
-    const GenerateTalkingPoints = async (resumes) => {
-        try {
-            const savedQuestions = JSON.parse(localStorage.getItem("questions"));
+    //     // navigation buttons
+    // const handleNextClick = () => {
+    //     if (currentQuestionIndex < questions.length - 1) {
+    //         setCurrentQuestionIndex((prevIndex) => {
+    //             const newIndex = prevIndex + 1;
+    //             console.log("Next Question Index:", newIndex); 
+    //             console.log("Next Question:", questions[newIndex]); 
+    //             return newIndex;
+    //         });
+    //     }
+    // };
 
-            if (!savedQuestions || savedQuestions.length === 0) {
-                throw new Error("No questions found. Please refresh or generate questions before analyzing.");
-            }
-
-            const talkingPointsPrompt = `Generate an array of talking points that align resume to the job description in valid JSON format. 
-            Include the following interview questions: ${JSON.stringify(savedQuestions)}. 
-            Return only a JSON array. Avoid any additional text, formatting, or line breaks outside of the JSON array. 
-            The JSON must be valid and parsable where each object follows this structure:
-                - "talkingPoints": A talking point relevant to aligning resumes with the job description.
-                - "category": Behavioral Question, Situational Question, Technical Question, etc.
-                - "response": Leave this field as an empty string ("").
-                - "video_id": Leave this field as an empty string ("").
-                - "video_url": Leave this field as an empty string ("").
-                Do not include \`\`\`json`;
-
-            console.log("Talking Points Prompt:", talkingPointsPrompt);
-
-            // Make API call
-            const resumeResponse = await fetch("https://api.roughlyai.com/ttfiles/api/prompt_response", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    handler: "api_call",
-                    key: "Onward/Resumes/",
-                    api_key: process.env.NEXT_PUBLIC_ROUGHLY_API_KEY,
-                    question: talkingPointsPrompt,
-                    numsimular: 5, 
-                }),
-            });
-
-            const resumeTalkingPoints = await PollingResponse(
-                (
-                    await resumeResponse.json()
-                ).data
-            );
-
-            console.log("Parsed Talking Points:", resumeTalkingPoints);
-
-            return { resumeTalkingPoints };
-        } catch (error) {
-            console.error("Error generating talking points:", error);
-            throw error;
-        }
-    };
-
-        // navigation buttons
-    const handleNextClick = () => {
-        if (currentQuestionIndex < questions.length - 1) {
-            setCurrentQuestionIndex((prevIndex) => {
-                const newIndex = prevIndex + 1;
-                console.log("Next Question Index:", newIndex); 
-                console.log("Next Question:", questions[newIndex]); 
-                return newIndex;
-            });
-        }
-    };
-
-    const handlePrevClick = () => {
-        if (currentQuestionIndex > 0) {
-            setCurrentQuestionIndex((prevIndex) => {
-                const newIndex = prevIndex - 1;
-                console.log("Previous Question Index:", newIndex); 
-                console.log("Previous Question:", questions[newIndex]); 
-                return newIndex;
-            });
-        }
-    };
+    // const handlePrevClick = () => {
+    //     if (currentQuestionIndex > 0) {
+    //         setCurrentQuestionIndex((prevIndex) => {
+    //             const newIndex = prevIndex - 1;
+    //             console.log("Previous Question Index:", newIndex); 
+    //             console.log("Previous Question:", questions[newIndex]); 
+    //             return newIndex;
+    //         });
+    //     }
+    // };
     
 
     const handleAnalysisClick = async () => {
@@ -201,19 +110,22 @@ export default function PracticeAnswer() {
                     width="100%"
                 >
                     {/* Answer cards */}
-                    <Flex flexDirection={"row"} ml={"0rem"} mt={"3rem"}>
+                    <Flex flexDirection={"row"} ml={"0rem"} mt={"3rem"} justifyContent={"center"}>
                         {questions.length > 0 ? (
-                            <AnswerPractice
-                                question={questions[currentQuestionIndex]}
-                                onShowVideoChange={() => {}}
-                            />
+                            // <AnswerPractice
+                            //     questions={questions}
+                            //     question={questions[currentQuestionIndex]}
+                            //     onShowVideoChange={() => {}}
+                            // />
+                            <AnswerPractice questions={questions} onShowVideoChange={setShowVideo}/>
+                            
                         ) : (
                             <Text>No questions available. Please try again.</Text>
                         )}
                     </Flex>
 
                     {/* question navigation buttons */}
-                    <Flex flexDirection="row" justify="space-between" mt="auto" px="4em" mb="20px">
+                    {/* <Flex flexDirection="row" justify="space-between" mt="auto" px="4em" mb="20px">
                         <Button
                             bg="brand.pureWhite"
                             size="xxs"
@@ -238,10 +150,10 @@ export default function PracticeAnswer() {
                         >
                             Next
                         </Button>
-                    </Flex>
+                    </Flex> */}
 
                     {/* Bottom Buttons */}
-                    <Flex 
+                    {/* <Flex 
                         flexDirection={"row"} 
                         justify={"flex-end"} 
                         mt={"auto"} 
@@ -269,8 +181,8 @@ export default function PracticeAnswer() {
                             > 
                                Start Analysis
                             </Button>
-                        )} */}
-                    </Flex>
+                        )}
+                    </Flex> */}
                 </Flex>
             </LayoutSim>
         </>
