@@ -204,15 +204,17 @@ export default function PracticeInterviewFilter() {
         ? selectedQuestionType.join(", ")
         : "all types";
 
-      const jobQuestionPrompt = `Generate a unique set of ${selectedNumber} interview questions, ensuring a mix of ${selectedQuestionType}.
-        If Common Interview Questions are selected, include exactly 1 common question every 5 questions, positioned at the start of the array. 
+      const jobQuestionPrompt = `Generate a unique set of ${selectedNumber} from categories: ${selectedQuestionType}.
+
+        If "Common Interview Questions" are selected, generate only 1 Common Interview Question every 5 questions, positioned at the start of the array. 
         These can be general interview questions not specific to nursing.
-        The remaining questions should be divided proportionally and strictly draw from the specified categories in ${selectedQuestionType},
+        The remaining questions should be divided proportionally and strictly draw from the specified categories: ${selectedQuestionType},
         ensuring relevance to the job posting.
+
         Avoid repeating questions or overly similar phrasing from prior sets.
         Return the questions in valid JSON format, without any additional formatting or backticks, where each object follows this structure:
           - question: The interview question.
-          - category: Behavioural Question, Situational Question, Technical Question, Competency Question, Cultural Question, Career Goals Question, Legal/Regulation Question, Common Interview Question
+          - category: Behavioural Question, Situational Question, Technical Question, Competency Question, Cultural Question, Career Goals Question, Legal/Regulation Question or Common Interview Question
           - additionalInfo: A brief explanation of what the question is assessing.;`
       console.log("Job Question Prompt:", jobQuestionPrompt);
 

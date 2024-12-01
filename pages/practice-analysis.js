@@ -38,17 +38,7 @@ export default function VideoWithTranscriptions() {
     setAnalysisData(data); // Set analysis data
   }, []);
 
-  if (!analysisData) {
-    return (
-      <Flex justifyContent="center" alignItems="center" height="100vh">
-        <LoadingSpinner />
-      </Flex>
-    );
-  }
 
-  const currentAnalysis = analysisData.find(
-    (item) => item["Question Id"] === `Q${currentQuestionId}`
-  );
 
 
   useEffect(() => {
@@ -172,10 +162,10 @@ export default function VideoWithTranscriptions() {
                     position="relative"
                   >
                     <Text fontWeight="bold" mb={2} fontSize="sm" color="gray.800">
-                      {currentAnalysis["Question Id"]}
+
                     </Text>
                     <Text fontSize="sm" mb={4} color="gray.600">
-                      {currentAnalysis.Expectation}
+
                     </Text>
                   </Box>
 

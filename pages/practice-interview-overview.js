@@ -50,11 +50,34 @@ export default function PracticeInterviewOverview() {
                         <Stack spacing={6} mt={4}>
 
                             <Heading as="h1" size="lg">Practice Overview</Heading>
-                            
+                            {questions.map((question, index) => (
+                                <Box 
+                                    key={index} // Use a unique key for each question
+                                    bg="gray.100" 
+                                    p={4} 
+                                    borderRadius="md" 
+                                    boxShadow="sm"
+                                >
+                                    <Heading as="h3" size="md" mb={2}>
+                                        Question {index + 1}
+                                    </Heading>
+                                    <Text fontSize="lg" color="gray.800">
+                                        {question.question}
+                                    </Text>
+                                    <Text fontSize="sm" color="gray.500" mt={2}>
+                                        Category: {question.category || "General"}
+                                    </Text>
+                                    {question.additionalInfo && (
+                                        <Text fontSize="sm" color="gray.600" mt={2}>
+                                            Info: {question.additionalInfo}
+                                        </Text>
+                                    )}
+                                </Box>
+                            ))}
                             <VideoWQuestionCard 
                                 thumbnail="/images/smiling-girl.png"
                                 questionNumber={1}
-                                questionText="Can you walk me through a situation where you had to collaborate with the interdisciplinary team during a code blue to ensure timely administration of ACLS protocols and coordinate care post-resuscitation, including any challenges with the EMR documentation?"
+                                questionText="Question 1:"
                                 totalSteps={5}
                                 currentStep={0}
                                 onPrev={handlePrev}
