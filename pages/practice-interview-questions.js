@@ -46,6 +46,10 @@ export default function PracticeInterviewQuestion() {
         localStorage.setItem("sessionId", sessionId);
         console.log("New Session ID generated:", sessionId);
 
+        // reset saved answers URL
+        localStorage.removeItem("answersPublicUrl");
+        console.log("answersPublicUrl reset for the new session.");
+
     }
 
     return (

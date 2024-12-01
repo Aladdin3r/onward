@@ -34,30 +34,6 @@ export default function PracticeAnswer() {
         }
     }, []);
 
-    //     // navigation buttons
-    // const handleNextClick = () => {
-    //     if (currentQuestionIndex < questions.length - 1) {
-    //         setCurrentQuestionIndex((prevIndex) => {
-    //             const newIndex = prevIndex + 1;
-    //             console.log("Next Question Index:", newIndex); 
-    //             console.log("Next Question:", questions[newIndex]); 
-    //             return newIndex;
-    //         });
-    //     }
-    // };
-
-    // const handlePrevClick = () => {
-    //     if (currentQuestionIndex > 0) {
-    //         setCurrentQuestionIndex((prevIndex) => {
-    //             const newIndex = prevIndex - 1;
-    //             console.log("Previous Question Index:", newIndex); 
-    //             console.log("Previous Question:", questions[newIndex]); 
-    //             return newIndex;
-    //         });
-    //     }
-    // };
-    
-
     const handleAnalysisClick = async () => {
         try {
             setLoading(true); // Show loading spinner

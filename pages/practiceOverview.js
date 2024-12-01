@@ -14,6 +14,7 @@ export default function PracticeInterviewOverview() {
   const [isLoading, setIsLoading] = useState(true);
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [answerAnalysis, setAnswerAnalysis] = useState([]);
   const [error, setError] = useState(null);
   const router = useRouter();
 
@@ -33,6 +34,23 @@ export default function PracticeInterviewOverview() {
         }
       }
   }, []);
+
+  useEffect(() => {
+    const storedAnalysis = localStorage.getItem("answerAnalysis");
+    if (storedAnalysis) {
+      try {
+        const parsedAnalysis = JSON.parse(storedAnalysis); 
+        if (typeof parsedAnalysis.answer === "string") {
+          parsedAnalysis.answer = JSON.parse(parsedAnalysis.answer);
+        }
+        setAnswerAnalysis(parsedAnalysis); 
+        console.log("Parsed Analysis:", parsedAnalysis);
+      } catch (err) {
+        console.error("Error parsing answerAnalysis:", err);
+      }
+    }
+  }, []);
+  
 
 
   const handleOverviewClick = () => {
@@ -116,14 +134,14 @@ export default function PracticeInterviewOverview() {
         <title>Practice Interview Overview</title>
       </Head>
       <LayoutSim>
-        <Flex direction="column">
-          <Flex direction="row" justifyContent={"space-between"}>
+        <Flex direction="column" p={4} mx="5em">
+        <Flex direction="row" justifyContent={"space-between"}>
             {/* LEFT COLUMN*/}
             <Flex
               flexDirection={"column"}
               alignItems={"center"}
               columnGap="0em"
-              w="50%"
+              w="55%"
               mt="0em"
               mb={6}
               p={2}
@@ -258,116 +276,27 @@ export default function PracticeInterviewOverview() {
 
             {/* RIGHT COLUMN */}
             <Flex 
-              flexDirection={"column"}
-              gap={2}
-              w="48%"
-              mt="0em"
-              mr={0}
-              mb={6}
-              pt={4}
-              px={"1rem"}
-              bgColor={"white"}
-              overflow={"scroll"}
-              borderBottomRadius={"md"}
+              flexDirection="column" 
+              gap={2} 
+              w="40%" 
+              mt={2} mr={0} mb={6} 
+              pt={4} px={"1rem"} 
+              bgColor={"white"} 
+              overflow={"scroll"} 
+              borderRadius={15} 
               boxShadow={"md"}
+              h={"50%"}
             >
-                <Box>
-                  <Heading as="h2" size={"xs"} mb={4}>
-                    Detailed Analysis
-                  </Heading>
-                </Box>
-                <Box border={"1px"} borderColor={"brand.blueberryCreme"} borderRadius={"md"} px={4} py={2}>
-                  <Heading as="h4" size="10pt">
-                    Overall:
-                  </Heading>
-                  <Text>
-                    Start with encouragement, then offer constructive suggestions for improvement.
-                  </Text>
-                </Box>
-                <Box border={"1px"} borderColor={"brand.blueberryCreme"} borderRadius={"md"} px={4} py={2}>
-                  <Heading as="h4" size="10pt">
-                    Clarity:
-                  </Heading>
-                  <Text>
-                    Suggestions to improve phrasing and reduce hesitations.
-                  </Text>
-                  <Heading as="h4" size="10pt">
-                    Relevance:
-                  </Heading>
-                  <Text>
-                    Suggestions to improve phrasing and reduce hesitations.
-                  </Text>
-                  <Heading as="h4" size="10pt">
-                    Effectiveness:
-                  </Heading>
-                  <Text>
-                    Suggestions to improve phrasing and reduce hesitations.
-                  </Text>
-                </Box>
-
-                <Box border={"1px"} borderColor={"brand.blueberryCreme"} borderRadius={"md"} px={4} py={2}>
-                  <Heading as="h4" size="10pt">
-                    Grammar & Syntax:
-                  </Heading>
-                  <Text>
-                    Suggestions to improve phrasing and reduce hesitations.
-                  </Text>
-                  <Heading as="h4" size="10pt">
-                    Language Support:
-                  </Heading>
-                  <Text>
-                    Suggestions to improve phrasing and reduce hesitations.
-                  </Text>
-                </Box>
-                <Flex gap={2}>
-                  <Box border={"1px"} borderColor={"brand.blueberryCreme"} borderRadius={"md"} px={4} py={2}>
-                    <Heading as="h4" size="10pt">
-                      Filler Words:
-                    </Heading>
-                    <Text>
-                      Suggestions to improve phrasing and reduce hesitations.
-                    </Text>
-                  </Box>
-                  <Box border={"1px"} borderColor={"brand.blueberryCreme"} borderRadius={"md"} px={4} py={2}>
-                    <Heading as="h4" size="10pt">
-                      Power Words:
-                    </Heading>
-                    <Text>
-                      Suggestions to improve phrasing and reduce hesitations.
-                    </Text>
-                  </Box>
-                </Flex>
-                <Box border={"1px"} borderColor={"brand.blueberryCreme"} borderRadius={"md"} px={4} py={2}>
-                  <Heading as="h4" size="10pt">
-                    STAR Method:
-                  </Heading>
-                  <Text>
-                    Suggestions to improve phrasing and reduce hesitations.
-                  </Text>
-                </Box>
-                <Box border={"1px"} borderColor={"brand.blueberryCreme"} borderRadius={"md"} px={4} py={2}>
-                  <Heading as="h4" size="10pt">
-                    What Worked Well:
-                  </Heading>
-                  <Text>
-                    Suggestions to improve phrasing and reduce hesitations.
-                  </Text>
-                  <Heading as="h4" size="10pt">
-                    Room for Improvements:
-                  </Heading>
-                  <Text>
-                    Suggestions to improve phrasing and reduce hesitations.
-                  </Text>
-                  <Heading as="h4" size="10pt">
-                    Next Steps to Success
-                  </Heading>
-                  <Text>
-                    Suggestions to improve phrasing and reduce hesitations.
-                  </Text>
-                </Box>
+              <Box>
+                <Heading as="h2" size={"xs"} mb={4}>
+                  Quick Glance:
+                </Heading>
+              </Box>
+              <ImprovementSteps/>
+                  
             </Flex>
           </Flex>
-        </Flex>        
+        </Flex>
       </LayoutSim>
     </>
   );

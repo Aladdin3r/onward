@@ -236,39 +236,11 @@ export default function PracticeInterviewFilter() {
         }
       );
 
-      // const resumeResponse = await fetch(
-      //   "https://api.roughlyai.com/ttfiles/api/prompt_response",
-      //   {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({
-      //       handler: "api_call",
-      //       key: "Onward/Resumes/",
-      //       api_key: process.env.NEXT_PUBLIC_ROUGHLY_API_KEY,
-      //       question: `Generate an array of talking points that align resumes to the job description in valid JSON format. Each object in the array should include the following fields:
-      //                 - "talkingPoints": A talking point or prompt relevant to aligning resumes with the job description.
-      //                 - category: Behavioural Question, Situational Question, Technical Question, Competency Question, Cultural Question, Career Goals Question, Legal/Regulation Question, Common Interview Question
-      //                 - "response": Leave this field as an empty string ("").
-      //                 - "video_id": Leave this field as an empty string ("").
-      //                 - "video_url": Leave this field as an empty string ("")
-      //                 Output only the JSON array.`,
-      //       numsimular: 5, // default 5
-      //     }),
-      //   }
-      // );
-
       const jobPostQuestions = await PollingResponse(
         (
           await jobPostResponse.json()
         ).data
       );
-      // const resumeTalkingPoints = await PollingResponse(
-      //   (
-      //     await resumeResponse.json()
-      //   ).data
-      // );
 
       return { jobPostQuestions };
     } catch (error) {
@@ -305,11 +277,6 @@ export default function PracticeInterviewFilter() {
 
       // Save parsed questions and talking points to localStorage
       localStorage.setItem("questions", JSON.stringify(parsedQuestions));
-      // localStorage.setItem(
-      //   "talkingPoints",
-      //   JSON.stringify(resumeTalkingPoints)
-      // );
-
       router.push("/practice-interview-questions");
     } catch (error) {
       console.error("Error in handleStartClick:", error);

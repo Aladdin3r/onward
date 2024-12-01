@@ -1,360 +1,478 @@
-import Head from "next/head";
-import styles from "@/styles/Home.module.css";
-import "@/styles/theme";
-import {
-  Heading,
-  Box,
-  Text,
-  VStack,
-  Flex,
-  SimpleGrid,
-  Tag,
-  Divider,
-  Container,
-} from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import Head from "next/head";
+import { Box, Center, Spinner, Text, Flex, Button, Stack, Heading, Card, CardBody, StackDivider } from "@chakra-ui/react";
+import Layout from "@/styles/components/Layout";
+import ImprovementSteps from "@/styles/components/ImprovementSteps";
+import TranscriptionComponent from "@/styles/components/FullTranscriptionCard";
+import LayoutSim from "@/styles/components/LayoutSim.js";
+import { useRouter } from "next/router";
 import LoadingSpinner from "@/styles/components/LoadingSpinner";
-import HighlightFillerWords from "@/styles/components/HighlightFillerWords";
-import LayoutSim from "@/styles/components/LayoutSim";
-import QuestionProgressIndicator from "@/styles/components/QuestionProgressIndicator";
 
-export default function VideoWithTranscriptions() {
-  const [videoUrl, setVideoUrl] = useState(null); // State for video URL
-  const [transcript, setTranscript] = useState([]); // State for transcriptions
-  const [error, setError] = useState(null); // State for error handling
-  const [analysisData, setAnalysisData] = useState(null); // Store analysis data
-  const [currentQuestionId, setCurrentQuestionId] = useState(1); // Current Question ID
-  const [loading, setLoading] = useState(true); // Loading state
+export default function PracticeInterviewOverview() {
+  const [videoUrl, setVideoUrl] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [questions, setQuestions] = useState([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [error, setError] = useState(null);
+  const [answerAnalysis, setAnswerAnalysis] = useState([]);
 
-  const GenerateAnalysis = () => {
-    const analysis = localStorage.getItem("analysisData");
-    return analysis ? JSON.parse(analysis) : null;
-  };
+  const router = useRouter();
 
   useEffect(() => {
-    const data = GenerateAnalysis();
-    setAnalysisData(data); // Set analysis data
+    const storedQuestions = localStorage.getItem("questions");
+    if (storedQuestions) {
+        try {
+            const parsedQuestions = JSON.parse(storedQuestions);
+            setQuestions(parsedQuestions);
+            if (parsedQuestions.length > 0) {
+                console.log("First Question:", parsedQuestions);
+            } else {
+                console.warn("Questions array is empty.");
+            }
+        } catch (error) {
+            console.error("Error parsing questions from localStorage:", error);
+        }
+      }
   }, []);
 
+  useEffect(() => {
+    const storedAnalysis = localStorage.getItem("answerAnalysis");
+  
+    try {
+      // Parse the stored analysis from localStorage
+      const parsedAnalysis = storedAnalysis ? JSON.parse(storedAnalysis) : {};
+  
+      // Ensure the parsed data contains the 'answer' key
+      if (parsedAnalysis.answer) {
+        setAnswerAnalysis(parsedAnalysis.answer); // Set the 'answer' key directly in state
+      } else {
+        console.warn("No 'answer' field found in stored analysis.");
+        setAnswerAnalysis([]); // Default to an empty array if no 'answer' field exists
+      }
+    } catch (error) {
+      console.error("Error parsing stored analysis:", error);
+      setAnswerAnalysis([]); // Reset to empty array if parsing fails
+    }
+  }, []);
+  
+  
+  const handleOverviewClick = () => {
+    router.push({
+      pathname: "/practiceOverview",
+    });
+  };
+  const handleEndClick = () => {
+    router.push({
+      pathname: "/",
+    });
+  };
 
+  const handleNextClick = () => {
+    router.push({
+      pathname: "/practice-interview-questions-2",
+    });
+  };
 
+  const handleQuestionSelect = (index) => {
+    setCurrentQuestionIndex(index);
+};
 
   useEffect(() => {
-    const fetchVideoAndTranscriptions = async () => {
+    const fetchVideo = async () => {
       try {
-        // Fetch the latest video from the 'onward-video' bucket
-        const { data: videoData, error: videoError } = await supabase.storage
+        // List files in the 'videos' folder
+        const { data, error } = await supabase.storage
           .from("onward-video")
           .list("videos", {
             limit: 1,
             offset: 0,
-            sortBy: { column: "created_at", order: "desc" }, // Sort by created_at for the most recent video
+            sortBy: { column: "created_at", order: "desc" }, // Sort by created_at for recent videos
           });
-  
-        if (videoError) {
-          console.error("Error fetching video list:", videoError.message);
+
+        if (error) {
+          console.error("Error fetching video list:", error.message);
           setError("Failed to fetch video list.");
-          setLoading(false);
           return;
         }
-  
-        const videoPath = videoData?.[0]?.name;
+
+        // Check if there's a valid video file or an empty placeholder
+        const videoPath = data?.[0]?.name;
         if (videoPath && videoPath !== "emptyFolderPlaceholder") {
+          console.log("Fetching video from path:", `videos/${videoPath}`);
           const { data: urlData, error: urlError } = await supabase.storage
             .from("onward-video")
             .getPublicUrl(`videos/${videoPath}`);
-  
+
           if (urlError) {
-            console.error("Error fetching video URL:", urlError.message);
             setError("Failed to load video.");
+            console.error("Error fetching video URL:", urlError.message);
           } else {
             setVideoUrl(urlData.publicUrl);
           }
         } else {
           setError("No valid video found.");
-          setLoading(false);
-          return;
         }
-  
-        // Now fetch the latest transcription from the 'transcriptions' table
-        const { data: transcriptionData, error: transcriptionError } =
-          await supabase
-            .from("transcriptions")
-            .select("text")
-            .order("created_at", { ascending: false }) // Order by created_at for the latest transcription
-            .limit(1); // Fetch only the latest transcription
-  
-        if (transcriptionError) {
-          console.error(
-            "Error fetching transcriptions:",
-            transcriptionError.message
-          );
-          setError("Failed to fetch transcriptions.");
-        } else {
-          setTranscript(transcriptionData || []);
-        }
-  
-        setLoading(false);
+
+        setIsLoading(false);
       } catch (error) {
-        console.error("Error fetching video or transcriptions:", error.message);
-        setError("Error fetching video or transcriptions.");
-        setLoading(false);
+        console.error("Error fetching video:", error.message);
+        setError("Error fetching video.");
+        setIsLoading(false);
       }
     };
-  
-    fetchVideoAndTranscriptions();
-  }, []); // Empty dependency array ensures this only runs once on mount
-  
+
+    // Initial fetch when the component is mounted
+    fetchVideo();
+
+    // Polling every 5 seconds for new videos
+    const intervalId = setInterval(fetchVideo, 5000);
+
+    // Cleanup the interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []); // Empty dependency array ensures this runs once on mount
 
   return (
     <>
       <Head>
-        <title>Practice Interview — Onward</title>
-        <meta
-          name="description"
-          content="Onward is an AI-powered personal interview coach designed to help nurses, particularly those new to the Canadian healthcare system, excel in job interviews."
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <title>Practice Interview Overview</title>
       </Head>
+      <LayoutSim>
+        <Flex direction="column">
+          <Flex direction="row" justifyContent={"space-between"}>
+            {/* LEFT COLUMN*/}
+            <Flex
+              flexDirection={"column"}
+              alignItems={"center"}
+              w="50%"
+              mt="0em"
+              mb={6}
+              p={2}
+            >
+              <Box
+                maxW="70%"
+                mb={4}
+                p={2}
+                boxShadow="md"
+                borderRadius="15"
+                border="1px"
+                borderColor="#E6EAF2"
+                bg="white"
+                overflow="hidden"
+                width="60%"
+              >
+                {isLoading ? (
+                  <Center height="400px">
+                    <LoadingSpinner /> {/* Custom spinner */}
+                  </Center>
+                ) : error ? (
+                  <Center height="400px">
+                    <Text fontSize="xl" color="red.500">
+                      {error}
+                    </Text>
+                  </Center>
+                ) : (
+                  videoUrl && (
+                    <video
+                      src={videoUrl}
+                      controls
+                      width="100%"
+                      style={{ borderRadius: "8px" }}
+                    />
+                  )
+                )}
+              </Box>
 
-      <div className={`${styles.page}`}>
-        <LayoutSim>
-          <Box maxW="100vw" py={6} px={4} overflowX="hidden">
-            <Container maxWidth="1920px" mx="auto">
-              <Flex
-                alignItems="center"
-                justifyContent="space-between"
-                px={4}
+              <Card
+                boxShadow="md"
+                borderRadius="15"
+                border="1px"
+                borderColor="#E6EAF2"
+                bg="white"
+                overflow="hidden"
+                width="100%"
                 mb={4}
               >
-                <Heading
-                  fontSize={{ base: "xs", lg: "md", "2xl": "lg" }}
-                  fontWeight="bold"
-                  mb={8}
-                >
-                  Response Analysis
-                </Heading>
-              </Flex>
-
-              <Flex gap="2.5rem" alignItems="flex-start" px={4}>
-                {/* Left Column with Overview and Response Sections */}
-                <VStack
-                  flex="0.55"
-                  spacing={4}
-                  alignItems="stretch"
-                  width="50%"
-                >
-                  <Text
-                    fontSize={{ base: "xxs", lg: "xs", "2xl": "sm" }}
-                    color="nightBlack"
-                  >
-                    Overview
-                  </Text>
-                  <Box
-                    bg="white"
-                    p={4}
-                    borderRadius="15"
-                    w="100%"
-                    boxShadow="md"
-                    position="relative"
-                  >
-                    <Text fontWeight="bold" mb={2} fontSize="sm" color="gray.800">
-
-                    </Text>
-                    <Text fontSize="sm" mb={4} color="gray.600">
-
-                    </Text>
-                  </Box>
-
-                  <Flex gap={1} mx={"auto"}>
-                    <QuestionProgressIndicator totalSteps={5} currentStep={0} />
-                  </Flex>
-
-                  {/* Your Response Box */}
-                  <Box bg="white" borderRadius="15" boxShadow="md" mb={50}>
-                    <Box p={4} borderBottomWidth="1px">
-                      <Text
-                        fontWeight="bold"
-                        fontSize={{ base: "xxs", lg: "xs", "2xl": "sm" }}
-                      >
-                        Your Response
-                      </Text>
-                    </Box>
-                    <Box p={4} maxW="820px">
-                      {transcript && transcript.length > 0 ? (
-                        <Text fontSize="xxs" color="brand.nightBlack">
-                          {transcript.map((item, index) => (
-                            <span key={index}>{item.text} </span> // Assuming transcript items have a "text" property
-                          ))}
-                        </Text>
-                      ) : (
-                        <Text fontSize="xxs" color="brand.nightBlack">
-                          Loading transcript...
-                        </Text>
-                      )}
-                    </Box>
-                  </Box>
-
-                  {/* Filler and Relevant Words */}
-                  <SimpleGrid columns={2} spacing={4}>
-                    <Box
-                      bg="brand.frostWhite"
-                      p={4}
-                      borderRadius="15"
-                      boxShadow="md"
-                    >
-                      <Text
-                        fontWeight="bold"
-                        mb={2}
-                        fontSize={{ base: "xxs", lg: "xs", "2xl": "sm" }}
-                      >
-                        Filler Words{" "}
-                        <Tag colorScheme="red" ml={1} mt={2}>
-                          !
-                        </Tag>
-                      </Text>
-                      <Text fontSize="xxs" color="brand.nightBlack">
-                        Um - used 7 times in your response
-                      </Text>
-                      <Text fontSize="xxs" color="brand.nightBlack">
-                        Like - used 3 times in your response
-                      </Text>
-                    </Box>
-
-                    <Box bg="gray.50" p={4} borderRadius="15" boxShadow="md">
-                      <Text
-                        fontWeight="bold"
-                        mb={2}
-                        fontSize={{ base: "xxs", lg: "xs", "2xl": "sm" }}
-                      >
-                        Relevant Words
-                      </Text>
-                      <Text fontSize="xxs" color="brand.nightBlack" mb={5}>
-                        <strong>Heart Attack</strong> - empathy, bedside manner,
-                        patient safety, patient-centered approach
-                      </Text>
-                      <Text fontSize="xxs" color="brand.nightBlack" mb={5}>
-                        <strong>Intubation</strong> - medical knowledge,
-                        communication, team-oriented approach
-                      </Text>
-                    </Box>
-                  </SimpleGrid>
-                </VStack>
-
-                {/* Right Column with Video Player */}
-                <VStack flex="0.45" spacing={4} alignItems="stretch">
-                  <Text
-                    fontSize={{ base: "xxs", lg: "xs", "2xl": "sm" }}
-                    fontWeight="bold"
-                    color="nightBlack"
-                  >
-                    Video Analysis
-                  </Text>
-
-                  <Box
-                    bg="white"
-                    p={4}
-                    borderRadius="15"
-                    boxShadow="md"
-                    position="relative"
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                    w="100%"
-                  >
-                    {loading ? (
-                      <Box height="400px">
-                        <LoadingSpinner />
-                      </Box>
-                    ) : error ? (
-                      <Box height="400px">
-                        <Text fontSize="xl" color="red.500">
-                          {error}
-                        </Text>
+                <CardBody textAlign={"left"}>
+                  <Stack spacing="4" divider={<StackDivider />}>
+                    {questions.length > 0 ? (
+                      <Box>
+                        <Flex flexDir={"row"} justifyContent={"space-between"}>
+                          <Heading as="h3" size="10pt" mb={4}>
+                            {questions[currentQuestionIndex].category || "General Question"}
+                          </Heading>
+                          <Heading as="h3" size="10pt" mb={4}>
+                            {currentQuestionIndex + 1}/{questions.length}
+                          </Heading>
+                        </Flex>
+                        <Box>
+                          <Text pt="2" fontSize="16pt">
+                            {questions[currentQuestionIndex].question || "No question text available"}
+                          </Text>
+                        </Box>
                       </Box>
                     ) : (
-                      videoUrl && (
-                        <video
-                          src={videoUrl}
-                          controls
-                          width="100%"
-                          style={{ borderRadius: "8px" }}
-                        />
-                      )
+                      <Text pt="2" fontSize="18pt">
+                        No questions available. Please try again.
+                      </Text>
                     )}
-                  </Box>
+                  </Stack>
 
-                  {/* Suggested Topics */}
-                  <Box
-                    bg="white"
-                    p={4}
-                    borderRadius="15"
-                    boxShadow="md"
-                    mb={5}
-                    pb={6}
-                  >
-                    <Text
-                      fontWeight="bold"
-                      mb={4}
-                      fontSize={{ base: "xxs", lg: "xs", "2xl": "sm" }}
-                    >
-                      Suggested Topics
-                    </Text>
-                    <Divider mb={4} />
-                    <VStack align="stretch" spacing={5}>
-                      <Box>
-                        <Text
-                          fontWeight="bold"
-                          fontSize={{ base: "xxs", lg: "xs", "2xl": "sm" }}
-                          color="gray.600"
-                          mb={5}
-                        >
-                          Question 1
-                        </Text>
-                        <Text
-                          fontWeight="bold"
-                          fontSize={{ base: "xxs", lg: "xs", "2xl": "sm" }}
-                          color="brand.nightBlack"
-                        >
-                          Patient–Centered Care:
-                        </Text>
-                        <Text fontSize="xxxs" color="brand.nightBlack">
-                          Ask about handling unexpected patient needs.
-                        </Text>
-                      </Box>
+                  {/* Navigation buttons styled as squares */}
+                  {questions.length > 0 && (
+                  <Flex mt={6} gap={2} width={"80%"} alignItems={"center"}>
+                      {questions.map((_, index) => (
+                          <Button
+                              key={index}
+                              borderRadius="md" 
+                              flexGrow={1}
+                              flexBasis={`calc(100% / ${Math.min(questions.length, 5)} - 0.5rem)`}
+                              height="10px"
+                              bg={
+                                  index === currentQuestionIndex
+                                      ? "brand.pastelBlue"
+                                      : "brand.blueberryCreme"
+                              }
+                              boxShadow={index === currentQuestionIndex ? "md" : "none"}
+                              _hover={{ bg: "brand.pastelBlue" }}
+                              onClick={() => handleQuestionSelect(index)}
+                          >
+                          </Button>
+                      ))}
+                    </Flex>
+                  )}
+                </CardBody>
+              </Card>
 
-                      <Box>
-                        <Text
-                          fontWeight="bold"
-                          fontSize={{ base: "xxs", lg: "xs", "2xl": "sm" }}
-                          color="gray.600"
-                          mb={5}
-                        >
-                          Question 2
+              {/* Response  */}
+              <Card
+                boxShadow="md"
+                borderRadius="15"
+                border="1px"
+                borderColor="#E6EAF2"
+                bg="white"
+                overflow="hidden"
+                width="100%"
+              >
+                <CardBody textAlign={"left"}>
+                    <Stack spacing="4" divider={<StackDivider />}>
+                    {answerAnalysis ? (
+                        <Box>
+                          <Flex flexDir={"row"} justifyContent={"space-between"}>
+                            <Heading as="h3" size="10pt" mb={4}>
+                              Your Answer:
+                            </Heading>
+                            <Heading as="h3" size="10pt" mb={4}>
+                              {currentQuestionIndex + 1}/{questions.length}
+                            </Heading>
+                          </Flex>
+                          <Box
+                            dangerouslySetInnerHTML={{
+                              __html: answerAnalysis.answer || "No answer available.",
+                            }}
+                            overflow={"scroll"}
+                            height={"50%"}
+                          />
+                        </Box>
+                      ) : (
+                        <Text pt="2" fontSize="18pt">
+                          No questions available. Please try again.
                         </Text>
-                        <Text
-                          fontWeight="bold"
-                          fontSize={{ base: "xxs", lg: "xs", "2xl": "sm" }}
-                          color="brand.nightBlack"
-                        >
-                          Effective Communication:
-                        </Text>
-                        <Text fontSize="xxxs" color="brand.nightBlack">
-                          Focus on teamwork and clear communication in urgent
-                          situations.
-                        </Text>
-                      </Box>
-                    </VStack>
-                  </Box>
-                </VStack>
+                      )}
+                    </Stack>
+                  </CardBody>
+                </Card>
+
+              <Flex
+                alignSelf={"flex-start"}
+                mb={0}
+                pt={8}
+              >
+                <Button
+                  bg={"brand.pureWhite"}
+                  size="xxs"
+                  width={"6rem"}
+                  p={2}
+                  py="2.5"
+                  border={"1px"}
+                  borderColor={"red"}
+                  onClick={handleEndClick}
+                  _hover={{
+                    bg: "brand.pureWhite",
+                    color: "red",
+                    border: "1px",
+                    borderColor: "red",
+                  }}
+                >
+                  End
+                </Button>
               </Flex>
-            </Container>
-          </Box>
-        </LayoutSim>
-      </div>
+            </Flex>
+
+            {/* RIGHT COLUMN */}
+            <Flex flexDirection="column" gap={2} w="48%" mt="0em" mr={0} mb={6} pt={4} px={"1rem"} bgColor={"white"} overflow={"scroll"} borderBottomRadius={"15"} boxShadow={"md"}>
+              <Box>
+                <Heading as="h2" size={"xs"} my={4}>
+                  Detailed Analysis
+                </Heading>
+              </Box>
+
+              {answerAnalysis ? (
+                <Box>
+                  {answerAnalysis ? (
+                    <>
+                      {/* Overall Feedback */}
+                      <Box
+                        border="1px"
+                        borderColor="brand.blueberryCreme"
+                        borderRadius="md"
+                        px={4}
+                        py={2}
+                        mb={4}
+                      >
+                        <Heading as="h4" size="10pt" mb={2}>
+                          Overall Feedback:
+                        </Heading>
+                        <Text>
+                          {answerAnalysis.overallFeedback || "No overall feedback available."}
+                        </Text>
+                      </Box>
+
+                      {/* Detailed Feedback Sections */}
+                      <Box
+                        border="1px"
+                        borderColor="brand.blueberryCreme"
+                        borderRadius="md"
+                        px={4}
+                        py={2}
+                        mb={4}
+                      >
+                        <Heading as="h4" size="10pt">Clarity:</Heading>
+                        <Text>
+                          {answerAnalysis.detailedFeedback?.clarity || "No feedback available"}
+                        </Text>
+                        <Heading as="h4" size="10pt" mt={2}>
+                          Relevance:
+                        </Heading>
+                        <Text>
+                          {answerAnalysis.detailedFeedback?.relevance || "No feedback available"}
+                        </Text>
+                        <Heading as="h4" size="10pt" mt={2}>
+                          Effectiveness:
+                        </Heading>
+                        <Text>
+                          {answerAnalysis.detailedFeedback?.effectiveness || "No feedback available"}
+                        </Text>
+                      </Box>
+
+                      {/* Grammar and Syntax */}
+                      <Box
+                        border="1px"
+                        borderColor="brand.blueberryCreme"
+                        borderRadius="md"
+                        px={4}
+                        py={2}
+                        mb={4}
+                      >
+                        <Heading as="h4" size="10pt">Grammar & Syntax:</Heading>
+                        <Text>
+                          {answerAnalysis.detailedFeedback?.grammarAndSyntax || "No feedback available"}
+                        </Text>
+                        <Heading as="h4" size="10pt" mt={2}>
+                          Language Refinement:
+                        </Heading>
+                        <Text>
+                          {answerAnalysis.detailedFeedback?.languageRefinement || "No feedback available"}
+                        </Text>
+                        <Heading as="h4" size="10pt">STAR Method:</Heading>
+                        <Text>
+                          {answerAnalysis.detailedFeedback?.starMethod || "No feedback available"}
+                        </Text>
+                      </Box>
+
+                      {/* Filler Words and Power Words */}
+                      <Flex gap={2} mb={4}>
+                        <Box
+                          border="1px"
+                          borderColor="brand.blueberryCreme"
+                          borderRadius="md"
+                          px={4}
+                          py={2}
+                          flex={1}
+                        >
+                          <Heading as="h4" size="10pt">Filler Words:</Heading>
+                          {answerAnalysis.detailedFeedback?.fillerAndPowerWords?.fillerWords?.length >
+                          0 ? (
+                            answerAnalysis.detailedFeedback.fillerAndPowerWords.fillerWords.map(
+                              (word, i) => <Text key={i}>{word}</Text>
+                            )
+                          ) : (
+                            <Text>No filler words identified. Great Job!</Text>
+                          )}
+                        </Box>
+                        <Box
+                          border="1px"
+                          borderColor="brand.blueberryCreme"
+                          borderRadius="md"
+                          px={4}
+                          py={2}
+                          flex={1}
+                        >
+                          <Heading as="h4" size="10pt">Power Words:</Heading>
+                          {answerAnalysis.detailedFeedback?.fillerAndPowerWords?.powerWords?.length >
+                          0 ? (
+                            answerAnalysis.detailedFeedback.fillerAndPowerWords.powerWords.map(
+                              (word, i) => <Text key={i}>{word}</Text>
+                            )
+                          ) : (
+                            <Text>
+                              Consider using power words to make your answers more effective and
+                              impactful!
+                            </Text>
+                          )}
+                        </Box>
+                      </Flex>
+
+                      {/* STAR Method and Feedback */}
+                      <Box
+                        border="1px"
+                        borderColor="brand.blueberryCreme"
+                        borderRadius="md"
+                        px={4}
+                        py={2}
+                      >
+                        <Heading as="h4" size="10pt" mt={2}>
+                          What Worked Well:
+                        </Heading>
+                        <Text>
+                          {answerAnalysis.detailedFeedback?.whatWorkedWell || "No feedback available"}
+                        </Text>
+                        <Heading as="h4" size="10pt" mt={2}>
+                          Room for Improvements:
+                        </Heading>
+                        <Text>
+                          {answerAnalysis.detailedFeedback?.roomForImprovements || "No feedback available"}
+                        </Text>
+                        <Heading as="h4" size="10pt" mt={2}>
+                          Next Steps to Success:
+                        </Heading>
+                        <Text>
+                          {answerAnalysis.detailedFeedback?.nextStepsToSuccess || "No feedback available"}
+                        </Text>
+                      </Box>
+                    </>
+                  ) : (
+                    <Text>No analysis found for the current question.</Text>
+                  )}
+                </Box>
+              ) : (
+                <Text>Loading detailed analysis...</Text>
+              )}
+            </Flex>
+
+          </Flex>
+        </Flex>        
+      </LayoutSim>
     </>
   );
 }
