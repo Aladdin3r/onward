@@ -31,8 +31,6 @@ export default function PracticeInterviewQuestion() {
             }
         }
     }, []);
-    
-    
 
     // start and end button
     const handleEndClick = () => {
