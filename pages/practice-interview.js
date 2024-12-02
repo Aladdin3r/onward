@@ -111,7 +111,7 @@ export default function PracticeInterview() {
             {questions.length > 0 ? (
               questions.map((question, index) => (
                 <Text key={index} fontSize="sm" mb="1">
-                  {index + 1}. {question}
+                  {index + 1}. {questions}
                 </Text>
               ))
             ) : (
