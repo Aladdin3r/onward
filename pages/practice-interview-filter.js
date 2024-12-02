@@ -135,16 +135,14 @@ export default function PracticeInterviewFilter() {
   const UploadFiles = async (resumes, jobPosts) => {
     try {
       const uploadPromises = [];
-
+  
       if (resumes.length > 0) {
         uploadPromises.push(
-          fetch("https://api.roughlyai.com/ttfiles/api/prompt_response", {
+          fetch("/api/roughlyai", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              handler: "api_upload",
+              handlerType: "api_upload", 
               key: "Onward/Resumes/",
               upload_data: resumes.map((file) => file.url),
               fn: resumes.map((file) => file.name),
@@ -153,16 +151,14 @@ export default function PracticeInterviewFilter() {
           })
         );
       }
-
+  
       if (jobPosts.length > 0) {
         uploadPromises.push(
-          fetch("https://api.roughlyai.com/ttfiles/api/prompt_response", {
+          fetch("/api/roughlyai", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              handler: "api_upload",
+              handlerType: "api_upload",
               key: "Onward/JobPosts/",
               upload_data: jobPosts.map((file) => file.url),
               fn: jobPosts.map((file) => file.name),
@@ -171,22 +167,23 @@ export default function PracticeInterviewFilter() {
           })
         );
       }
-
+  
       const responses = await Promise.all(uploadPromises);
-
+  
       const pollingResults = await Promise.all(
         responses.map(async (resp) => {
           const { data: _url } = await resp.json();
           return await PollingResponse(_url);
         })
       );
-
+  
       return pollingResults;
     } catch (error) {
       console.error("Error uploading files:", error);
       throw error;
     }
   };
+  
 
   // prompt function
   const GenerateQuestions = async (
@@ -196,84 +193,55 @@ export default function PracticeInterviewFilter() {
     selectedQuestionType
   ) => {
     try {
-      console.log("Sending API request with:", {
-        selectedNumber,
-        selectedQuestionType,
-      }); // debugging
       const formattedQuestionTypes = selectedQuestionType.length
         ? selectedQuestionType.join(", ")
         : "all types";
-
-      const jobQuestionPrompt = `Generate a unique set of ${selectedNumber} interview questions, ensuring a mix of ${selectedQuestionType}.
-        If Common Interview Questions are selected, include exactly 1 common question every 5 questions, positioned at the start of the array. 
-        These can be general interview questions not specific to nursing.
-        The remaining questions should be divided proportionally and strictly draw from the specified categories in ${selectedQuestionType},
-        ensuring relevance to the job posting.
-        Avoid repeating questions or overly similar phrasing from prior sets.
-        Return the questions in valid JSON format, without any additional formatting or backticks, where each object follows this structure:
-          - question: The interview question.
-          - category: Behavioural Question, Situational Question, Technical Question, Competency Question, Cultural Question, Career Goals Question, Legal/Regulation Question, Common Interview Question
-          - additionalInfo: A brief explanation of what the question is assessing.;`
-      console.log("Job Question Prompt:", jobQuestionPrompt);
-
-      // Make API call
-      const jobPostResponse = await fetch(
-        "https://api.roughlyai.com/ttfiles/api/prompt_response",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            handler: "api_call",
-            key: "Onward/JobPosts/",
-            api_key: process.env.NEXT_PUBLIC_ROUGHLY_API_KEY,
-            question: jobQuestionPrompt,
-            numsimular: selectedNumber,
-          }),
-        }
+      
+      const filteredCategories = selectedQuestionType.filter(
+        (category) => category !== "Common Interview Questions"
       );
 
-      // const resumeResponse = await fetch(
-      //   "https://api.roughlyai.com/ttfiles/api/prompt_response",
-      //   {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({
-      //       handler: "api_call",
-      //       key: "Onward/Resumes/",
-      //       api_key: process.env.NEXT_PUBLIC_ROUGHLY_API_KEY,
-      //       question: `Generate an array of talking points that align resumes to the job description in valid JSON format. Each object in the array should include the following fields:
-      //                 - "talkingPoints": A talking point or prompt relevant to aligning resumes with the job description.
-      //                 - category: Behavioural Question, Situational Question, Technical Question, Competency Question, Cultural Question, Career Goals Question, Legal/Regulation Question, Common Interview Question
-      //                 - "response": Leave this field as an empty string ("").
-      //                 - "video_id": Leave this field as an empty string ("").
-      //                 - "video_url": Leave this field as an empty string ("")
-      //                 Output only the JSON array.`,
-      //       numsimular: 5, // default 5
-      //     }),
-      //   }
-      // );
+      const jobQuestionPrompt = `Generate a unique set of ${selectedNumber} interview questions strictly from these categories: ${selectedQuestionType.join(", ")}.
+        If "Common Interview Questions" is selected, include exactly 1 "Common Interview Question" for every 5 questions, positioned at the start of the group. 
+        If fewer than 5 questions are requested, include no more than 1 "Common Interview Question", positioned at the start of the group.  
 
-      const jobPostQuestions = await PollingResponse(
-        (
-          await jobPostResponse.json()
-        ).data
-      );
-      // const resumeTalkingPoints = await PollingResponse(
-      //   (
-      //     await resumeResponse.json()
-      //   ).data
-      // );
+        The remaining questions must be strictly and evenly distributed across the following categories: 
+        ${filteredCategories.join(", ")} (excluding "Common Interview Questions"). 
 
+        Each question must:
+        1. Be relevant to the job posting and draw from specific skills or past experiences on the resume when possible.
+        2. Align with its assigned category and not overlap with other categories.
+        3. Avoid repeating or using overly similar phrasing from prior sets.
+
+        Return the questions in valid JSON format, without any additional formatting or backticks. Each object should follow this structure:
+        - question: The interview question.
+        - category: Must be one of these - Behavioural Question, Situational Question, Technical Question, Competency Question, Cultural Question, 
+          Career Goals Question, Legal/Regulation Question, or Common Interview Question.`;
+  
+      const response = await fetch("/api/roughlyai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          handlerType: "api_call", // Specify the handler type
+          key: "Onward/JobPosts/",
+          api_key: process.env.NEXT_PUBLIC_ROUGHLY_API_KEY,
+          question: jobQuestionPrompt,
+          numsimular: selectedNumber,
+        }),
+      });
+  
+  
+      const { data } = await response.json();
+      const jobPostQuestions = await PollingResponse(data);
+  
       return { jobPostQuestions };
     } catch (error) {
       console.error("Error generating questions and talking points:", error);
       throw error;
     }
+    console.error("Generate Questions Prompt:", jobPostQuestions);
   };
+  
 
   // next & back buttons
   const handleStartClick = async () => {
@@ -282,37 +250,28 @@ export default function PracticeInterviewFilter() {
       const storedFiles = JSON.parse(localStorage.getItem("selectedFiles"));
       const urls = await getPublicURLs(storedFiles);
       setFileURLs(urls);
-
-     
+  
       const uploadProgress = await UploadFiles(urls.resumes, urls.jobPosts);
       console.log("Upload progress:", uploadProgress);
-
-      // Generate questions 
-      const { jobPostQuestions } =
-        await GenerateQuestions(
-          urls.jobPosts,
-          urls.resumes,
-          selectedNumber,
-          selectedQuestionType
-        );
-
+  
+      const { jobPostQuestions } = await GenerateQuestions(
+        urls.jobPosts,
+        urls.resumes,
+        selectedNumber,
+        selectedQuestionType
+      );
+  
       console.log("Generated Questions:", jobPostQuestions);
-
-      const parsedQuestions = JSON.parse(jobPostQuestions.answer); // Parse the JSON string
+  
+      const parsedQuestions = JSON.parse(jobPostQuestions.answer); 
       console.log("Parsed Questions:", parsedQuestions);
-
-      // Save parsed questions and talking points to localStorage
+  
       localStorage.setItem("questions", JSON.stringify(parsedQuestions));
-      // localStorage.setItem(
-      //   "talkingPoints",
-      //   JSON.stringify(resumeTalkingPoints)
-      // );
-
       router.push("/practice-interview-questions");
     } catch (error) {
       console.error("Error in handleStartClick:", error);
     } finally {
-      setLoading(false); // Hide loading spinner
+      setLoading(false);
     }
   };
 

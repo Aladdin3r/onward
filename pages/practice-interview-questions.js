@@ -15,32 +15,22 @@ export default function PracticeInterviewQuestion() {
     const [questionTypes, setQuestionTypes] = useState([]);
 
     useEffect(() => {
-        // generate a unique session ID at the start of practice mode
-        let sessionId = localStorage.getItem("sessionId");
-
-        if (!sessionId) {
-            sessionId = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}`; 
-            localStorage.setItem("sessionId", sessionId); // save it to localStorage
-            console.log("New Unique Session ID:", sessionId);
-        } else {
-            console.log("Existing Session ID:", sessionId);
-        }
-
-        // Load questions from localStorage
-        const storedQuestions = localStorage.getItem("questions");
-        if (storedQuestions) {
-            try {
-                const parsedQuestions = JSON.parse(storedQuestions);
-                if (Array.isArray(parsedQuestions)) {
-                    setQuestions(parsedQuestions.map((q) => q.question));
-                    setQuestionTypes(parsedQuestions.map((q) => q.category));
+        // Check if we're in the browser to access localStorage
+        if (typeof window !== "undefined") {
+            const storedQuestions = localStorage.getItem("questions");
+            if (storedQuestions) {
+                try {
+                    const parsedQuestions = JSON.parse(storedQuestions);
+                    if (Array.isArray(parsedQuestions)) {
+                        setQuestions(parsedQuestions.map((q) => q.question || q));
+                        setQuestionTypes(parsedQuestions.map((q) => q.category || "General"));
+                    }
+                } catch (error) {
+                    console.error("Error parsing stored questions:", error);
                 }
-            } catch (error) {
-                console.error("Error parsing stored questions:", error);
             }
         }
     }, []);
-    
 
     // start and end button
     const handleEndClick = () => {
@@ -53,6 +43,14 @@ export default function PracticeInterviewQuestion() {
         router.push({
             pathname: '/practice-interview-answer'
         })
+        const sessionId = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+        localStorage.setItem("sessionId", sessionId);
+        console.log("New Session ID generated:", sessionId);
+
+        // reset saved answers URL
+        localStorage.removeItem("answersPublicUrl");
+        console.log("answersPublicUrl reset for the new session.");
+
     }
 
     return (
@@ -102,8 +100,8 @@ export default function PracticeInterviewQuestion() {
                     >
                         <Box>
                             <QuestionPractice
-                                questions={questions} 
-                                questionTypes={questionTypes} 
+                                questions={questions || []} 
+                                questionTypes={questionTypes || []}
                                 borderRadius={"15"}
                                 questionWidth={"80%"}
                                 showControls={false}

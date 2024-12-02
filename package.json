@@ -60,6 +60,8 @@
 
     "framer-motion": "^11.11.9",
 
+    "jspdf": "^2.5.2",
+
     "lottie-react": "^2.4.0",
 
     "lottie-web": "^5.12.2",
