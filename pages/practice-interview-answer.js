@@ -7,8 +7,9 @@ import { useState, useEffect } from "react";
 import LayoutSim from "@/styles/components/LayoutSim";
 import AnswerPractice from "@/styles/components/AnswerPractice";
 import { supabase } from "@/lib/supabaseClient";
+import dynamic from "next/dynamic";
 
-export default function PracticeAnswer() {
+function PracticeAnswer() {
     const [showVideo, setShowVideo] = useState(false);
     const [questions, setQuestions] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -190,3 +191,7 @@ export default function PracticeAnswer() {
 
         return response;
     };
+
+    const DynamicPracticeAnswer = dynamic(() => Promise.resolve(PracticeAnswer), { ssr: false });
+
+export default DynamicPracticeAnswer;
