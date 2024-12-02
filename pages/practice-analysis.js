@@ -8,8 +8,9 @@ import TranscriptionComponent from "@/styles/components/FullTranscriptionCard";
 import LayoutSim from "@/styles/components/LayoutSim.js";
 import { useRouter } from "next/router";
 import LoadingSpinner from "@/styles/components/LoadingSpinner";
+import dynamic from "next/dynamic";
 
-export default function PracticeInterviewOverview() {
+function PracticeAnalysis() {
   const [videoUrl, setVideoUrl] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [questions, setQuestions] = useState([]);
@@ -476,3 +477,10 @@ export default function PracticeInterviewOverview() {
     </>
   );
 }
+
+const DynamicPracticeAnalysis = dynamic(
+  () => Promise.resolve(PracticeAnalysis),
+  { ssr: false }
+);
+
+export default DynamicPracticeAnalysis;
