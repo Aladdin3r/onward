@@ -1,148 +1,72 @@
 import Head from "next/head";
-import { Heading, Box, Flex, Button, Text } from "@chakra-ui/react";
-import ProgressBar from "@/styles/components/ProgressBar";
-import Footer from "@/styles/components/Footer";
-import { useRouter } from "next/router";
+import { Flex, Button, VStack, Box, Text, Heading } from "@chakra-ui/react";
 import Layout from "@/styles/components/Layout";
-import FileUpload from "@/styles/components/FileUpload";
-import { supabase } from "@/lib/supabaseClient";
-import { useState, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
 
-export default function PracticeInterview() {
-  const [uploadedFiles, setUploadedFiles] = useState({ resumes: [], jobPosts: [] });
-  const [selectedFiles, setSelectedFiles] = useState({ resumes: [], jobPosts: [] });
-  const router = useRouter();
+// Fetch questions dynamically during build time
+export async function getStaticProps() {
+  let questions = [];
 
-  const handleNextClick = async () => {
-    // Ensure user selects a resume and job post file
-    if (!selectedFiles.resumes.length || !selectedFiles.jobPosts.length) {
-      alert("Please select one resume and one job post to get a tailored analysis for you!");
-      return; // Prevent navigation
-    }
+  try {
+    // Replace this URL with the actual API or data source
+    const res = await fetch("https://api.roughlyai.com/ttfiles/api/questions");
+    if (!res.ok) throw new Error("Failed to fetch questions");
+    questions = await res.json();
+  } catch (error) {
+    console.error("Error fetching questions:", error.message);
+    questions = []; // Fallback to empty array if fetching fails
+  }
 
-    // Save file selection to local storage
-    const storedFiles = JSON.stringify(selectedFiles);
-    localStorage.setItem("selectedFiles", storedFiles);
-
-    router.push("/practice-interview-filter");
+  return {
+    props: {
+      questions, // Pass questions as a prop
+    },
+    revalidate: 10, // Optional: Revalidate every 10 seconds
   };
+}
 
-  // Restore last file selection from local storage
-  useEffect(() => {
-    const savedSelections = localStorage.getItem("selectedFiles");
-    if (savedSelections) {
-      const parsedSelections = JSON.parse(savedSelections);
-      setSelectedFiles(parsedSelections);
-    }
-  }, []);
-
-  // Handle file selection
-  const handleFileSelect = (file, type) => {
-    setSelectedFiles((prev) => {
-      const updatedSelection = { ...prev };
-      const fileType = type === "resume" ? "resumes" : "jobPosts";
-      updatedSelection[fileType] = [{ id: file.name, name: file.name }];
-      localStorage.setItem("selectedFiles", JSON.stringify(updatedSelection));
-      return updatedSelection;
-    });
-  };
-
-  // Handle file upload
-  const sessionId = Date.now(); // Generate a unique session ID for the session
-  const handleResponseUpload = async (file, questionId) => {
-    try {
-      const bucketName = "onward-responses";
-      const filePath = `uploads/${sessionId}/response-${questionId}-${file.name}`;
-      const { error } = await supabase.storage.from(bucketName).upload(filePath, file, { upsert: true });
-
-      if (error) {
-        console.error("Error uploading response file:", error.message);
-        return;
-      }
-
-      const publicURL = supabase.storage.from(bucketName).getPublicUrl(filePath).publicUrl;
-      setUploadedFiles((prevFiles) => [
-        ...prevFiles,
-        { sessionId, questionId, name: file.name, url: publicURL },
-      ]);
-    } catch (err) {
-      console.error("Upload failed:", err.message);
-    }
-  };
-
-  // Handle file deletion
-  const handleDeleteFile = async (fileId, type) => {
-    const bucketName = type === "resume" ? "onward-resume" : "onward-job-posting";
-    const filePath = `uploads/${fileId}`;
-    try {
-      const { error } = await supabase.storage.from(bucketName).remove([filePath]);
-      if (error) {
-        console.error("Error deleting file from Supabase:", error.message);
-        return;
-      }
-      setUploadedFiles((prevFiles) => {
-        const updatedFiles = { ...prevFiles };
-        const fileType = type === "resume" ? "resumes" : "jobPosts";
-        updatedFiles[fileType] = updatedFiles[fileType].filter((file) => file.id !== fileId);
-        return updatedFiles;
-      });
-    } catch (err) {
-      console.error("Error deleting file:", err.message);
-    }
+export default function PracticeInterview({ questions }) {
+  const handleNextClick = () => {
+    console.log("Next button clicked");
+    // Replace this with routing logic for testing or the next step
   };
 
   return (
     <>
       <Head>
         <title>Practice Interview — Onward</title>
-        <meta
-          name="description"
-          content="Onward is an AI-powered personal interview coach designed to help nurses, particularly those new to the Canadian healthcare system, excel in job interviews."
-        />
+        <meta name="description" content="Onward AI-powered interview coach." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout showTopNav={true} pageTitle="Practice">
         <Flex flexDirection="column" height="86vh" width="100%">
-          <ProgressBar activeStep={0} />
-          <Flex
-            ml={{ xl: "8", "2xl": "10" }}
-            columnGap={{ lg: "3rem", "2xl": "5rem" }}
-            flexDirection={{ base: "column", xl: "row" }}
-            mt="3em"
-            alignItems={{ base: "center", xl: "unset" }}
-          >
-            {/* Resume Upload */}
-            <FileUpload
-              title="Upload Resume"
-              fileType="resume"
-              bucketName="onward-resume"
-              onFileUpload={(newFile) => console.log("Uploaded File:", newFile)}
-              selectedFiles={selectedFiles.resumes}
-              handleFileSelect={(file) => handleFileSelect(file, "resume")}
-            />
-
-            {/* Job Posting Upload */}
-            <FileUpload
-              title="Upload Job Posting"
-              fileType="job-posting"
-              bucketName="onward-job-posting"
-              onFileUpload={(newFile) => console.log("Uploaded File:", newFile)}
-              selectedFiles={selectedFiles.jobPosts}
-              handleFileSelect={(file) => handleFileSelect(file, "jobPost")}
-            />
+          <Flex mt="3em" flexDirection="column" alignItems="center">
+            <div>Placeholder for File Upload 1</div>
+            <div>Placeholder for File Upload 2</div>
           </Flex>
 
-          {/* Next Button */}
+          {/* Displaying fetched questions if available */}
+          <VStack spacing={4} align="start" p={8}>
+            <Heading as="h2" size="lg">
+              Practice Interview Questions
+            </Heading>
+            {questions.length > 0 ? (
+              questions.map((question, index) => (
+                <Box key={index} p={4} borderWidth="1px" borderRadius="md">
+                  <Text>{question.text}</Text>
+                </Box>
+              ))
+            ) : (
+              <Text>No questions available at the moment. Please try again later.</Text>
+            )}
+          </VStack>
+
           <Flex flexDirection="row" justify="flex-end" mt="auto" mb="20px">
             <Button
               bg="brand.blushPink"
               size="xs"
               py="1.5rem"
               px="5rem"
-              width={{ base: "8rem", "2xl": "12rem" }}
-              height={{ base: "2rem", "2xl": "2.5rem" }}
               color="white"
               boxShadow="md"
               onClick={handleNextClick}
