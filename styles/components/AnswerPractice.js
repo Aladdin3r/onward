@@ -389,7 +389,7 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
             }
     
             // Navigate to the practice overview page
-            router.push("/practice-interview-analysis");
+            router.push("/practice-analysis");
         } catch (error) {
             console.error("Error in handleAnalysisClick:", error.message);
             alert(`An error occurred during analysis: ${error.message}`);
