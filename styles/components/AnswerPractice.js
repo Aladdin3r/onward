@@ -289,53 +289,6 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
           throw error;
         }
       };
-      
-    // const Prompt = async ()=>{
-    //     const _resp = await fetch("https://api.roughlyai.com/ttfiles/api/prompt_response", {
-    //       method: "POST",
-    //       headers: {
-    //         "Content-Type": "application/json"
-    //       },
-    //       body: JSON.stringify({
-    //         handler: "api_call",
-    //         key: "Onward/Test/",
-    //         api_key: process.env.NEXT_PUBLIC_ROUGHLY_API_KEY,
-    //         question:`You are an AI interview coach helping immigrant nurses refine their answers. 
-    //           Compare their answers to their resume and provide actionable, clear, and constructive feedback.
-    
-    //             ### Focus Areas:
-    //             - For each answer:
-    //                 - Suggest professional language for casual terms (e.g., "help patients" → "facilitate patient care").
-    //                 - Explain Canadian healthcare norms and highlight transferable skills.
-    //                 - Encourage confidence and offer language support for English challenges.
-    
-    //             ### Each object in the analysis array should follow this structure:
-    //             - **question**: The question.
-    //             - **answer**: User's answer with filler words wrapped as <span style="color:red;">word</span> and power words bolded as <b>word</b>.
-    //             - **expectation**: What the question assesses.
-    //             - **overallFeedback**: Positive encouragement with improvement tips.
-    //             - **detailedFeedback**:
-    //             - clarity, relevance, effectiveness, grammarAndSyntax.
-    //             - fillerAndPowerWords: { "fillerWords": [...], "powerWords": [...] }.
-    //             - languageRefinement, starMethod, whatWorkedWell, roomForImprovements, nextStepsToSuccess.
-    
-    //             ### Constraints:
-    //             - Use a friendly, supportive tone.
-    //             - Provide actionable feedback tailored to immigrant nurses.
-    //             - Return valid JSON only, no extra formatting. Do not include backticks JSON`,
-    //         numsimular:10
-    //       })
-    //     });
-    //     const { data: _url } = await _resp.json();
-    //     const analysis_response = await PollingResponse(_url);
-
-    //     try {
-    //         const parsedAnalysis = JSON.parse(analysis_response);
-    //         setAnswerAnalysis(parsedAnalysis.answers || []);
-    //     } catch (error) {
-    //         console.error("Error parsing AI response:", error);
-    //     }
-    //   }
 
     // button handlers
     const handleEndClick = () => {
@@ -366,19 +319,6 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
             router.push("/practiceOverview");
         }
     };
-    
-    
-    const handlePrevClick = () => {
-        if (currentQuestionIndex > 0) {
-            const prevIndex = currentQuestionIndex - 1;
-            setCurrentQuestionIndex(prevIndex);
-    
-            // Update editable transcription for the previous question
-            const prevAnswer = answers[prevIndex]?.response || "";
-            setEditableTranscription(prevAnswer);
-        }
-    };    
-    
 
     const handleVoiceClick = () => {
         setShowVideo(true);
@@ -449,7 +389,7 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
             }
     
             // Navigate to the practice overview page
-            router.push("/practiceOverview");
+            router.push("/practice-interview-analysis");
         } catch (error) {
             console.error("Error in handleAnalysisClick:", error.message);
             alert(`An error occurred during analysis: ${error.message}`);
