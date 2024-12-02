@@ -5,23 +5,35 @@ import Footer from "@/styles/components/Footer";
 import { useRouter } from "next/router";
 import Layout from "@/styles/components/Layout";
 import FileUpload from "@/styles/components/FileUpload";
-import { supabase } from '@/lib/supabaseClient';
 import { useState, useEffect } from "react";
 
-export default function PracticeInterview({ questions }) {
+export default function PracticeInterview() {
   const [uploadedFiles, setUploadedFiles] = useState({ resumes: [], jobPosts: [] });
   const [selectedFiles, setSelectedFiles] = useState({ resumes: [], jobPosts: [] });
+  const [questions, setQuestions] = useState([]);
   const router = useRouter();
 
+  // Fetch or Import Questions at Runtime
+  useEffect(() => {
+    async function loadQuestions() {
+      try {
+        const questionsModule = await import("@/data/nursingInterviewQuestions");
+        setQuestions(questionsModule.default || []);
+      } catch (error) {
+        console.error("Error loading questions:", error);
+        setQuestions([]); // Fallback in case of an error
+      }
+    }
+    loadQuestions();
+  }, []);
+
   const handleNextClick = () => {
-    // Save file selection to local storage
     const storedFiles = JSON.stringify(selectedFiles);
     localStorage.setItem("selectedFiles", storedFiles);
 
-    // Ensure user selects a resume and job post file
     if (!selectedFiles.resumes.length || !selectedFiles.jobPosts.length) {
       alert("Please select one resume and one job post to get a tailored analysis for you!");
-      return; // Prevent navigation
+      return;
     }
 
     router.push("/practice-interview-filter");
@@ -41,10 +53,7 @@ export default function PracticeInterview({ questions }) {
         const updatedSelection = { ...prev };
         const fileType = type === "resume" ? "resumes" : "jobPosts";
 
-        // Allow only one file per type
         updatedSelection[fileType] = [{ id: file.name, name: file.name }];
-
-        // Persist to localStorage
         localStorage.setItem("selectedFiles", JSON.stringify(updatedSelection));
 
         return updatedSelection;
@@ -99,7 +108,7 @@ export default function PracticeInterview({ questions }) {
           {/* Questions Preview */}
           <Box mt="4" p="4" bg="brand.blueberryCreme" borderRadius="md" boxShadow="sm">
             <Heading size="md" mb="2">Interview Questions Preview</Heading>
-            {questions && questions.length > 0 ? (
+            {questions.length > 0 ? (
               questions.map((question, index) => (
                 <Text key={index} fontSize="sm" mb="1">
                   {index + 1}. {question}
@@ -136,18 +145,4 @@ export default function PracticeInterview({ questions }) {
       </Layout>
     </>
   );
-}
-
-export async function getStaticProps() {
-  // Simulate fetching questions
-  const questions = [
-    "Tell me about yourself.",
-    "Why did you choose nursing as a profession?",
-    "How do you handle a stressful situation with a patient?",
-    "Describe a time you worked with a difficult team member.",
-  ];
-
-  return {
-    props: { questions },
-  };
 }
