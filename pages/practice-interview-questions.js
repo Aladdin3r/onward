@@ -15,20 +15,23 @@ export default function PracticeInterviewQuestion() {
     const [questionTypes, setQuestionTypes] = useState([]);
 
     useEffect(() => {
-        // Load questions from localStorage
-        const storedQuestions = localStorage.getItem("questions");
-        if (storedQuestions) {
-            try {
-                const parsedQuestions = JSON.parse(storedQuestions);
-                if (Array.isArray(parsedQuestions)) {
-                    setQuestions(parsedQuestions.map((q) => q.question));
-                    setQuestionTypes(parsedQuestions.map((q) => q.category));
+        // Check if we're in the browser to access localStorage
+        if (typeof window !== "undefined") {
+            const storedQuestions = localStorage.getItem("questions");
+            if (storedQuestions) {
+                try {
+                    const parsedQuestions = JSON.parse(storedQuestions);
+                    if (Array.isArray(parsedQuestions)) {
+                        setQuestions(parsedQuestions.map((q) => q.question || q));
+                        setQuestionTypes(parsedQuestions.map((q) => q.category || "General"));
+                    }
+                } catch (error) {
+                    console.error("Error parsing stored questions:", error);
                 }
-            } catch (error) {
-                console.error("Error parsing stored questions:", error);
             }
         }
     }, []);
+    
     
 
     // start and end button
