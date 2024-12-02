@@ -5,61 +5,90 @@ import Footer from "@/styles/components/Footer";
 import { useRouter } from "next/router";
 import Layout from "@/styles/components/Layout";
 import FileUpload from "@/styles/components/FileUpload";
+import { supabase } from "@/lib/supabaseClient";
 import { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export default function PracticeInterview() {
   const [uploadedFiles, setUploadedFiles] = useState({ resumes: [], jobPosts: [] });
   const [selectedFiles, setSelectedFiles] = useState({ resumes: [], jobPosts: [] });
-  const [questions, setQuestions] = useState([]);
   const router = useRouter();
 
-  // Fetch or Import Questions at Runtime
-  useEffect(() => {
-    async function loadQuestions() {
-      try {
-        const questionsModule = await import("@/data/nursingInterviewQuestions");
-        setQuestions(questionsModule.default || []);
-      } catch (error) {
-        console.error("Error loading questions:", error);
-        setQuestions([]); // Fallback in case of an error
-      }
-    }
-    loadQuestions();
-  }, []);
-
-  const handleNextClick = () => {
-    const storedFiles = JSON.stringify(selectedFiles);
-    localStorage.setItem("selectedFiles", storedFiles);
-
+  const handleNextClick = async () => {
+    // Ensure user selects a resume and job post file
     if (!selectedFiles.resumes.length || !selectedFiles.jobPosts.length) {
       alert("Please select one resume and one job post to get a tailored analysis for you!");
-      return;
+      return; // Prevent navigation
     }
+
+    // Save file selection to local storage
+    const storedFiles = JSON.stringify(selectedFiles);
+    localStorage.setItem("selectedFiles", storedFiles);
 
     router.push("/practice-interview-filter");
   };
 
+  // Restore last file selection from local storage
   useEffect(() => {
-    const savedSelections = JSON.parse(localStorage.getItem("selectedFiles"));
+    const savedSelections = localStorage.getItem("selectedFiles");
     if (savedSelections) {
-      console.log("Restored selections from local storage:", savedSelections);
-      setSelectedFiles(savedSelections);
+      const parsedSelections = JSON.parse(savedSelections);
+      setSelectedFiles(parsedSelections);
     }
   }, []);
 
+  // Handle file selection
   const handleFileSelect = (file, type) => {
+    setSelectedFiles((prev) => {
+      const updatedSelection = { ...prev };
+      const fileType = type === "resume" ? "resumes" : "jobPosts";
+      updatedSelection[fileType] = [{ id: file.name, name: file.name }];
+      localStorage.setItem("selectedFiles", JSON.stringify(updatedSelection));
+      return updatedSelection;
+    });
+  };
+
+  // Handle file upload
+  const sessionId = Date.now(); // Generate a unique session ID for the session
+  const handleResponseUpload = async (file, questionId) => {
     try {
-      setSelectedFiles((prev) => {
-        const updatedSelection = { ...prev };
+      const bucketName = "onward-responses";
+      const filePath = `uploads/${sessionId}/response-${questionId}-${file.name}`;
+      const { error } = await supabase.storage.from(bucketName).upload(filePath, file, { upsert: true });
+
+      if (error) {
+        console.error("Error uploading response file:", error.message);
+        return;
+      }
+
+      const publicURL = supabase.storage.from(bucketName).getPublicUrl(filePath).publicUrl;
+      setUploadedFiles((prevFiles) => [
+        ...prevFiles,
+        { sessionId, questionId, name: file.name, url: publicURL },
+      ]);
+    } catch (err) {
+      console.error("Upload failed:", err.message);
+    }
+  };
+
+  // Handle file deletion
+  const handleDeleteFile = async (fileId, type) => {
+    const bucketName = type === "resume" ? "onward-resume" : "onward-job-posting";
+    const filePath = `uploads/${fileId}`;
+    try {
+      const { error } = await supabase.storage.from(bucketName).remove([filePath]);
+      if (error) {
+        console.error("Error deleting file from Supabase:", error.message);
+        return;
+      }
+      setUploadedFiles((prevFiles) => {
+        const updatedFiles = { ...prevFiles };
         const fileType = type === "resume" ? "resumes" : "jobPosts";
-
-        updatedSelection[fileType] = [{ id: file.name, name: file.name }];
-        localStorage.setItem("selectedFiles", JSON.stringify(updatedSelection));
-
-        return updatedSelection;
+        updatedFiles[fileType] = updatedFiles[fileType].filter((file) => file.id !== fileId);
+        return updatedFiles;
       });
-    } catch (error) {
-      console.error("Error in handleFileSelect:", error);
+    } catch (err) {
+      console.error("Error deleting file:", err.message);
     }
   };
 
@@ -105,31 +134,17 @@ export default function PracticeInterview() {
             />
           </Flex>
 
-          {/* Questions Preview */}
-          <Box mt="4" p="4" bg="brand.blueberryCreme" borderRadius="md" boxShadow="sm">
-            <Heading size="md" mb="2">Interview Questions Preview</Heading>
-            {questions.length > 0 ? (
-              questions.map((question, index) => (
-                <Text key={index} fontSize="sm" mb="1">
-                  {index + 1}. {questions}
-                </Text>
-              ))
-            ) : (
-              <Text>No questions available</Text>
-            )}
-          </Box>
-
           {/* Next Button */}
-          <Flex flexDirection={"row"} justify={"flex-end"} mt={"auto"} mb="20px">
+          <Flex flexDirection="row" justify="flex-end" mt="auto" mb="20px">
             <Button
-              bg={"brand.blushPink"}
+              bg="brand.blushPink"
               size="xs"
-              py={"1.5rem"}
-              px={"5rem"}
+              py="1.5rem"
+              px="5rem"
               width={{ base: "8rem", "2xl": "12rem" }}
               height={{ base: "2rem", "2xl": "2.5rem" }}
-              color={"white"}
-              boxShadow={"md"}
+              color="white"
+              boxShadow="md"
               onClick={handleNextClick}
               _hover={{
                 bg: "white",
