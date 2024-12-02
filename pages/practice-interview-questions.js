@@ -8,9 +8,8 @@ import LayoutSim from "@/styles/components/LayoutSim";
 import { Image } from "@chakra-ui/react";
 import ProgressBar from "@/styles/components/ProgressBar";
 import { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
 
-function PracticeInterviewQuestion() {
+export default function PracticeInterviewQuestion() {
     const router = useRouter();
     const [questions, setQuestions] = useState([]);
     const [questionTypes, setQuestionTypes] = useState([]);
@@ -148,10 +147,3 @@ function PracticeInterviewQuestion() {
         </>
     );
 }
-
-const DynamicPracticeInterviewQuestion = dynamic(
-    () => Promise.resolve(PracticeInterviewQuestion),
-    { ssr: false }
-);
-
-export default DynamicPracticeInterviewQuestion;

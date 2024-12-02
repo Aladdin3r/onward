@@ -17,7 +17,6 @@ import QuestionPractice from "./QuestionPractice";
 import RecordCamera from "./Camera";
 import Transcriber from "./Transcriber";
 import { supabase } from "@/lib/supabaseClient";
-import { saveRecordingToSupabase } from "@/src/utils/actions";
 
 export default function AnswerPractice({ questions, onShowVideoChange }) {
     const router = useRouter();
@@ -30,6 +29,8 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [answers, setAnswers] = useState([]);
     const [answerAnalysis, setAnswerAnalysis] = useState([]);
+    const [loading, setLoading] = useState(false); 
+
 
     const currentQuestion = questions[currentQuestionIndex];
 
@@ -46,14 +47,15 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
         setAnswers((prevAnswers) => {
             const updatedAnswers = [...prevAnswers];
             updatedAnswers[currentQuestionIndex] = {
-                questionId: currentQuestionIndex + 1, // 1-based index
+                questionId: currentQuestionIndex + 1,
                 question: currentQuestion?.question || "",
-                response: responseText,
+                response: responseText.trim(), 
             };
             return updatedAnswers;
         });
         console.log("Saved answer:", { questionId: currentQuestionIndex + 1, responseText });
-    };    
+    };
+    
 
     // save answer array to supabase with session ID
     const saveAllAnswersToFile = async () => {
@@ -63,23 +65,23 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
                 console.error("Session ID not found.");
                 return;
             }
-            
+    
             const currentDate = new Date().toISOString().split("T")[0];
-
             const bucketName = "onward-responses";
             const fileName = `all-answers-${sessionId}.txt`;
             const filePath = `uploads/${currentDate}/${fileName}`;
-
-            // formatting answers
+    
+            // Format answers as a text file (your existing format is perfect)
             const textContent = answers
-            .map(
-                (answer) =>
-                    `Question ${answer.questionId}:\n${answer.question}\n\nAnswer:\n${answer.response}\n`
-            )
-            .join("\n==========\n");
-
+                .map(
+                    (answer) =>
+                        `Question ${answer.questionId}:\n${answer.question}\n\nAnswer:\n${answer.response}\n`
+                )
+                .join("\n==========\n");
+    
             const answersFile = new Blob([textContent], { type: "text/plain" });
     
+            // Upload file to Supabase storage
             const { error: uploadError } = await supabase.storage
                 .from(bucketName)
                 .upload(filePath, answersFile, { upsert: true });
@@ -94,32 +96,58 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
                 .getPublicUrl(filePath);
     
             if (publicUrlError) throw new Error(publicUrlError.message);
-
+    
             const answersFileUrl = publicUrlData.publicUrl;
             console.log("Answers File Details:", { url: answersFileUrl, name: fileName });
+    
             localStorage.setItem("answersPublicUrl", answersFileUrl);
     
+            // Return the file URL and name
             return { url: answersFileUrl, name: fileName };
         } catch (err) {
             console.error("Error saving all answers:", err.message);
         }
-    };
+    };    
+
+    // Save analysis to Supabase
+    const saveAnalysisToSupabase = async (analysis) => {
+        try {
+          // Construct the analysis entry
+          const analysisEntry = {
+            session_id: localStorage.getItem("sessionId"), 
+            analysis_data: analysis, 
+            created_at: new Date().toISOString(), 
+          };
+      
+          // Insert the analysis into Supabase
+          const { data, error } = await supabase.from("onward-analysis").insert([analysisEntry]);
+      
+          if (error) {
+            throw new Error(`Failed to save analysis to Supabase: ${error.message}`);
+          }
+      
+          console.log("Analysis saved to Supabase:", data);
+        } catch (error) {
+          console.error("Error saving analysis to Supabase:", error.message);
+        }
+      };
+      
     
     // API stuff
     const UploadFiles = async (resumes, answers) => {
         try {
           const uploadPromises = [];
       
-          // Upload Resumes
+          // Upload resumes
           if (resumes.length > 0) {
             uploadPromises.push(
-              fetch("https://api.roughlyai.com/ttfiles/api/prompt_response", {
+              fetch("/api/roughlyai", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                  handler: "api_upload",
+                  handlerType: "api_upload", 
                   key: "Onward/Resumes/",
                   upload_data: resumes.map((file) => file.url),
                   fn: resumes.map((file) => file.name),
@@ -129,16 +157,16 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
             );
           }
       
-          // Upload Answers
+          // Upload answers
           if (answers.length > 0) {
             uploadPromises.push(
-              fetch("https://api.roughlyai.com/ttfiles/api/prompt_response", {
+              fetch("/api/roughlyai", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                  handler: "api_upload",
+                  handlerType: "api_upload",
                   key: "Onward/Answers/",
                   upload_data: answers.map((file) => file.url),
                   fn: answers.map((file) => file.name),
@@ -166,8 +194,8 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
           console.error("Error uploading files:", error);
           throw error;
         }
-      };      
-
+      };
+      
     // const UploadFiles = async (resumes, answers)=>{
     //     const _resp = await fetch("https://api.roughlyai.com/ttfiles/api/prompt_response", {
     //       method: "POST",
@@ -188,71 +216,80 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
     //     const prog = await PollingResponse(_url);
     //   }
 
-    const GenerateAnalysis = async (
-        answersUrl, 
-        resumeUrl
-      ) => {
+    const GenerateAnalysis = async (answersUrl, resumeUrl) => {
         try {
-          console.log("Sending API request with:", {
-            answersUrl, 
-            resumeUrl
-          });
-          const analysisPrompt = `You are an AI interview coach helping immigrant nurses refine their answers. 
-          Compare their answers to their resume and provide actionable, clear, and constructive feedback.
-
+          console.log("Sending API request with:", { answersUrl, resumeUrl });
+      
+          const analysisPrompt = `
+            You are an AI interview coach helping immigrant nurses refine their answers. 
+            Compare their answers to their resumes and provide actionable, clear, and constructive feedback.
             ### Focus Areas:
             - For each answer:
-                - Suggest professional language for casual terms (e.g., "help patients" → "facilitate patient care").
-                - Explain Canadian healthcare norms and highlight transferable skills.
-                - Encourage confidence and offer language support for English challenges.
+                1. Suggest professional language for casual terms (e.g., "help patients" → "facilitate patient care").
+                2. Explain Canadian healthcare norms and highlight transferable skills.
+                3. Encourage confidence and provide language support for English challenges.
 
-            ### Each object should follow this structure:
-            - **question**: The question.
-            - **answer**: User's answer with filler words wrapped as <span style="color:red;">word</span> and power words bolded as <b>word</b>.
-            - **expectation**: What the question assesses.
-            - **overallFeedback**: Positive encouragement with improvement tips.
-            - **detailedFeedback**:
-            - clarity, relevance, effectiveness, grammarAndSyntax.
-            - fillerAndPowerWords: { "fillerWords": [...], "powerWords": [...] }.
-            - languageRefinement, starMethod, whatWorkedWell, roomForImprovements, nextStepsToSuccess.
+            ### JSON Output:
+            Generate an analysis array where each object corresponds to a question-answer pair. Each object must include the following fields:
+                - **question**: The interview question.
+                - **answer**: The user’s answer with:
+                    - Filler words wrapped as <span color="brand.imperialRed;">word</span>.
+                    - Power words bolded as <b>word</b>.
+                - **expectation**: What the question is designed to assess (e.g., communication skills, problem-solving).
+                - **overallFeedback**: Positive encouragement with tips for improvement.
+                - **detailedFeedback**: A breakdown of key aspects, including:
+                - **clarity**: Is the answer clear and concise?
+                - **relevance**: Does the answer address the question and effectively utilize their past experience?
+                - **effectiveness**: Is the answer impactful and compelling?
+                - **grammarAndSyntax**: Are there any grammatical or syntactical issues?
+                - **fillerAndPowerWords**: An object with:
+                    - **fillerWords**: An array of filler words identified in the answer and total count.
+                    - **powerWords**: An array of power words identified in the answer and total count.
+                - **languageRefinement**: Suggestions for improving phrasing and vocabulary.
+                - **starMethod**: Feedback on structuring answers using the STAR method, guide on what's missing (Situation, Task, Action, Result).
+                - **whatWorkedWell**: Positive aspects of the answer.
+                - **roomForImprovements**: Areas that need improvement.
+                - **nextStepsToSuccess**: Actionable next steps for enhancing future answers.
 
-            ### Constraints:
-            - Use a friendly, supportive tone.
-            - Provide actionable feedback tailored to immigrant nurses.
-            - Return valid JSON only, no extra formatting. Do not include backticks JSON`
-          console.log("Analysis Prompt:", analysisPrompt);
-    
-          // Make API call
-          const analysisResponse = await fetch(
-            "https://api.roughlyai.com/ttfiles/api/prompt_response",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                handler: "api_call",
-                key: "Onward/Analysis/",
-                api_key: process.env.NEXT_PUBLIC_ROUGHLY_API_KEY,
-                question: analysisPrompt,
-                numsimular: 5,
-              }),
-            }
-          );
-    
-          const answerAnalysis = await PollingResponse(
-            (
-              await analysisResponse.json()
-            ).data
-          );
-    
-          return { answerAnalysis };
+                ### Constraints:
+                - Use a conversational, encouraging, friendly and supportive tone.
+                - Provide specific, actionable feedback tailored to immigrant nurses.
+                - Return valid JSON only. Ensure the output is well-formed, with no additional formatting or backticks.
+          `;
+      
+         
+          const response = await fetch("/api/roughlyai", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              handlerType: "api_call", 
+              key: "Onward/Analysis/",
+              api_key: process.env.NEXT_PUBLIC_ROUGHLY_API_KEY, 
+              question: analysisPrompt, 
+              numsimular: answers.length, 
+              upload_data: [
+                { name: "Answers File", url: answersUrl },
+                { name: "Resume File", url: resumeUrl },
+              ], 
+            }),
+          });
+      
+          // Handle the response
+          if (!response.ok) {
+            throw new Error("Failed to generate analysis");
+          }
+      
+          const { data } = await response.json();
+          const analysisResult = await PollingResponse(data); 
+          return { analysisResult };
         } catch (error) {
           console.error("Error generating analysis:", error);
           throw error;
         }
       };
-
+      
     // const Prompt = async ()=>{
     //     const _resp = await fetch("https://api.roughlyai.com/ttfiles/api/prompt_response", {
     //       method: "POST",
@@ -300,29 +337,6 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
     //     }
     //   }
 
-
-    const handleVideoSave = async (url) => {
-      try {
-        console.log("Video URL to save:", url); // Debugging log
-        
-        // Save video and get public URL
-        const { data, error } = await saveRecordingToSupabase(url);
-        if (error) {
-          console.error("Error saving video to Supabase:", error);
-          return;
-        }
-    
-        const publicUrl = data.publicUrl; // Get the public URL from the response
-        setSavedVideoUrl(publicUrl); // Update the state with the public URL
-        console.log("Video successfully saved to Supabase:", publicUrl);
-    
-        // You can also save the URL to a database or perform other actions here
-      } catch (error) {
-        console.error("Error in handleVideoSave:", error);
-      }
-    };
-    
-  
     // button handlers
     const handleEndClick = () => {
         router.push({
@@ -330,26 +344,29 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
         });
     };
 
-
     const handleNextClick = async () => {
         const responseText = activeButton === "text" ? editableTranscription : transcription;
     
-        // save current answer
+        // Save the current answer
         handleSaveAnswer(responseText);
     
         if (currentQuestionIndex < questions.length - 1) {
             const nextIndex = currentQuestionIndex + 1;
             setCurrentQuestionIndex(nextIndex);
     
-            // update typed responses for the next question
+            // Update editable transcription and reset transcription state
             const nextAnswer = answers[nextIndex]?.response || "";
             setEditableTranscription(nextAnswer);
+            if (activeButton === "text") {
+                setTranscription("");
+            }
         } else {
             console.log("All questions answered. Saving all answers...");
-            await saveAllAnswersToFile(); // save all answers to a single file
+            await saveAllAnswersToFile();
             router.push("/practiceOverview");
         }
     };
+    
     
     const handlePrevClick = () => {
         if (currentQuestionIndex > 0) {
@@ -381,67 +398,66 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
     const handleEditableChange = (event) => {
         const updatedText = event.target.value;
         setEditableTranscription(updatedText);
-    
-        handleSaveAnswer(updatedText);
+        handleSaveAnswer(updatedText); 
     };
+    
     
     const handleTranscription = (transcribedText) => {
-        setTranscription(transcribedText);
-    
-        handleSaveAnswer(transcribedText);
+        setTranscription(transcribedText.trim()); 
+        handleSaveAnswer(transcribedText.trim()); 
     };
+    
 
     const handleAnalysisClick = async () => {
         try {
-            const videoURL = savedVideoUrl;
-            const transcriptionText = transcription;
+            setLoading(true); // Show loading spinner
     
-            // Save transcription to Supabase
-            const transcriptionEntry = { text: transcriptionText, video_id: videoURL };
-            const { error } = await supabase.from("transcriptions").insert(transcriptionEntry);
-            if (error) throw error;
+            if (answers.length === 0) {
+                console.error("No answers available.");
+                alert("Please answer the questions before starting the analysis.");
+                return;
+            }
     
-            // Save answers file and get its public URL and name
+            // Save all answers to a text file
             const answersFile = await saveAllAnswersToFile();
+            if (!answersFile) {
+                throw new Error("Failed to save answers to a file.");
+            }
             const answersUrl = answersFile.url;
-            console.log("Answers File URL:", answersUrl);
-
-            // Get selected resumes from localStorage
+            console.log("Answers file saved:", answersUrl);
+    
+            // Get resume files from localStorage
             const storedFiles = JSON.parse(localStorage.getItem("selectedFileURLs"));
             if (!storedFiles || !storedFiles.resumes || storedFiles.resumes.length === 0) {
-            throw new Error("No resume files found in selected files.");
+                throw new Error("No resume files found in selected files.");
             }
-
             const resumes = storedFiles.resumes;
-            const answers = [{ name: answersFile.name, url: answersUrl }];
-
+    
             // Upload resumes and answers
-            const uploadProgress = await UploadFiles(resumes, answers);
+            console.log("Uploading resumes and answers...");
+            const uploadProgress = await UploadFiles(resumes, [{ name: answersFile.name, url: answersUrl }]);
             console.log("Upload progress:", uploadProgress);
-
+    
             // Generate analysis using the uploaded files
-            const { answerAnalysis } = await GenerateAnalysis(answersUrl, resumes[0].url);
-            console.log("Generated Analysis (Raw):", answerAnalysis);
-
-            // Ensure the `answer` field is parsed
-            if (typeof answerAnalysis.answer === "string") {
-                try {
-                    answerAnalysis.answer = JSON.parse(answerAnalysis.answer);
-                } catch (parseError) {
-                    console.error("Error parsing `answer` field:", parseError);
-                }
+            console.log("Generating analysis...");
+            const { analysisResult } = await GenerateAnalysis(answersUrl, resumes[0].url);
+            console.log("Generated Analysis (Raw):", analysisResult);
+    
+            // Save analysis result to Supabase
+            if (analysisResult) {
+                await saveAnalysisToSupabase(analysisResult);
             }
-
-            // Store the corrected `answerAnalysis` in localStorage
-            localStorage.setItem("answerAnalysis", JSON.stringify({ answer: answerAnalysis.answer }));
-
+    
             // Navigate to the practice overview page
-            router.push({ pathname: "/practiceOverview" });
+            router.push("/practiceOverview");
         } catch (error) {
-            console.error("Error in handleAnalysisClick:", error);
+            console.error("Error in handleAnalysisClick:", error.message);
+            alert(`An error occurred during analysis: ${error.message}`);
+        } finally {
+            setLoading(false);
         }
-    };    
-
+    };
+    
   return (
     <>
         <Flex
@@ -480,7 +496,6 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
                             Response Type:
                         </Heading>
                         <Divider orientation="horizontal" mb={4} />
-
 
                         {/* Response Type Buttons */}
                         <Flex flexDirection="row" gap="2rem">
@@ -537,6 +552,7 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
                             />
                         </Flex>
                     </Flex>
+
                     {/* Answer Section */}
                         <Box
                             p="4"
@@ -558,7 +574,7 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
                                             <Textarea
                                                 value={editableTranscription}
                                                 onChange={handleEditableChange}
-                                                placeholder="Type your answer here"
+                                                placeholder="Type your answer here..."
                                                 size="sm"
                                                 height="10rem"
                                                 resize="vertical"
@@ -581,7 +597,6 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
                             flexDirection="column"
                             width="60%"
                             py="2rem"
-
                             boxShadow="md"
                             justifyContent="center"
                             alignItems="center"
@@ -627,7 +642,6 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
                         >
                         Start Analysis
                         </Button>
-
                     ) : (
                         <Button
                         bg="brand.blushPink"
@@ -648,7 +662,6 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
                         </Button>
                     )}
                 </Flex>
-
             </Flex>
         </>
     );
