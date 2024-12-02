@@ -352,12 +352,6 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
         try {
             setLoading(true); // Show loading spinner
     
-            if (answers.length === 0) {
-                console.error("No answers available.");
-                alert("Please answer the questions before starting the analysis.");
-                return;
-            }
-    
             // Save all answers to a text file
             const answersFile = await saveAllAnswersToFile();
             if (!answersFile) {
