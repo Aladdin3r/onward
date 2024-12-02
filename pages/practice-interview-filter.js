@@ -349,7 +349,6 @@ export default function PracticeInterviewFilter() {
             <Flex
               flexDirection="row"
               justifyContent="space-between"
-              // mt={{ base: "5rem", xl: "3rem", "2xl":"5rem"}}
               mt="auto"
               mb="20px"
             >

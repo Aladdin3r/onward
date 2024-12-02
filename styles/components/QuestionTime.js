@@ -11,6 +11,7 @@ import {
     NumberInputStepper,
     NumberIncrementStepper,
     NumberDecrementStepper,
+    Checkbox,
 } from '@chakra-ui/react'
 
 export default function QuestionTime({ selectedNumber, onNumberChange, selectedLength, onLengthChange }) {
@@ -18,10 +19,10 @@ export default function QuestionTime({ selectedNumber, onNumberChange, selectedL
         <>
         <Card 
             width={{ base: "30rem", sm:"32rem", lg:"40rem", xl: "20rem", "2xl":"30rem"}} 
-            height={"16rem"}
+            height={"18rem"}
             borderRadius="15px" 
             boxShadow="md"
-            >
+        >
             <CardBody>
                 <Flex direction={"column"} gap={5} p={3} alignItems={"center"} justifyContent={"center"}>
 
@@ -74,10 +75,18 @@ export default function QuestionTime({ selectedNumber, onNumberChange, selectedL
                                     </NumberInputStepper>
                                 </NumberInput>
                             </Box>
-                    </Box>
-                </Flex>
-            </CardBody>
-        </Card>
+                            <Checkbox size={"lg"} py={2} value="No Timer">
+                                <Text
+                                fontSize={{ base: "xxxs", "2xl": "xs" }}
+                                value="No Timer"
+                                >
+                                No Timer
+                                </Text>
+                            </Checkbox>
+                        </Box>
+                    </Flex>
+                </CardBody>
+            </Card>
         </>
     )
 }
