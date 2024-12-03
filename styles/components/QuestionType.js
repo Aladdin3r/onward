@@ -115,15 +115,15 @@ export default function QuestionType({
                       </Text>
                     </Flex>
                     <List spacing={3} fontWeight="normal" fontSize="12pt">
-  <ListItem><strong>Behavioural:</strong> Past experiences to showcase problem-solving and interpersonal skills.</ListItem>
-  <ListItem><strong>Situational:</strong> Hypothetical scenarios to test decision-making and adaptability.</ListItem>
-  <ListItem><strong>Technical:</strong> Nursing-specific knowledge and skills.</ListItem>
-  <ListItem><strong>Competency:</strong> Core nursing abilities and qualifications.</ListItem>
-  <ListItem><strong>Cultural:</strong> Sensitivity to diverse patient backgrounds.</ListItem>
-  <ListItem><strong>Career Goals:</strong> Long-term aspirations in nursing.</ListItem>
-  <ListItem><strong>Regulations:</strong> Knowledge of healthcare laws and standards.</ListItem>
-  <ListItem><strong>General Interview:</strong> Broad questions on experience, strengths, and fit for the role.</ListItem>
-</List>
+                    <ListItem><strong>Behavioural:</strong> Past experiences to showcase problem-solving and interpersonal skills.</ListItem>
+                    <ListItem><strong>Situational:</strong> Hypothetical scenarios to test decision-making and adaptability.</ListItem>
+                    <ListItem><strong>Technical:</strong> Nursing-specific knowledge and skills.</ListItem>
+                    <ListItem><strong>Competency:</strong> Core nursing abilities and qualifications.</ListItem>
+                    <ListItem><strong>Cultural:</strong> Sensitivity to diverse patient backgrounds.</ListItem>
+                    <ListItem><strong>Career Goals:</strong> Long-term aspirations in nursing.</ListItem>
+                    <ListItem><strong>Regulations:</strong> Knowledge of healthcare laws and standards.</ListItem>
+                    <ListItem><strong>General Interview:</strong> Broad questions on experience, strengths, and fit for the role.</ListItem>
+                  </List>
 
                   </Box>
                 )}

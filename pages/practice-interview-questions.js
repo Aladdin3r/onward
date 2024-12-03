@@ -43,10 +43,6 @@ export default function PracticeInterviewQuestion() {
         router.push({
             pathname: '/practice-interview-answer'
         })
-        const sessionId = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
-        localStorage.setItem("sessionId", sessionId);
-        console.log("New Session ID generated:", sessionId);
-
         // reset saved answers URL
         localStorage.removeItem("answersPublicUrl");
         console.log("answersPublicUrl reset for the new session.");
