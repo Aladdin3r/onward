@@ -2,23 +2,11 @@ import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import "@/styles/theme";
 import {
-  Heading,
-  Box,
-  CardBody,
   Text,
-  Stack,
-  Card,
-  Link,
   Flex,
   Button,
 } from "@chakra-ui/react";
-import TopNav from "@/styles/components/TopNav";
-import { SideNavBar } from "@/styles/components/SideNav";
 import ProgressBar from "@/styles/components/ProgressBar";
-import Footer from "@/styles/components/Footer";
-import Popup from "@/styles/components/Popup.js";
-import ViewAllPopup from "@/styles/components/ViewAllPopup"; // Import the new ViewAllPopup component
-import { useDisclosure } from "@chakra-ui/react";
 import { useRouter } from "next/router"; // Import useRouter
 import UploadFile from "@/styles/components/FileUpload";
 import Layout from "@/styles/components/Layout";
@@ -27,8 +15,6 @@ import QuestionTime from "@/styles/components/QuestionTime";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import LoadingSpinner from "@/styles/components/LoadingSpinner";
-
-// right now using drop down for question number and length of interview
 
 export default function PracticeInterviewFilter() {
   const router = useRouter();
@@ -42,6 +28,13 @@ export default function PracticeInterviewFilter() {
   const [selectedQuestionType, setSelectedQuestionType] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Generate a session ID and save it in localStorage
+    const sessionId = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+    localStorage.setItem("sessionId", sessionId);
+    console.log("New Session ID generated:", sessionId);
+  }, []);  
 
   const handleNumberOfQuestionChange = (value) => {
     setSelectedNumber(value);
@@ -62,7 +55,7 @@ export default function PracticeInterviewFilter() {
     console.log("Updated selectedQuestionType:", selectedQuestionType);
   }, [selectedQuestionType]);
 
-  // get slected file url
+  // get selected file url
   const getPublicURLs = async (selectedFiles) => {
     try {
       const selectedFileURLs = { resumes: [], jobPosts: [] };
@@ -134,6 +127,11 @@ export default function PracticeInterviewFilter() {
   // sending file to roughly functoin
   const UploadFiles = async (resumes, jobPosts) => {
     try {
+      const sessionId = localStorage.getItem("sessionId"); 
+      if (!sessionId) {
+        throw new Error("Session ID not found in localStorage.");
+      }
+
       const uploadPromises = [];
   
       if (resumes.length > 0) {
@@ -143,7 +141,7 @@ export default function PracticeInterviewFilter() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               handlerType: "api_upload", 
-              key: "Onward/Resumes/",
+              key: `Onward/${sessionId}`,
               upload_data: resumes.map((file) => file.url),
               fn: resumes.map((file) => file.name),
               api_key: process.env.NEXT_PUBLIC_ROUGHLY_API_KEY,
@@ -159,7 +157,7 @@ export default function PracticeInterviewFilter() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               handlerType: "api_upload",
-              key: "Onward/JobPosts/",
+              key: `Onward/${sessionId}`,
               upload_data: jobPosts.map((file) => file.url),
               fn: jobPosts.map((file) => file.name),
               api_key: process.env.NEXT_PUBLIC_ROUGHLY_API_KEY,
@@ -193,6 +191,11 @@ export default function PracticeInterviewFilter() {
     selectedQuestionType
   ) => {
     try {
+      const sessionId = localStorage.getItem("sessionId"); 
+      if (!sessionId) {
+        throw new Error("Session ID not found in localStorage.");
+      }
+
       const formattedQuestionTypes = selectedQuestionType.length
         ? selectedQuestionType.join(", ")
         : "all types";
@@ -201,29 +204,29 @@ export default function PracticeInterviewFilter() {
         (category) => category !== "Common Interview Questions"
       );
 
-      const jobQuestionPrompt = `Generate a unique set of ${selectedNumber} interview questions strictly from these categories: ${selectedQuestionType.join(", ")}.
-        If "Common Interview Questions" is selected, include exactly 1 "Common Interview Question" for every 5 questions, positioned at the start of the group. 
-        If fewer than 5 questions are requested, include no more than 1 "Common Interview Question", positioned at the start of the group.  
+      const jobQuestionPrompt = `Generate ${selectedNumber} unique interview questions from these categories: ${selectedQuestionType.join(", ")}.
+        ### Rules:
+        1. **Distribution:**
+          - Include 1 "Common Interview Question" for every 5 questions (if selected). Place at the start.
+          - Distribute the remaining questions across: ${filteredCategories.join(", ")}.
 
-        The remaining questions must be strictly and evenly distributed across the following categories: 
-        ${filteredCategories.join(", ")} (excluding "Common Interview Questions"). 
+        2. **Resume Integration (Optional):**
+          - Use details from the resume to craft questions about past experiences or skills when relevant.
+          - Highlight transferable skills and Canadian healthcare norms where applicable.
 
-        Each question must:
-        1. Be relevant to the job posting and draw from specific skills or past experiences on the resume when possible.
-        2. Align with its assigned category and not overlap with other categories.
-        3. Avoid repeating or using overly similar phrasing from prior sets.
-
-        Return the questions in valid JSON format, without any additional formatting or backticks. Each object should follow this structure:
-        - question: The interview question.
-        - category: Must be one of these - Behavioural Question, Situational Question, Technical Question, Competency Question, Cultural Question, 
-          Career Goals Question, Legal/Regulation Question, or Common Interview Question.`;
+        3. **Output:**
+          - Return valid JSON with:
+            - **question**: The question text.
+            - **category**: One of:
+              - Behavioural, Situational, Technical, Competency, Cultural, Career Goals, Legal/Regulation, or Common Interview.
+          - Do not include additional formatting and backticks`;
   
       const response = await fetch("/api/roughlyai", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          handlerType: "api_call", // Specify the handler type
-          key: "Onward/JobPosts/",
+          handlerType: "api_call",
+          key: `Onward/${sessionId}`,
           api_key: process.env.NEXT_PUBLIC_ROUGHLY_API_KEY,
           question: jobQuestionPrompt,
           numsimular: selectedNumber,
@@ -233,13 +236,13 @@ export default function PracticeInterviewFilter() {
   
       const { data } = await response.json();
       const jobPostQuestions = await PollingResponse(data);
+      console.log("Generate Question Prompt:", jobPostQuestions);
   
       return { jobPostQuestions };
     } catch (error) {
-      console.error("Error generating questions and talking points:", error);
+      console.error("Error generating questions:", error);
       throw error;
     }
-    console.error("Generate Questions Prompt:", jobPostQuestions);
   };
   
 
@@ -247,6 +250,9 @@ export default function PracticeInterviewFilter() {
   const handleStartClick = async () => {
     try {
       setLoading(true);
+      const sessionId = localStorage.getItem("sessionId"); 
+      console.log("Session ID for this session:", sessionId);
+
       const storedFiles = JSON.parse(localStorage.getItem("selectedFiles"));
       const urls = await getPublicURLs(storedFiles);
       setFileURLs(urls);
@@ -314,13 +320,6 @@ export default function PracticeInterviewFilter() {
             </Flex>
           )}
           <Flex
-            // flexDirection={"column"}
-            // height="100vh"
-            // minH={{ base: "90vh", md: "100vh", xl: "78vh", "2xl":"85vh" }}
-            // width={"100%"}
-            // maxW={{ base: "100%", md: "1200px", lg: "1920px" }}
-            // mx="auto"
-            // flexGrow={1}
             flexDirection="column"
             height="86vh"
             width="100%"

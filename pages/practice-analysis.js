@@ -8,9 +8,9 @@ import TranscriptionComponent from "@/styles/components/FullTranscriptionCard";
 import LayoutSim from "@/styles/components/LayoutSim.js";
 import { useRouter } from "next/router";
 import LoadingSpinner from "@/styles/components/LoadingSpinner";
-import dynamic from "next/dynamic";
 
-function PracticeAnalysis() {
+
+export default function PracticeAnalysis() {
   const [videoUrl, setVideoUrl] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [questions, setQuestions] = useState([]);
@@ -38,25 +38,17 @@ function PracticeAnalysis() {
   }, []);
 
   useEffect(() => {
-    const storedAnalysis = localStorage.getItem("answerAnalysis");
-  
-    try {
-      // Parse the stored analysis from localStorage
-      const parsedAnalysis = storedAnalysis ? JSON.parse(storedAnalysis) : {};
-  
-      // Ensure the parsed data contains the 'answer' key
-      if (parsedAnalysis.answer) {
-        setAnswerAnalysis(parsedAnalysis.answer); // Set the 'answer' key directly in state
-      } else {
-        console.warn("No 'answer' field found in stored analysis.");
-        setAnswerAnalysis([]); // Default to an empty array if no 'answer' field exists
+      const storedAnalysis = localStorage.getItem("answerAnalysis");
+      if (storedAnalysis) {
+          try {
+              const parsedData = JSON.parse(storedAnalysis);
+              setAnswerAnalysis(parsedData);
+          } catch (error) {
+              console.error("Failed to parse answer analysis:", error);
+          }
       }
-    } catch (error) {
-      console.error("Error parsing stored analysis:", error);
-      setAnswerAnalysis([]); // Reset to empty array if parsing fails
-    }
   }, []);
-  
+
   
   const handleOverviewClick = () => {
     router.push({
@@ -65,13 +57,7 @@ function PracticeAnalysis() {
   };
   const handleEndClick = () => {
     router.push({
-      pathname: "/",
-    });
-  };
-
-  const handleNextClick = () => {
-    router.push({
-      pathname: "/practice-interview-questions-2",
+      pathname: "/practice-interview",
     });
   };
 
@@ -136,20 +122,14 @@ function PracticeAnalysis() {
   return (
     <>
       <Head>
-        <title>Practice Interview Overview</title>
+        <title>Practice Interview Analysis</title>
       </Head>
       <LayoutSim>
         <Flex direction="column">
-          <Flex direction="row" justifyContent={"space-between"}>
-            {/* LEFT COLUMN*/}
-            <Flex
-              flexDirection={"column"}
-              alignItems={"center"}
-              w="50%"
-              mt="0em"
-              mb={6}
-              p={2}
-            >
+          <Flex direction="row" justifyContent="space-between">
+            {/* LEFT COLUMN */}
+            <Flex flexDirection="column" alignItems="center" w="50%" mt="0em" mb={6} p={2}>
+              {/* Video Section */}
               <Box
                 maxW="70%"
                 mb={4}
@@ -173,17 +153,11 @@ function PracticeAnalysis() {
                     </Text>
                   </Center>
                 ) : (
-                  videoUrl && (
-                    <video
-                      src={videoUrl}
-                      controls
-                      width="100%"
-                      style={{ borderRadius: "8px" }}
-                    />
-                  )
+                  videoUrl && <video src={videoUrl} controls width="100%" style={{ borderRadius: "8px" }} />
                 )}
               </Box>
-
+  
+              {/* Question and Answer Section */}
               <Card
                 boxShadow="md"
                 borderRadius="15"
@@ -194,23 +168,25 @@ function PracticeAnalysis() {
                 width="100%"
                 mb={4}
               >
-                <CardBody textAlign={"left"}>
+                <CardBody textAlign="left">
                   <Stack spacing="4" divider={<StackDivider />}>
-                    {questions.length > 0 ? (
+                    {answerAnalysis.length > 0 ? (
                       <Box>
-                        <Flex flexDir={"row"} justifyContent={"space-between"}>
+                        <Flex justifyContent="space-between">
                           <Heading as="h3" size="10pt" mb={4}>
-                            {questions[currentQuestionIndex].category || "General Question"}
+                            {answerAnalysis[currentQuestionIndex]?.question || "No question available."}
                           </Heading>
                           <Heading as="h3" size="10pt" mb={4}>
-                            {currentQuestionIndex + 1}/{questions.length}
+                            {currentQuestionIndex + 1}/{answerAnalysis.length}
                           </Heading>
                         </Flex>
-                        <Box>
-                          <Text pt="2" fontSize="16pt">
-                            {questions[currentQuestionIndex].question || "No question text available"}
-                          </Text>
-                        </Box>
+                        <Box
+                          pt="2"
+                          fontSize="16pt"
+                          dangerouslySetInnerHTML={{
+                            __html: answerAnalysis[currentQuestionIndex]?.answer || "No answer provided.",
+                          }}
+                        />
                       </Box>
                     ) : (
                       <Text pt="2" fontSize="18pt">
@@ -218,269 +194,183 @@ function PracticeAnalysis() {
                       </Text>
                     )}
                   </Stack>
-
-                  {/* Navigation buttons styled as squares */}
-                  {questions.length > 0 && (
-                  <Flex mt={6} gap={2} width={"80%"} alignItems={"center"}>
-                      {questions.map((_, index) => (
-                          <Button
-                              key={index}
-                              borderRadius="md" 
-                              flexGrow={1}
-                              flexBasis={`calc(100% / ${Math.min(questions.length, 5)} - 0.5rem)`}
-                              height="10px"
-                              bg={
-                                  index === currentQuestionIndex
-                                      ? "brand.pastelBlue"
-                                      : "brand.blueberryCreme"
-                              }
-                              boxShadow={index === currentQuestionIndex ? "md" : "none"}
-                              _hover={{ bg: "brand.pastelBlue" }}
-                              onClick={() => handleQuestionSelect(index)}
-                          >
-                          </Button>
-                      ))}
-                    </Flex>
-                  )}
                 </CardBody>
               </Card>
-
-              {/* Response  */}
-              <Card
-                boxShadow="md"
-                borderRadius="15"
-                border="1px"
-                borderColor="#E6EAF2"
-                bg="white"
-                overflow="hidden"
-                width="100%"
+  
+              {/* Navigation Buttons */}
+              {answerAnalysis.length > 1 && (
+                <Flex mt={6} gap={2} width="80%" alignItems="center">
+                  {answerAnalysis.map((_, index) => (
+                    <Button
+                      key={index}
+                      borderRadius="md"
+                      flexGrow={1}
+                      flexBasis={`calc(100% / ${Math.min(answerAnalysis.length, 5)} - 0.5rem)`}
+                      height="10px"
+                      bg={index === currentQuestionIndex ? "brand.pastelBlue" : "brand.blueberryCreme"}
+                      boxShadow={index === currentQuestionIndex ? "md" : "none"}
+                      _hover={{ bg: "brand.pastelBlue" }}
+                      onClick={() => handleQuestionSelect(index)}
+                    />
+                  ))}
+                </Flex>
+              )}
+              <Flex 
+                  flexDirection={"row"} 
+                  mt={"auto"} 
+                  px="4em"
+                  mb="20px"
+                  marginTop="30px"
               >
-                <CardBody textAlign={"left"}>
-                    <Stack spacing="4" divider={<StackDivider />}>
-                    {answerAnalysis ? (
-                        <Box>
-                          <Flex flexDir={"row"} justifyContent={"space-between"}>
-                            <Heading as="h3" size="10pt" mb={4}>
-                              Your Answer:
-                            </Heading>
-                            <Heading as="h3" size="10pt" mb={4}>
-                              {currentQuestionIndex + 1}/{questions.length}
-                            </Heading>
-                          </Flex>
-                          <Box
-                            dangerouslySetInnerHTML={{
-                              __html: answerAnalysis.answer || "No answer available.",
-                            }}
-                            overflow={"scroll"}
-                            height={"50%"}
-                          />
-                        </Box>
-                      ) : (
-                        <Text pt="2" fontSize="18pt">
-                          No questions available. Please try again.
-                        </Text>
-                      )}
-                    </Stack>
-                  </CardBody>
-                </Card>
-
-              <Flex
-                alignSelf={"flex-start"}
-                mb={0}
-                pt={8}
-              >
-                <Button
-                  bg={"brand.pureWhite"}
-                  size="xxs"
-                  width={"6rem"}
-                  p={2}
-                  py="2.5"
-                  border={"1px"}
-                  borderColor={"red"}
-                  onClick={handleEndClick}
-                  _hover={{
-                    bg: "brand.pureWhite",
-                    color: "red",
-                    border: "1px",
-                    borderColor: "red",
-                  }}
-                >
-                  End
-                </Button>
+                  <Button bg={"white"} size="xs" color={"brand.imperialRed"} py={"1.5rem"} px={"5rem"} boxShadow={"md"} border={"1px"} borderColor={"brand.imperialRed"}
+                      onClick={handleEndClick}
+                      _hover={{
+                          bg: "brand.imperialRed",
+                          color: "white",
+                          border: "1px",
+                          boxShadow:"md"
+                      }}
+                  >
+                      End
+                  </Button>
               </Flex>
             </Flex>
-
+  
             {/* RIGHT COLUMN */}
-            <Flex flexDirection="column" gap={2} w="48%" mt="0em" mr={0} mb={6} pt={4} px={"1rem"} bgColor={"white"} overflow={"scroll"} borderBottomRadius={"15"} boxShadow={"md"}>
+            <Flex
+              flexDirection="column"
+              gap={2}
+              w="48%"
+              mt="0em"
+              mr={0}
+              mb={6}
+              pt={4}
+              px="1rem"
+              bgColor="white"
+              overflow="scroll"
+              borderBottomRadius="15"
+              boxShadow="md"
+            >
               <Box>
-                <Heading as="h2" size={"xs"} my={4}>
+                <Heading as="h2" size="xs" my={4}>
                   Detailed Analysis
                 </Heading>
               </Box>
-
-              {answerAnalysis ? (
+  
+              {/* Analysis Details */}
+              {answerAnalysis.length > 0 ? (
                 <Box>
-                  {answerAnalysis ? (
-                    <>
-                      {/* Overall Feedback */}
-                      <Box
-                        border="1px"
-                        borderColor="brand.blueberryCreme"
-                        borderRadius="md"
-                        px={4}
-                        py={2}
-                        mb={4}
-                      >
-                        <Heading as="h4" size="10pt" mb={2}>
-                          Overall Feedback:
-                        </Heading>
+                  {/* Overall Feedback */}
+                  <Box border="1px" borderColor="brand.blueberryCreme" borderRadius="md" px={4} py={2} mb={4}>
+                    <Heading as="h4" size="10pt" mb={2}>
+                      Overall Feedback:
+                    </Heading>
+                    <Text>
+                      {answerAnalysis[currentQuestionIndex]?.overallFeedback ||
+                        "No overall feedback available."}
+                    </Text>
+                  </Box>
+  
+                  {/* Clarity, Relevance, and Effectiveness */}
+                  <Box border="1px" borderColor="brand.blueberryCreme" borderRadius="md" px={4} py={2} mb={4}>
+                    <Heading as="h4" size="10pt">Clarity:</Heading>
+                    <Text>
+                      {answerAnalysis[currentQuestionIndex]?.detailedFeedback?.clarity || "No feedback available."}
+                    </Text>
+                    <Heading as="h4" size="10pt" mt={2}>
+                      Relevance:
+                    </Heading>
+                    <Text>
+                      {answerAnalysis[currentQuestionIndex]?.detailedFeedback?.relevance || "No feedback available."}
+                    </Text>
+                    <Heading as="h4" size="10pt" mt={2}>
+                      Effectiveness:
+                    </Heading>
+                    <Text>
+                      {answerAnalysis[currentQuestionIndex]?.detailedFeedback?.effectiveness || "No feedback available."}
+                    </Text>
+                  </Box>
+  
+                  {/* Grammar & Syntax, Language Refinement, and STAR Method */}
+                  <Box border="1px" borderColor="brand.blueberryCreme" borderRadius="md" px={4} py={2} mb={4}>
+                    <Heading as="h4" size="10pt">Grammar & Syntax:</Heading>
+                    <Text>
+                      {answerAnalysis[currentQuestionIndex]?.detailedFeedback?.grammarAndSyntax ||
+                        "No feedback available."}
+                    </Text>
+                    <Heading as="h4" size="10pt" mt={2}>
+                      Language Refinement:
+                    </Heading>
+                    <Text>
+                      {answerAnalysis[currentQuestionIndex]?.detailedFeedback?.languageRefinement ||
+                        "No feedback available."}
+                    </Text>
+                    <Heading as="h4" size="10pt">STAR Method:</Heading>
+                    <Text>
+                      {answerAnalysis[currentQuestionIndex]?.detailedFeedback?.starMethod || "No feedback available."}
+                    </Text>
+                  </Box>
+  
+                  {/* Filler Words and Power Words */}
+                  <Flex gap={2} mb={4}>
+                    <Box border="1px" borderColor="brand.blueberryCreme" borderRadius="md" px={4} py={2} flex={1}>
+                      <Heading as="h4" size="10pt">Filler Words:</Heading>
+                      {answerAnalysis[currentQuestionIndex]?.detailedFeedback?.fillerAndPowerWords?.fillerWords?.length >
+                      0 ? (
+                        answerAnalysis[currentQuestionIndex].detailedFeedback.fillerAndPowerWords.fillerWords.map(
+                          (word, i) => <Text key={i} fontWeight="bold" color="brand.imperialRed">{word}</Text>
+                        )
+                      ) : (
+                        <Text>No filler words identified. Great Job!</Text>
+                      )}
+                    </Box>
+                    <Box border="1px" borderColor="brand.blueberryCreme" borderRadius="md" px={4} py={2} flex={1}>
+                      <Heading as="h4" size="10pt">Power Words:</Heading>
+                      {answerAnalysis[currentQuestionIndex]?.detailedFeedback?.fillerAndPowerWords?.powerWords?.length >
+                      0 ? (
+                        answerAnalysis[currentQuestionIndex].detailedFeedback.fillerAndPowerWords.powerWords.map(
+                          (word, i) => <Text key={i}>{word}</Text>
+                        )
+                      ) : (
                         <Text>
-                          {answerAnalysis.overallFeedback || "No overall feedback available."}
+                          Consider using power words to make your answers more effective and impactful!
                         </Text>
-                      </Box>
-
-                      {/* Detailed Feedback Sections */}
-                      <Box
-                        border="1px"
-                        borderColor="brand.blueberryCreme"
-                        borderRadius="md"
-                        px={4}
-                        py={2}
-                        mb={4}
-                      >
-                        <Heading as="h4" size="10pt">Clarity:</Heading>
-                        <Text>
-                          {answerAnalysis.detailedFeedback?.clarity || "No feedback available"}
-                        </Text>
-                        <Heading as="h4" size="10pt" mt={2}>
-                          Relevance:
-                        </Heading>
-                        <Text>
-                          {answerAnalysis.detailedFeedback?.relevance || "No feedback available"}
-                        </Text>
-                        <Heading as="h4" size="10pt" mt={2}>
-                          Effectiveness:
-                        </Heading>
-                        <Text>
-                          {answerAnalysis.detailedFeedback?.effectiveness || "No feedback available"}
-                        </Text>
-                      </Box>
-
-                      {/* Grammar and Syntax */}
-                      <Box
-                        border="1px"
-                        borderColor="brand.blueberryCreme"
-                        borderRadius="md"
-                        px={4}
-                        py={2}
-                        mb={4}
-                      >
-                        <Heading as="h4" size="10pt">Grammar & Syntax:</Heading>
-                        <Text>
-                          {answerAnalysis.detailedFeedback?.grammarAndSyntax || "No feedback available"}
-                        </Text>
-                        <Heading as="h4" size="10pt" mt={2}>
-                          Language Refinement:
-                        </Heading>
-                        <Text>
-                          {answerAnalysis.detailedFeedback?.languageRefinement || "No feedback available"}
-                        </Text>
-                        <Heading as="h4" size="10pt">STAR Method:</Heading>
-                        <Text>
-                          {answerAnalysis.detailedFeedback?.starMethod || "No feedback available"}
-                        </Text>
-                      </Box>
-
-                      {/* Filler Words and Power Words */}
-                      <Flex gap={2} mb={4}>
-                        <Box
-                          border="1px"
-                          borderColor="brand.blueberryCreme"
-                          borderRadius="md"
-                          px={4}
-                          py={2}
-                          flex={1}
-                        >
-                          <Heading as="h4" size="10pt">Filler Words:</Heading>
-                          {answerAnalysis.detailedFeedback?.fillerAndPowerWords?.fillerWords?.length >
-                          0 ? (
-                            answerAnalysis.detailedFeedback.fillerAndPowerWords.fillerWords.map(
-                              (word, i) => <Text key={i}>{word}</Text>
-                            )
-                          ) : (
-                            <Text>No filler words identified. Great Job!</Text>
-                          )}
-                        </Box>
-                        <Box
-                          border="1px"
-                          borderColor="brand.blueberryCreme"
-                          borderRadius="md"
-                          px={4}
-                          py={2}
-                          flex={1}
-                        >
-                          <Heading as="h4" size="10pt">Power Words:</Heading>
-                          {answerAnalysis.detailedFeedback?.fillerAndPowerWords?.powerWords?.length >
-                          0 ? (
-                            answerAnalysis.detailedFeedback.fillerAndPowerWords.powerWords.map(
-                              (word, i) => <Text key={i}>{word}</Text>
-                            )
-                          ) : (
-                            <Text>
-                              Consider using power words to make your answers more effective and
-                              impactful!
-                            </Text>
-                          )}
-                        </Box>
-                      </Flex>
-
-                      {/* STAR Method and Feedback */}
-                      <Box
-                        border="1px"
-                        borderColor="brand.blueberryCreme"
-                        borderRadius="md"
-                        px={4}
-                        py={2}
-                      >
-                        <Heading as="h4" size="10pt" mt={2}>
-                          What Worked Well:
-                        </Heading>
-                        <Text>
-                          {answerAnalysis.detailedFeedback?.whatWorkedWell || "No feedback available"}
-                        </Text>
-                        <Heading as="h4" size="10pt" mt={2}>
-                          Room for Improvements:
-                        </Heading>
-                        <Text>
-                          {answerAnalysis.detailedFeedback?.roomForImprovements || "No feedback available"}
-                        </Text>
-                        <Heading as="h4" size="10pt" mt={2}>
-                          Next Steps to Success:
-                        </Heading>
-                        <Text>
-                          {answerAnalysis.detailedFeedback?.nextStepsToSuccess || "No feedback available"}
-                        </Text>
-                      </Box>
-                    </>
-                  ) : (
-                    <Text>No analysis found for the current question.</Text>
-                  )}
+                      )}
+                    </Box>
+                  </Flex>
+  
+                  {/* Next Steps and Improvements */}
+                  <Box border="1px" borderColor="brand.blueberryCreme" borderRadius="md" px={4} py={2}>
+                    <Heading as="h4" size="10pt" mt={2}>
+                      What Worked Well:
+                    </Heading>
+                    <Text>
+                      {answerAnalysis[currentQuestionIndex]?.whatWorkedWell ||
+                        "No feedback available."}
+                    </Text>
+                    <Heading as="h4" size="10pt" mt={2}>
+                      Room for Improvements:
+                    </Heading>
+                    <Text>
+                      {answerAnalysis[currentQuestionIndex]?.roomForImprovements ||
+                        "No feedback available."}
+                    </Text>
+                    <Heading as="h4" size="10pt" mt={2}>
+                      Next Steps to Success:
+                    </Heading>
+                    <Text>
+                      {answerAnalysis[currentQuestionIndex]?.nextStepsToSuccess ||
+                        "No feedback available."}
+                    </Text>
+                  </Box>
                 </Box>
               ) : (
                 <Text>Loading detailed analysis...</Text>
               )}
             </Flex>
-
           </Flex>
-        </Flex>        
+        </Flex>
       </LayoutSim>
     </>
   );
-}
-
-const DynamicPracticeAnalysis = dynamic(
-  () => Promise.resolve(PracticeAnalysis),
-  { ssr: false }
-);
-
-export default DynamicPracticeAnalysis;
+};  

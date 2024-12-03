@@ -1,12 +1,10 @@
 import Head from "next/head";
-import styles from "@/styles/Home.module.css";
 import "@/styles/theme";
 import { Heading, Box, CardBody, Text, Stack, Card, Link, Flex, Button } from "@chakra-ui/react";
 import { useRouter } from 'next/router'; // Import useRouter
 import { useState, useEffect } from "react";
 import LayoutSim from "@/styles/components/LayoutSim";
 import AnswerPractice from "@/styles/components/AnswerPractice";
-import { supabase } from "@/lib/supabaseClient";
 import LoadingSpinner from "@/styles/components/LoadingSpinner";
 
 
@@ -24,9 +22,9 @@ export default function PracticeAnswer() {
             try {
                 const parsedQuestions = JSON.parse(storedQuestions);
                 setQuestions(parsedQuestions);
-                console.log("First Question Index: 0"); // Log the first question index
+                console.log("First Question Index: 0"); 
                 if (parsedQuestions.length > 0) {
-                    console.log("First Question:", parsedQuestions[0]); // Log the first question content
+                    console.log("First Question:", parsedQuestions[0]); 
                 } else {
                     console.warn("Questions array is empty.");
                 }
@@ -44,26 +42,6 @@ export default function PracticeAnswer() {
 
     return (
         <>
-            {loading ? (
-                // Loading spinner overlay
-                <Flex
-                justifyContent="center"
-                alignItems="center"
-                position="fixed"
-                top="0"
-                left="0"
-                width="100%"
-                height="100%"
-                backgroundColor="rgba(255, 255, 255, 0.8)"
-                zIndex="10"
-                >
-                <LoadingSpinner />
-                <Text fontSize="lg" color="gray.600" mt={4}>
-                    Analyzing your answers...
-                </Text>
-                </Flex>
-            ) : (
-                <>
                 <Head>
                     <title>Practice Interview — Onward</title>
                     <meta
@@ -92,10 +70,8 @@ export default function PracticeAnswer() {
                         <Text>No questions available. Please try again.</Text>
                         )}
                     </Flex>
-                    </Flex>
-                </LayoutSim>
-                </>
-            )}
+                </Flex>
+            </LayoutSim>
         </>
     );
 }
