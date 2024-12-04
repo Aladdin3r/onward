@@ -172,13 +172,21 @@ export default function PracticeAnalysis() {
                   <Stack spacing="4" divider={<StackDivider />}>
                     {answerAnalysis.length > 0 ? (
                       <Box>
-                        <Flex justifyContent="space-between">
-                          <Heading as="h3" size="10pt" mb={4}>
-                            {answerAnalysis[currentQuestionIndex]?.question || "No question available."}
+                        <Flex flexDir={"column"}>
+                          <Flex justifyContent="space-between">
+                            <Heading size={{ base: "12pt", md: "16pt", "2xl": "18pt" }}>
+                              {questions[currentQuestionIndex]?.category || "No question available."} Question
+                            </Heading>
+                            <Heading as="h3" size="10pt" mb={4}>
+                             {currentQuestionIndex + 1}/{answerAnalysis.length}
+                            </Heading>
+                          </Flex>
+                          <Box>
+                            <Heading as="h3" size="16pt" mb={4}>
+                              {answerAnalysis[currentQuestionIndex]?.question || "No question available."}
                           </Heading>
-                          <Heading as="h3" size="10pt" mb={4}>
-                            {currentQuestionIndex + 1}/{answerAnalysis.length}
-                          </Heading>
+                          </Box>
+
                         </Flex>
                         <Box
                           pt="2"
