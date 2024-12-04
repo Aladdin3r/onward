@@ -204,15 +204,10 @@ export default function PracticeInterviewFilter() {
         (category) => category !== "Common Interview Questions"
       );
 
-      const jobQuestionPrompt = `Generate ${selectedNumber} unique interview questions from these categories: ${selectedQuestionType.join(", ")}.
+      const jobQuestionPrompt = `
+        Generate ${selectedNumber} unique interview questions from these categories: ${selectedQuestionType.join(", ")}.
         ### Rules:
-        1. **Distribution:**
-          - Include 1 "Common Interview Question" for every 5 questions (if selected). Place at the start.
-          - Distribute the remaining questions across: ${filteredCategories.join(", ")}.
-
-        2. **Resume Integration (Optional):**
           - Use details from the resume to craft questions about past experiences or skills when relevant.
-          - Highlight transferable skills and Canadian healthcare norms where applicable.
 
         3. **Output:**
           - Return valid JSON with: [{"question":text, "category":"Behavioural, Situational, Technical, Competency, Cultural, Career Goals, Legal/Regulation, or Common Interview",}]
