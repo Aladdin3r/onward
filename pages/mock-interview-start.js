@@ -95,7 +95,7 @@ export default function MockInterviewQuestionPage() {
           </Center>
 
           {/* Video Player */}
-          <Flex justify="center" mb={8} mt={20} position="relative" height="500px" width="100%">
+          <Flex justify="center" mb={8} mt={10} position="relative"  width="100%">
             <RecordCamera isMicOn={true} isCameraOn={false} isRecordingAvailable={true} isRecordingEnabled={false} />
           </Flex>
 
@@ -103,8 +103,8 @@ export default function MockInterviewQuestionPage() {
           <audio ref={audioRef} style={{ display: "none" }} /> {/* This player will be hidden */}
 
           {/* Bottom Control Bar */}
-          <Box width="100%" py={2} bg="white" boxShadow="md" position="fixed" bottom={0} zIndex="9999">
-            <Flex justify="space-between" align="center" maxW="800px" mx="auto" px={4}>
+          <Box width="100%" py={3} bg="white" boxShadow="md" position="fixed" bottom={0} zIndex="9999">
+            <Flex justify="space-between" align="center" mx="4em" px={4}>
               {/* End Button */}
               <Button
                 colorScheme="red"
@@ -112,6 +112,12 @@ export default function MockInterviewQuestionPage() {
                 px={8}
                 py={6}
                 onClick={() => router.push("/")}
+                _hover={{
+                  bg: "white",
+                  color: "red",
+                  boxShadow: "md",
+                  border: "1px solid ",
+                  }}
               >
                 End
               </Button>
@@ -124,6 +130,12 @@ export default function MockInterviewQuestionPage() {
                 px={8}
                 py={6}
                 onClick={handleNextQuestion}
+                _hover={{
+                  bg: "white",
+                  color: "brand.blushPink",
+                  border: "1px",
+                  boxShadow: "md",
+              }}
               >
                 Next Question
               </Button>

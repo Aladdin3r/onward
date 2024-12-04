@@ -21,6 +21,13 @@ export default function Popup({
         onClick={onOpen}
         w={{ md: "xxs", lg: "12rem", xl: "18rem", "2xl": "md" }}
         h={{ md: "2rem", lg: "2.5rem", xl: "3rem", "2xl": "4rem" }}
+        _hover={{
+          bg: "#EA4A7D",
+          color: "#ffffff", 
+          // transform: "scale(1.025)", 
+          boxShadow: "0 4px 4px rgba(0, 0, 0, 0.25)", 
+        }}
+        
         // m={{ base: "3", lg: "4", xl: "5", "2xl": "5" }}
       >
         {title}
@@ -133,6 +140,13 @@ export default function Popup({
                       mt={3} 
                       onClick={button1Action}
                       p={8}
+                      _hover={{
+                        bg: "#ffffff",
+                        color: "#EA4A7D", 
+                        border: "1px solid #EA4A7D",
+                        transform: "scale(1.025)", 
+                        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)", 
+                      }}
                     >
                         {button1Text}
                       </Button>
@@ -182,6 +196,13 @@ export default function Popup({
                         mt={3} 
                         onClick={button2Action}
                         p={8}
+                        _hover={{
+                          bg: "#ffffff",
+                          color: "#EA4A7D", 
+                          border: "1px solid #EA4A7D",
+                          transform: "scale(1.025)", 
+                          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)", 
+                        }}
                       >
                         {button2Text}
                       </Button>

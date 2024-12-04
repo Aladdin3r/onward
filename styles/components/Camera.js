@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useToast, Button, Box } from "@chakra-ui/react";
 import { supabase } from "@/lib/supabaseClient";
 
+
 export default function RecordCamera({
   isRecordingAvailable,
   setSavedVideoUrl,
@@ -160,6 +161,7 @@ export default function RecordCamera({
             height: "100%",
             borderRadius: "10px",
             transform: "scaleX(-1)",
+            
           }}
         />
       </div>
@@ -171,12 +173,48 @@ export default function RecordCamera({
           alignItems="center"
           mt={4}
         >
-          <Button
+          {/* <Button
             onClick={isRecording ? stopRecording : startRecording}
             colorScheme={isRecording ? "red" : "green"}
             size="lg"
           >
             {isRecording ? "Stop" : "Start"}
+          </Button> */}
+          <Button
+            onClick={isRecording ? stopRecording : startRecording}
+            padding="0" 
+            border="none" 
+            background="transparent" 
+            _focus={{
+              outline: "none", 
+            }}
+            style={{
+              width: "auto", // Let the SVG size dictate the button size
+              height: "auto", // Same for height
+            }}
+            _hover={{ // Default box-shadow
+              transform: "scale(1.05)", // Default scale effect
+              border: "none", // Remove default border  
+              outline: "none"
+            }}
+            _active={{
+              background: "transparent", // Remove active background
+              transform: "none", // Prevent transformation on active state
+            }}
+            // colorScheme={isRecording ? "red" : "green"}
+            // size="lg"
+          >
+            {isRecording ? (
+              <img
+              src="/images/stop.svg"
+              style={{ width: "2em", height: "2em" }}
+              />
+            ) : (
+              <img
+              src="/images/start2.svg"
+              style={{ width: "2em", height: "2em" }}
+              />
+            )}
           </Button>
         </Box>
       )}
