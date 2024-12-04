@@ -130,7 +130,8 @@ export default function QuestionType({
               </Text>
 
               <Checkbox
-                size={"md"}
+                colorScheme="purple"
+                size={"lg"}
                 my={3}
                 value="All"
                 isChecked={isAllSelected}

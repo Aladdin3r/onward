@@ -374,7 +374,7 @@ export default function PracticeInterviewFilter() {
                 bg={"brand.blushPink"}
                 color={"white"}
                 py={"1.5rem"}
-                px={"5rem"}
+                px={"5.8rem"}
                 size="xs"
                 width={{ base: "8rem", "2xl": "17rem" }}
                 height={{ base: "2rem", "2xl": "2.5rem" }}
