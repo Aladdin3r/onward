@@ -228,27 +228,28 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
             
             ### JSON Output:
             Generate an analysis array for each question-answer pair. The structure must be strictly as follows:
-            - "question" (string): The interview question.
-            - "answer" (string): The user's response with:
+            [{"question": "The interview question",
+            "answer": "The user's response with:
                 - Filler words (e.g., "um") wrapped in <span style="color: #EA4A4D;">word</span>.
-                - Power words wrapped in <b>word</b>.
-            - "expectation" (string): The skill or quality being assessed.
-            - "overallFeedback" (string): High-level encouragement and tips for improvement.
-            - "detailedFeedback" (object): A breakdown with the following fields:
-                - "clarity" (string): Clarity feedback.
-                - "relevance" (string): Relevance feedback.
-                - "effectiveness" (string): Effectiveness feedback.
-                - "grammarAndSyntax" (string): Grammar and syntax issues.
-                - "fillerAndPowerWords" (object):
-                    - "fillerWords" (array of strings): Filler words.
-                    - "fillerWordsCount" (number): Count of filler words.
-                    - "powerWords" (array of strings): Power words.
-                    - "powerWordsCount" (number): Count of power words.
-                - "languageRefinement" (string): Suggestions for improved phrasing.
-                - "starMethod" (string): Feedback on STAR structure (Situation, Task, Action, Result).
-            - "whatWorkedWell" (string): Positive aspects of the answer.
-            - "roomForImprovements" (string): Areas needing improvement.
-            - "nextStepsToSuccess" (string): Actionable steps for future answers.
+                - Power words wrapped in <b>word</b>.",
+            "expectation": "The skill or quality being assessed."
+            "overallFeedback": "High-level encouragement and tips for improvement."
+            "detailedFeedback": [A breakdown with the following fields:
+                {"clarity" (string): "Clarity feedback",
+                "relevance": "Relevance feedback",
+                "effectiveness": "Effectiveness feedback.",
+                "grammarAndSyntax" : "Grammar and syntax issues.",
+                "fillerAndPowerWords":
+                    - [{"fillerWords" (array of strings): ["Filler words",],
+                    - "fillerWordsCount" (number): ["Count of filler words"],
+                    - "powerWords" (array of strings): ["Power words,"],
+                    - "powerWordsCount" (number): ["Count of power words"}]
+                "languageRefinement" : "Suggestions for improved phrasing",
+                "starMethod": "Feedback on STAR structure (Situation, Task, Action, Result)"}],
+            - "whatWorkedWell": "Positive aspects of the answer",
+            - "roomForImprovements": "Areas needing improvement",
+            - "nextStepsToSuccess": "Actionable steps for future answers",
+            }]
             
             ### Constraints:
             1. Use conversational, friendly and encouraging language.
