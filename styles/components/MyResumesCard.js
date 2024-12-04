@@ -1,4 +1,4 @@
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Text, Heading, Divider } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { supabase } from "@/lib/supabaseClient"; // Make sure to import your Supabase client
 import PDFCard from './PDFCard'; // Import PDFCard component
@@ -65,19 +65,17 @@ export default function MyResumesCard() {
             overflow="hidden"
             boxShadow="md"
             backgroundColor="brand.pureWhite"
-            px={{ base: "4", xl: "10", "2xl":"12" }}
-            py={{ base: "4", xl: "6" }}
+            // px={{ base: "4", xl: "10", "2xl":"12" }}
+            // py={{ base: "4", xl: "6" }}
+            p={8}
             display="flex"
             flexDirection="column"
         >
-            <Text 
-                // fontSize={{ base: "xs", lg: "xxs", xl: "sm", "2xl":"md" }}
-                fontSize="xs"
-                fontWeight="bold" 
-                mb={2}
-            >
-                My Resumes:
-            </Text>
+            <Heading fontSize="xs" mb={2}>
+                My Resumes
+            </Heading>
+            <Divider mb={4} />
+            
             <Box
             display="flex"
             flexDirection="column"

@@ -67,7 +67,7 @@ const HistoryContainer = ({ limit = 3 }) => {
                 bg="white"
                 boxShadow="md"
                 borderRadius={15}
-                p={6}
+                p={8}
                 mt={3}
             >
                 <Heading fontSize="xs" mb={2}>
