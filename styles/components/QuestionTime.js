@@ -93,7 +93,7 @@ export default function QuestionTime({ selectedNumber, onNumberChange, selectedL
                                         </NumberInput>
                                     </Box>
 
-                            <Checkbox size={"lg"} mt={4} py={2} colorScheme="purple" value="No Timer">
+                            <Checkbox size={"lg"} mt={4} py={2} value="No Timer">
                                 <Text
                                 fontSize={{ base: "xxxs", "2xl": "xs" }}
                                 value="No Timer"

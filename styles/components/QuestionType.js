@@ -63,7 +63,7 @@ export default function QuestionType({
       >
         <CardBody>
           <Flex direction={"column"} p={3}>
-            <Flex direction={{ base: "row" }} padding={4} gap={4}>
+            <Flex direction={{ base: "row" }} padding={4} gap={4} mt={-6}>
               <Text
                 fontFamily="heading"
                 fontWeight="bold"
@@ -130,7 +130,6 @@ export default function QuestionType({
               </Text>
 
               <Checkbox
-                colorScheme="purple"
                 size={"lg"}
                 my={3}
                 value="All"
@@ -156,7 +155,7 @@ export default function QuestionType({
                 gap={4}
                 justify={"center"}
               >
-                <Box flex="1">
+                <Box flex="1" mt={-4}>
                   <Checkbox size={"lg"} my={3} value="Behavioural Question">
                     <Text
                       fontSize={{ base: "xxxs", "2xl": "xs" }}
@@ -181,7 +180,7 @@ export default function QuestionType({
                     </Text>
                   </Checkbox>
                 </Box>
-                <Box flex="1">
+                <Box flex="1" mt={-4}>
                   <Checkbox size={"lg"} my={3} value="Cultural Question">
                     <Text fontSize={{ base: "xxxs", "2xl": "xs" }}>
                       Cultural Questions
