@@ -42,6 +42,7 @@ export default function MockInterviewQuestionPage() {
         <Flex
           direction="column" 
           align="center" 
+          width="100%"
         >
           {/* Header Section */}
           <Flex direction="column" align="start" width="100%" p={6}>
@@ -157,10 +158,16 @@ export default function MockInterviewQuestionPage() {
             <Button
               bg="brand.blushPink"
               color="white"
-              size="md"
+              size="sm"
               px={10}
               py={9}
               onClick={startInterview}
+              _hover={{
+                bg: "white",
+                color: "brand.blushPink",
+                border: "1px",
+                boxShadow: "md",
+            }}
             >
               Start Interview
             </Button>

@@ -588,6 +588,7 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
                 justifyContent="center"
                 alignItems="center"
                 borderRadius={15}
+                bg="#ffffff"
                 >
                 <RecordCamera
                     isRecordingAvailable={true}
