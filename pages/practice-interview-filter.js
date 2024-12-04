@@ -215,10 +215,7 @@ export default function PracticeInterviewFilter() {
           - Highlight transferable skills and Canadian healthcare norms where applicable.
 
         3. **Output:**
-          - Return valid JSON with:
-            - **question**: The question text.
-            - **category**: One of:
-              - Behavioural, Situational, Technical, Competency, Cultural, Career Goals, Legal/Regulation, or Common Interview.
+          - Return valid JSON with: [{"question":text, "category":"Behavioural, Situational, Technical, Competency, Cultural, Career Goals, Legal/Regulation, or Common Interview",}]
           - Do not include additional formatting and backticks`;
   
       const response = await fetch("/api/roughlyai", {
