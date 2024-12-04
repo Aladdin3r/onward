@@ -244,7 +244,7 @@ export default function PracticeAnalysis() {
               mt="0em"
               mr={0}
               mb={6}
-              pt={4}
+              py={4}
               px="1rem"
               bgColor="white"
               overflow="scroll"
@@ -275,19 +275,19 @@ export default function PracticeAnalysis() {
                   <Box border="1px" borderColor="brand.blueberryCreme" borderRadius="md" px={4} py={2} mb={4}>
                     <Heading as="h4" size="10pt">Clarity:</Heading>
                     <Text>
-                      {answerAnalysis[currentQuestionIndex]?.detailedFeedback?.clarity || "No feedback available."}
+                      {answerAnalysis[currentQuestionIndex]?.detailedFeedback[0]?.clarity || "No feedback available."}
                     </Text>
                     <Heading as="h4" size="10pt" mt={2}>
                       Relevance:
                     </Heading>
                     <Text>
-                      {answerAnalysis[currentQuestionIndex]?.detailedFeedback?.relevance || "No feedback available."}
+                      {answerAnalysis[currentQuestionIndex]?.detailedFeedback[0]?.relevance || "No feedback available."}
                     </Text>
                     <Heading as="h4" size="10pt" mt={2}>
                       Effectiveness:
                     </Heading>
                     <Text>
-                      {answerAnalysis[currentQuestionIndex]?.detailedFeedback?.effectiveness || "No feedback available."}
+                      {answerAnalysis[currentQuestionIndex]?.detailedFeedback[0]?.effectiveness || "No feedback available."}
                     </Text>
                   </Box>
   
@@ -295,48 +295,49 @@ export default function PracticeAnalysis() {
                   <Box border="1px" borderColor="brand.blueberryCreme" borderRadius="md" px={4} py={2} mb={4}>
                     <Heading as="h4" size="10pt">Grammar & Syntax:</Heading>
                     <Text>
-                      {answerAnalysis[currentQuestionIndex]?.detailedFeedback?.grammarAndSyntax ||
+                      {answerAnalysis[currentQuestionIndex]?.detailedFeedback[0]?.grammarAndSyntax ||
                         "No feedback available."}
                     </Text>
                     <Heading as="h4" size="10pt" mt={2}>
                       Language Refinement:
                     </Heading>
                     <Text>
-                      {answerAnalysis[currentQuestionIndex]?.detailedFeedback?.languageRefinement ||
+                      {answerAnalysis[currentQuestionIndex]?.detailedFeedback[0]?.languageRefinement ||
                         "No feedback available."}
                     </Text>
                     <Heading as="h4" size="10pt">STAR Method:</Heading>
                     <Text>
-                      {answerAnalysis[currentQuestionIndex]?.detailedFeedback?.starMethod || "No feedback available."}
+                      {answerAnalysis[currentQuestionIndex]?.detailedFeedback[0]?.starMethod || "No feedback available."}
                     </Text>
                   </Box>
   
                   {/* Filler Words and Power Words */}
                   <Flex gap={2} mb={4}>
-                    <Box border="1px" borderColor="brand.blueberryCreme" borderRadius="md" px={4} py={2} flex={1}>
-                      <Heading as="h4" size="10pt">Filler Words:</Heading>
-                      {answerAnalysis[currentQuestionIndex]?.detailedFeedback?.fillerAndPowerWords?.fillerWords?.length >
-                      0 ? (
-                        answerAnalysis[currentQuestionIndex].detailedFeedback.fillerAndPowerWords.fillerWords.map(
-                          (word, i) => <Text key={i} fontWeight="bold" color="brand.imperialRed">{word}</Text>
-                        )
-                      ) : (
-                        <Text>No filler words identified. Great Job!</Text>
-                      )}
-                    </Box>
-                    <Box border="1px" borderColor="brand.blueberryCreme" borderRadius="md" px={4} py={2} flex={1}>
-                      <Heading as="h4" size="10pt">Power Words:</Heading>
-                      {answerAnalysis[currentQuestionIndex]?.detailedFeedback?.fillerAndPowerWords?.powerWords?.length >
-                      0 ? (
-                        answerAnalysis[currentQuestionIndex].detailedFeedback.fillerAndPowerWords.powerWords.map(
-                          (word, i) => <Text key={i}>{word}</Text>
-                        )
-                      ) : (
-                        <Text>
-                          Consider using power words to make your answers more effective and impactful!
+                  <Box border="1px" borderColor="brand.blueberryCreme" borderRadius="md" px={4} py={2} w={"50%"}>
+                    <Heading as="h4" size="10pt">Filler Words:</Heading>
+                    {answerAnalysis[currentQuestionIndex]?.detailedFeedback?.[0]?.fillerAndPowerWords?.[0]?.fillerWords.length > 0 ? (
+                      answerAnalysis[currentQuestionIndex]?.detailedFeedback?.[0]?.fillerAndPowerWords?.[0]?.fillerWords.map((word, index) => (
+                        <Text key={index} fontWeight="bold" color="brand.imperialRed">
+                          {word}
                         </Text>
-                      )}
-                    </Box>
+                      ))
+                    ) : (
+                      <Text>No filler words identified. Great Job!</Text>
+                    )}
+                  </Box>
+
+                  <Box border="1px" borderColor="brand.blueberryCreme" borderRadius="md" px={4} py={2} w={"50%"}>
+                    <Heading as="h4" size="10pt">Power Words:</Heading>
+                    {answerAnalysis[currentQuestionIndex]?.detailedFeedback?.[0]?.fillerAndPowerWords?.[0]?.powerWords.length > 0 ? (
+                      answerAnalysis[currentQuestionIndex]?.detailedFeedback?.[0]?.fillerAndPowerWords?.[0]?.powerWords.map((word, index) => (
+                        <Text key={index}>
+                          {word} 
+                        </Text>
+                      ))
+                    ) : (
+                      <Text>Consider using power words to make your answers more impactful!</Text>
+                    )}
+                  </Box>
                   </Flex>
   
                   {/* Next Steps and Improvements */}

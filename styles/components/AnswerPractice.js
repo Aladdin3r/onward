@@ -218,12 +218,12 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
             const analysisPrompt = `
             You are an AI interview coach specializing in helping immigrant nurses excel in interviews. 
             Analyze their answers, compare with their past experiences on their resume, 
-            and provide insights and specific actionable, clear, and constructive feedback tailored to their needs.
+            and provide insights and specific actionable, and constructive feedback tailored to their needs.
             
             ### Focus Areas:
             For each answer:
             1. Suggest professional language to replace casual terms (e.g. "facilitate patient care" instead of "help patients").
-            2. Use their resume to highlight transferable skills and align feedback with their professional experience.
+            2. Highlight transferable skills and align feedback with their professional experience on their resume.
             3. Provide suggestions to address English language challenges and boost confidence with encouraging feedback.
             
             ### JSON Output:
