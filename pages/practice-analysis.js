@@ -185,7 +185,7 @@ export default function PracticeAnalysis() {
                             <Heading as="h3" size="16pt" mb={4}>
                               {answerAnalysis[currentQuestionIndex]?.question || "No question available."}
                           </Heading>
-                          </Box>
+                        </Box>
 
                         </Flex>
                         <Box

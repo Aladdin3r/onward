@@ -210,8 +210,8 @@ export default function PracticeInterviewFilter() {
           - Use details from the resume to craft questions about past experiences or skills when relevant.
 
         3. **Output:**
-          - Return valid JSON with: [{"question":text, "category":"Behavioural, Situational, Technical, Competency, Cultural, Career Goals, Legal/Regulation, or Common Interview",}]
-          - Do not include additional formatting and backticks`;
+          - Return valid JSON with: [{"question":text, "category":"Behavioural, Situational, Technical, Competency, Cultural, Career Goals, Legal/Regulation, or Common Interview"},]
+          - Do not include additional formatting and \`\`\`\json`;
   
       const response = await fetch("/api/roughlyai", {
         method: "POST",
@@ -394,7 +394,7 @@ export default function PracticeInterviewFilter() {
 const PollingResponse = async (_url) => {
   const _response = await new Promise((resolve) => {
     const GetProgress = async (tries = 0) => {
-      if (tries === 10) {
+      if (tries === 20) {
         console.log("too long");
         resolve(false);
       }
@@ -405,7 +405,7 @@ const PollingResponse = async (_url) => {
         resolve(_progJson);
       } else {
         //try again
-        await setTimeout(() => GetProgress(tries + 1), 2000);
+        await setTimeout(() => GetProgress(tries + 1), 3000);
       }
     };
 
