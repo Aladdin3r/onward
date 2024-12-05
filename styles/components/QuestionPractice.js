@@ -128,7 +128,7 @@ export default function QuestionPractice({
       <Card
         borderTopRadius={borderTopRadius}
         borderBottomRadius={borderBottomRadius}
-        w={questionWidth}
+        // w={questionWidth}
         m={0}
         p={0}
       >

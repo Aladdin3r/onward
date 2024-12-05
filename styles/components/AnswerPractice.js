@@ -193,7 +193,6 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
             >
             {/* Question and Answer Section */}
             <Box
-                width="100%"
                 maxW={showVideo ? "60%" : "100%"}
                 transition="width 0.5s ease"
                 display="flex"
