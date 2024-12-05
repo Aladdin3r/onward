@@ -71,7 +71,7 @@ const HistoryContainer = ({ limit = 3 }) => {
                 mt={3}
             >
                 <Heading fontSize="xs" mb={2}>
-                    Practice Interview
+                    Interview History
                 </Heading>
                 <Divider mb={4} />
 
