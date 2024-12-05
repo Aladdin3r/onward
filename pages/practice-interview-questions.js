@@ -39,15 +39,38 @@ export default function PracticeInterviewQuestion() {
         });
     };
 
+    // DEMO MODE
     const handleSimulation = () => {
+        const demoQuestions = [
+            {
+                question: "Can you describe a situation where you had to prioritize multiple patient needs in a fast-paced environment? How did you manage it?",
+                category: "Situational",
+            },
+            {
+                question: "What motivated you to pursue a career in nursing, and what do you find most rewarding about it?",
+                category: "Common Interview",
+            },
+            {
+                question: "How do you ensure adherence to evidence-based practices when developing care plans for patients?",
+                category: "Technical ",
+            },
+            {
+                question: "Tell me about a time when you had to collaborate with a multidisciplinary team to improve patient outcomes. What was your role and what was the result?",
+                category: "Behavioral",
+            },
+            {
+                question: "How do you incorporate trauma-informed care and harm reduction strategies into your nursing practice?",
+                category: "Technical",
+            },
+        ];
+    
+        localStorage.setItem("questions", JSON.stringify(demoQuestions));
         router.push({
-            pathname: '/practice-interview-answer'
-        })
-        // reset saved answers URL
-        localStorage.removeItem("answersPublicUrl");
-        console.log("answersPublicUrl reset for the new session.");
-
-    }
+            pathname: '/practice-interview-answer',
+        });
+    };
+    
+    
 
     return (
         <>

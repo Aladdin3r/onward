@@ -16,23 +16,47 @@ export default function PracticeAnswer() {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     
+    // useEffect(() => {
+    //     const storedQuestions = localStorage.getItem("questions");
+    //     if (storedQuestions) {
+    //         try {
+    //             const parsedQuestions = JSON.parse(storedQuestions);
+    //             setQuestions(parsedQuestions);
+    //             console.log("First Question Index: 0"); 
+    //             if (parsedQuestions.length > 0) {
+    //                 console.log("First Question:", parsedQuestions[0]); 
+    //             } else {
+    //                 console.warn("Questions array is empty.");
+    //             }
+    //         } catch (error) {
+    //             console.error("Error parsing questions from localStorage:", error);
+    //         }
+    //     }
+    // }, []);
+
+    // DEMO MODE
     useEffect(() => {
-        const storedQuestions = localStorage.getItem("questions");
-        if (storedQuestions) {
-            try {
-                const parsedQuestions = JSON.parse(storedQuestions);
+    const storedQuestions = localStorage.getItem("questions");
+    if (storedQuestions) {
+        try {
+            const parsedQuestions = JSON.parse(storedQuestions);
+            if (parsedQuestions.length > 0) {
                 setQuestions(parsedQuestions);
-                console.log("First Question Index: 0"); 
-                if (parsedQuestions.length > 0) {
-                    console.log("First Question:", parsedQuestions[0]); 
-                } else {
-                    console.warn("Questions array is empty.");
-                }
-            } catch (error) {
-                console.error("Error parsing questions from localStorage:", error);
+            } else {
+                console.warn("Questions array is empty. Redirecting...");
+                router.push("/practice-interview");
             }
+        } catch (error) {
+            console.error("Error parsing questions from localStorage:", error);
+            router.push("/practice-interview");
         }
-    }, []);
+    } else {
+        console.warn("No questions found. Redirecting...");
+        router.push("/practice-interview");
+    }
+    setLoading(false);
+}, [router]);
+
     
     const handleEndClick = () => {
         router.push({

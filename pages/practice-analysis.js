@@ -16,7 +16,6 @@ export default function PracticeAnalysis() {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [error, setError] = useState(null);
-  const [answerAnalysis, setAnswerAnalysis] = useState([]);
 
   const router = useRouter();
 
@@ -37,24 +36,32 @@ export default function PracticeAnalysis() {
       }
   }, []);
 
-  useEffect(() => {
-      const storedAnalysis = localStorage.getItem("answerAnalysis");
-      if (storedAnalysis) {
-          try {
-              const parsedData = JSON.parse(storedAnalysis);
-              setAnswerAnalysis(parsedData);
-          } catch (error) {
-              console.error("Failed to parse answer analysis:", error);
-          }
-      }
-  }, []);
-
+  // FOR DEMO prepopulated analysis
+  const answerAnalysis = [
+    {
+      question: "Can you describe a situation where you had to prioritize multiple patient needs in a fast-paced environment? How did you manage it?",
+      answer: "Your feet so you can monitor your body language and you can say I had to manage a complex case in a community health setting and it was very <b>effective</b>.",
+      expectation: "The skill or quality being assessed.",
+      overallFeedback: "Great start! Let's refine your response to highlight your experience and skills more clearly.",
+      detailedFeedback: [
+        {
+          clarity: "The response lacks specific details about the situation and strategies used.",
+          relevance: "The answer should focus more on the strategies and outcomes related to managing complex cases.",
+          effectiveness: "The response needs to demonstrate specific actions and results.",
+          grammarAndSyntax: "The sentence structure is unclear and needs refinement.",
+          fillerAndPowerWords: [
+            { fillerWords: ["umm"], fillerWordsCount: 0, powerWords: ["effective"], powerWordsCount: 1 },
+          ],
+          languageRefinement: "Consider saying, 'I successfully managed a complex case by implementing a comprehensive care plan and collaborating with interdisciplinary teams.'",
+          starMethod: "Try to structure your answer using the STAR method: Describe the Situation, Task, Action, and Result.",
+        },
+      ],
+      whatWorkedWell: "You mentioned the effectiveness of your approach.",
+      roomForImprovements: "Include specific strategies and outcomes to strengthen your response.",
+      nextStepsToSuccess: "Practice describing a specific case using the STAR method to clearly convey your skills and experience.",
+    },
+  ];
   
-  const handleOverviewClick = () => {
-    router.push({
-      pathname: "/practiceOverview",
-    });
-  };
   const handleEndClick = () => {
     router.push({
       pathname: "/practice-interview",
@@ -183,7 +190,7 @@ export default function PracticeAnalysis() {
                           </Flex>
                           <Box>
                             <Heading as="h3" size="16pt" mb={4}>
-                              {answerAnalysis[currentQuestionIndex]?.question || "No question available."}
+                              {questions[currentQuestionIndex]?.question || "No question available."}
                           </Heading>
                         </Box>
 
