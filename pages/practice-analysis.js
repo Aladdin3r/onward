@@ -40,25 +40,25 @@ export default function PracticeAnalysis() {
   const answerAnalysis = [
     {
       question: "Can you describe a situation where you had to prioritize multiple patient needs in a fast-paced environment? How did you manage it?",
-      answer: "Answer here.",
+      answer: "<span style='color: #EA4A4D;'> Um, well, </span> there was this time in the ER where, <span style='color: #EA4A4D;'>uh,</span> I had a patient with chest pain, and I had to, <span style='color: #EA4A4D;'>like,</span> focus on them first, and then, <span style='color: #EA4A4D;'>um,</span> I kind of <b>delegated</b> some stuff to others and, you know, tried to make sure everyone got taken care of.",
       expectation: "The skill or quality being assessed.",
-      overallFeedback: "Great start! Let's refine your response to highlight your experience and skills more clearly.",
+      overallFeedback: "Great start! You've identified key actions like prioritizing the patient with chest pain and delegating tasks, which are essential in a fast-paced environment. Let's build on this foundation to present your experience with more confidence and detail.",
       detailedFeedback: [
         {
-          clarity: "The response lacks specific details about the situation and strategies used.",
-          relevance: "The answer should focus more on the strategies and outcomes related to managing complex cases.",
-          effectiveness: "The response needs to demonstrate specific actions and results.",
-          grammarAndSyntax: "The sentence structure is unclear and needs refinement.",
+          clarity: "Your response gives a good sense of the situation, but it can benefit from specific details about the actions you took and the results you achieved. For example, what tasks did you delegate, and how did you ensure patient safety and team coordination?",
+          relevance: "Focusing on the high-pressure ER environment is a strong choice for this question. To enhance relevance, tie your actions back to the qualities interviewers are looking for, such as decision-making under pressure and teamwork.",
+          effectiveness: "The answer demonstrates an understanding of prioritization and delegation, but adding concrete outcomes (e.g., stabilizing the patient, improving team efficiency) would better showcase your impact.",
+          grammarAndSyntax: "The response includes filler words ('um', 'uh', 'like') that may dilute the impact. Instead, consider replacing them with confident phrasing to highlight your skills.",
           fillerAndPowerWords: [
-            { fillerWords: ["umm"], fillerWordsCount: 0, powerWords: ["effective"], powerWordsCount: 1 },
+            { fillerWords: ["um", "uh", "like"], fillerWordsCount: 0, powerWords: ["delegated"], powerWordsCount: 1 },
           ],
-          languageRefinement: "Consider saying, 'I successfully managed a complex case by implementing a comprehensive care plan and collaborating with interdisciplinary teams.'",
+          languageRefinement: "Consider saying, 'In the ER, I had a patient with chest pain who required immediate attention. I prioritized their care by stabilizing them and communicating with my team to delegate tasks effectively. This ensured all patients received timely and appropriate care.'",
           starMethod: "Try to structure your answer using the STAR method: Describe the Situation, Task, Action, and Result.",
         },
       ],
-      whatWorkedWell: "You mentioned the effectiveness of your approach.",
-      roomForImprovements: "Include specific strategies and outcomes to strengthen your response.",
-      nextStepsToSuccess: "Practice describing a specific case using the STAR method to clearly convey your skills and experience.",
+      whatWorkedWell: "You emphasized the importance of prioritization and delegation, which are critical skills in nursing and clearly demonstrated your ability to manage a high-pressure situation",
+      roomForImprovements: "Include specific examples of your actions and their impact to strengthen your response and Replace casual language with professional phrasing to showcase your expertise.",
+      nextStepsToSuccess: "Practice describing similar scenarios using the STAR method to structure your answers clearly and effectively. Focus on including measurable outcomes, such as 'reduced patient wait times' or 'ensured team compliance with protocols.' Minimize filler words by practicing responses aloud or using mock interview tools.",
     },
   ];
   
