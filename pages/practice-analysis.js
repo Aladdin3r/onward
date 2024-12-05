@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import Head from "next/head";
-import { Box, Center, Spinner, Text, Flex, Button, Stack, Heading, Card, CardBody, StackDivider } from "@chakra-ui/react";
+import { Box, Center, Spinner, Text, Flex, Button, Stack, Heading, Card, CardBody, StackDivider, Divider } from "@chakra-ui/react";
 import Layout from "@/styles/components/Layout";
 import ImprovementSteps from "@/styles/components/ImprovementSteps";
 import TranscriptionComponent from "@/styles/components/FullTranscriptionCard";
@@ -184,17 +184,21 @@ export default function PracticeAnalysis() {
                             <Heading size={{ base: "12pt", md: "16pt", "2xl": "18pt" }}>
                               {questions[currentQuestionIndex]?.category || "No question available."} Question
                             </Heading>
-                            <Heading as="h3" size="10pt" mb={4}>
+                            <Heading as="h3" fontWeight={"regular"} size="10pt" mb={2}>
                              {currentQuestionIndex + 1}/{answerAnalysis.length}
                             </Heading>
                           </Flex>
+                          <Divider/>
                           <Box>
-                            <Heading as="h3" size="16pt" mb={4}>
+                            <Text fontSize="16pt" my={4}>
                               {questions[currentQuestionIndex]?.question || "No question available."}
-                          </Heading>
+                          </Text>
+                          <Divider my={2}/>
                         </Box>
-
                         </Flex>
+                        <Heading size={{ base: "12pt", md: "16pt", "2xl": "18pt" }} mt={2}>
+                          Your Response:
+                        </Heading>
                         <Box
                           pt="2"
                           fontSize="16pt"
@@ -211,7 +215,8 @@ export default function PracticeAnalysis() {
                   </Stack>
                 </CardBody>
               </Card>
-  
+
+
               {/* Navigation Buttons */}
               {answerAnalysis.length > 1 && (
                 <Flex mt={6} gap={2} width="80%" alignItems="center">

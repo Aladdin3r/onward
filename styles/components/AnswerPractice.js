@@ -45,7 +45,7 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
         if (loading) {
           const intervalId = setInterval(() => {
             setLoadingTextIndex((prevIndex) => (prevIndex + 1) % loadingMessages.length);
-          }, 2000);
+          }, 3000);
     
           return () => clearInterval(intervalId);
         }
@@ -164,39 +164,37 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
           const responseText =
             activeButton === "text" ? editableTranscription : transcription;
     
-          // Save the response to localStorage
-          const demoAnswers = [
-            {
-              questionId: 1,
-              question: "What motivated you to pursue a career in nursing?",
-              response: responseText.trim(),
-            },
-          ];
-          localStorage.setItem("answerResponse", JSON.stringify(demoAnswers));
-    
           // Navigate to the analysis page
           router.push("/practice-analysis");
-        }, 5500); // 
+        }, 5800); // 
       };
     
   return (
     <>
         {loading ? (
         <Flex
-            align="center"
-            justify="center"
-            height="100vh"
-            width="100vw"
-            position="fixed"
-            top="0"
-            left="0"
-            bg="rgba(255, 255, 255, 0.8)"
-            zIndex="10"
-            flexDirection="column"
+        align="center"
+        justify="center"
+        position="fixed" 
+        direction="column"
+        top="0"
+        left="0"
+        width="100vw" 
+        height="100vh"
+        bg="rgba(255, 255, 255, 0.8)" 
+        zIndex="9999" 
+      >
+        <LoadingSpinner />
+        <Text
+          mt={4}
+          fontSize="sm"
+          textAlign="center"
+          transition="opacity 0.8s ease-in-out"
+          key={loadingTextIndex}
         >
-            <LoadingSpinner /> {/* Replace with your actual spinner component */}
-            <Text>Analyzing Your Answers...</Text>
-        </Flex>
+          {loadingMessages[loadingTextIndex]}
+        </Text>
+      </Flex>
         ) : (
         <Flex flexDirection="column" justifyContent="center">
             <Flex

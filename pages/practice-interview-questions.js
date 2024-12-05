@@ -92,11 +92,12 @@ export default function PracticeInterviewQuestion() {
                             objectFit="cover"
                             width="10%"
                             display="flex"
-                        alignItems="center" 
-                        justifyContent="center"
+                            alignItems="center" 
+                            justifyContent="center"
+                            mt={10}
                             />
                         {/* <Text fontSize="sm" textAlign="center">Customize your practice! <br/> Choose how many questions you’d like to answer and select the types that best fit your focus areas:  </Text> */}
-                        <Text fontSize="sm" textAlign="center">Question Preview</Text>
+                        <Text fontSize="sm" textAlign="center" my={2}>Question Preview</Text>
                     </Flex>
                     <Flex
                         flex="1"

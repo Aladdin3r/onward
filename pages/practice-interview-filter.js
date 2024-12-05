@@ -28,6 +28,25 @@ export default function PracticeInterviewFilter() {
   const [selectedQuestionType, setSelectedQuestionType] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingTextIndex, setLoadingTextIndex] = useState(0);
+
+  // Loading messages for the loading screen
+  const loadingMessages = [
+    "Analyzing the job posting requirements...",
+    "Tailoring questions to match the job role...",
+    "Generating personalized interview questions...",
+  ];
+
+  // Rotate loading screen text
+  useEffect(() => {
+    if (loading) {
+      const intervalId = setInterval(() => {
+        setLoadingTextIndex((prevIndex) => (prevIndex + 1) % loadingMessages.length);
+      }, 3000);
+
+      return () => clearInterval(intervalId); // Cleanup interval on unmount
+    }
+  }, [loading]);
 
   // DEMO MODE 
   const demoQuestions = [
@@ -69,7 +88,7 @@ export default function PracticeInterviewFilter() {
   
       // Stop loading AFTER navigation
       setLoading(false);
-    }, 5000); // Simulate 3.5-second delay
+    }, 5500); // Simulate 3.5-second delay
   };
   
   
@@ -99,7 +118,7 @@ export default function PracticeInterviewFilter() {
             <Flex
               align="center"
               justify="center"
-              position="fixed" // covering whole page
+              position="fixed" 
               direction="column"
               top="0"
               left="0"
@@ -109,7 +128,7 @@ export default function PracticeInterviewFilter() {
               zIndex="9999" 
             >
               <LoadingSpinner />
-              <Text mt="4">Generating your Questions...</Text>
+              {loadingMessages[loadingTextIndex]}
             </Flex>
           )}
 
@@ -193,26 +212,3 @@ export default function PracticeInterviewFilter() {
   );
 }
 
-// const PollingResponse = async (_url) => {
-//   const _response = await new Promise((resolve) => {
-//     const GetProgress = async (tries = 0) => {
-//       if (tries === 20) {
-//         console.log("too long");
-//         resolve(false);
-//       }
-//       const _progress = await fetch(_url);
-//       const _progJson = await _progress.json();
-//       console.log("progress in json", _progJson);
-//       if (_progJson.progress === 2) {
-//         resolve(_progJson);
-//       } else {
-//         //try again
-//         await setTimeout(() => GetProgress(tries + 1), 3000);
-//       }
-//     };
-
-//     GetProgress();
-//   });
-
-//   return _response;
-// };
