@@ -109,7 +109,6 @@ export default function PracticeInterviewQuestion() {
                             <QuestionPractice
                                 questions={questions || []} 
                                 questionTypes={questionTypes || []}
-                                borderRadius={"15"}
                                 questionWidth={"80%"}
                                 showControls={false}
                             />

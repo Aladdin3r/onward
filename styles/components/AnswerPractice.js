@@ -34,6 +34,22 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
 
     const currentQuestion = questions[0]; // only display 1st
 
+    const [loadingTextIndex, setLoadingTextIndex] = useState(0);
+    const loadingMessages = [
+        "Analyzing your answers...",
+        "Preparing your personalized feedback...",
+        "Almost there! Fine-tuning your insights...",
+    ];
+
+    useEffect(() => {
+        if (loading) {
+          const intervalId = setInterval(() => {
+            setLoadingTextIndex((prevIndex) => (prevIndex + 1) % loadingMessages.length);
+          }, 2000);
+    
+          return () => clearInterval(intervalId);
+        }
+      }, [loading]);
 
     useEffect(() => {
         // Initialize the default voice as "Google US English"
@@ -188,12 +204,11 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
             gap="2rem"
             mx="auto"
             justifyContent="center"
-            width="100%"
-            maxWidth={showVideo ? "90%" : "100%"}
+            width={showVideo ? "90%" : "100%"}
             >
             {/* Question and Answer Section */}
             <Box
-                // maxW={showVideo ? "60%" : "100%"}
+                maxW={showVideo ? "60%" : "100%"}
                 transition="width 0.5s ease"
                 display="flex"
                 flexDirection="column"

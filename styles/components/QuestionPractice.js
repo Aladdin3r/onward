@@ -154,7 +154,7 @@ export default function QuestionPractice({
               questions.map((q, index) => (
                 <Box key={index}>
                   <Heading size="18pt">
-                    {q.category || questionTypes[index] || ""}
+                    {q.category || questionTypes[index] || ""} Question
                   </Heading>
                   <Text pt="2" fontSize="18pt">
                     {q.question || q}{" "}
