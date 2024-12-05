@@ -124,11 +124,18 @@ export default function QuestionPractice({
   };
 
   return (
-    <Flex flexDirection={"column"} justifyContent={"center"} alignItems={"center"}>
+    <Flex 
+      flexDirection={"column"} 
+      justifyContent={"center"} 
+      alignItems={"center"}
+      maxWidth={"1000px"} 
+
+    >
       <Card
         borderTopRadius={borderTopRadius}
         borderBottomRadius={borderBottomRadius}
         // w={questionWidth}
+        w={"100%"}
         m={0}
         p={0}
       >

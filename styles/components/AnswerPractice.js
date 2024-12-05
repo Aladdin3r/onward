@@ -189,11 +189,11 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
             mx="auto"
             justifyContent="center"
             width="100%"
-            maxWidth={showVideo ? "100%" : "60%"}
+            maxWidth={showVideo ? "90%" : "100%"}
             >
             {/* Question and Answer Section */}
             <Box
-                maxW={showVideo ? "60%" : "100%"}
+                // maxW={showVideo ? "60%" : "100%"}
                 transition="width 0.5s ease"
                 display="flex"
                 flexDirection="column"

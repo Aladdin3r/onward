@@ -40,7 +40,7 @@ export default function PracticeAnalysis() {
   const answerAnalysis = [
     {
       question: "Can you describe a situation where you had to prioritize multiple patient needs in a fast-paced environment? How did you manage it?",
-      answer: "Your feet so you can monitor your body language and you can say I had to manage a complex case in a community health setting and it was very <b>effective</b>.",
+      answer: "Answer here.",
       expectation: "The skill or quality being assessed.",
       overallFeedback: "Great start! Let's refine your response to highlight your experience and skills more clearly.",
       detailedFeedback: [

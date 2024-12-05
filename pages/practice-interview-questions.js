@@ -117,7 +117,7 @@ export default function PracticeInterviewQuestion() {
                         direction="column"
                         gap="5"
                     >
-                        <Box>
+                        <Box justify={"center"}>
                             <QuestionPractice
                                 questions={questions || []} 
                                 questionTypes={questionTypes || []}
