@@ -42,7 +42,7 @@ export default function PracticeInterviewFilter() {
     if (loading) {
       const intervalId = setInterval(() => {
         setLoadingTextIndex((prevIndex) => (prevIndex + 1) % loadingMessages.length);
-      }, 3000);
+      }, 2200);
 
       return () => clearInterval(intervalId); // Cleanup interval on unmount
     }
@@ -128,7 +128,15 @@ export default function PracticeInterviewFilter() {
               zIndex="9999" 
             >
               <LoadingSpinner />
-              {loadingMessages[loadingTextIndex]}
+              <Text
+                mt={4}
+                fontSize="sm"
+                textAlign="center"
+                transition="opacity 0.8s ease-in-out"
+                key={loadingTextIndex}
+              >
+                {loadingMessages[loadingTextIndex]}
+              </Text>
             </Flex>
           )}
 

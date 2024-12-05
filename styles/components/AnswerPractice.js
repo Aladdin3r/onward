@@ -45,7 +45,7 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
         if (loading) {
           const intervalId = setInterval(() => {
             setLoadingTextIndex((prevIndex) => (prevIndex + 1) % loadingMessages.length);
-          }, 3000);
+          }, 2700);
     
           return () => clearInterval(intervalId);
         }
@@ -59,54 +59,6 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
             setDefaultVoice(googleUSVoice);
         }
     }, []);
-
-    // useEffect(() => {
-    //     const demoAnswers = [
-    //         {
-    //             questionId: 1,
-    //             question: "What motivated you to pursue a career in nursing?",
-    //             response: "I wanted to help people and make a meaningful impact on their lives.",
-    //         },
-    //     ];
-    
-    //     setAnswers(demoAnswers); // Store prepared answers for analysis
-    // }, []);
-
-    // const handleSaveAnswer = (responseText) => {
-    //     setAnswers((prevAnswers) => {
-    //         const updatedAnswers = [...prevAnswers];
-    //         updatedAnswers[currentQuestionIndex] = {
-    //             questionId: currentQuestionIndex + 1,
-    //             question: currentQuestion?.question || "",
-    //             response: responseText.trim(),
-    //         };
-    //         return updatedAnswers;
-    //     });
-    //     console.log("Answer saved locally:", responseText);
-    // };    
-    
-    // // save answer array to supabase with session ID
-    // const saveAllAnswersToFile = async (updatedAnswers) => {
-    //     if (!updatedAnswers || updatedAnswers.length === 0) {
-    //         console.error("No answers to save.");
-    //         return;
-    //     }
-    
-    //     const textContent = updatedAnswers
-    //         .map((answer) => {
-    //             if (!answer || !answer.question || !answer.response) {
-    //                 console.warn("Incomplete answer detected:", answer);
-    //                 return "Incomplete answer detected.";
-    //             }
-    //             return `Question ${answer.questionId}:\n${answer.question}\n\nAnswer:\n${answer.response}\n`;
-    //         })
-    //         .join("\n==========\n");
-    
-    //     const answersFile = new Blob([textContent], { type: "text/plain" });
-    
-    //     console.log("All answers saved successfully to a single file.");
-    // };    
-
 
     // button handlers
     const handleEndClick = () => {
@@ -166,7 +118,7 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
     
           // Navigate to the analysis page
           router.push("/practice-analysis");
-        }, 5800); // 
+        }, 6000); // 
       };
     
   return (
