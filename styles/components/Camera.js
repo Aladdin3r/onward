@@ -193,7 +193,7 @@ export default function RecordCamera({
               height: "auto", // Same for height
             }}
             _hover={{ // Default box-shadow
-              transform: "scale(1.05)", // Default scale effect
+              transform: "scale(1.1git )", // Default scale effect
               border: "none", // Remove default border  
               outline: "none"
             }}
@@ -211,7 +211,7 @@ export default function RecordCamera({
               />
             ) : (
               <img
-              src="/images/start2.svg"
+              src="/images/stop2.svg"
               style={{ width: "2em", height: "2em" }}
               />
             )}

@@ -45,9 +45,9 @@ export default function DashboardCard() {
           />
 
           <Popup 
-            title="Start Practicing!" 
+            title="Start Now" 
             heading="Select an Interview Type:" 
-            content1="Practice a realistic interview scenario in a simulated environment."
+            content1="Expierence a realistic interview scenario in a simulated environment."
             button1Text="Practice" 
             button1Action={handlePracticeInterview}  // Navigate to the mock interview page
             content2="Focus on refining your answers and building confidence" 

@@ -124,7 +124,7 @@ export default function Popup({
                     fontWeight="semibold"
                     color="#343333"
                     mt="0.8rem"
-                    >Practice Questions</Text>
+                    >Practice</Text>
                     <Text color="#575656"fontSize="1.1em" fontWeight="semibold" mb={2} textAlign="center">
                     Focus on refining your answers and building confidence
                     </Text>
@@ -182,7 +182,7 @@ export default function Popup({
                       mt="0.8rem"
                     >Mock Interview</Text>
                     <Text color="#575656"fontSize="1.1em" fontWeight="semibold" mb={2} textAlign="center">
-                    Practice a realistic interview scenario in a simulated environment.
+                    Expierence a realistic interview scenario in a simulated environment.
                     </Text>
                     {button2Text && button2Action && (
                       <Button 
