@@ -111,10 +111,10 @@ export default function MockInterviewQuestionPage() {
                     don’t allow customization options, encouraging you to think on
                     your feet and practice answering naturally.
                   </Text>
-                  <Text fontSize="xxs" color="gray.700">
+                  {/* <Text fontSize="xxs" color="gray.700">
                     <strong>Interview Length:</strong> Typically lasts between <strong>20 to
                     60 minutes</strong>, adapting to your pace for a realistic experience.
-                  </Text>
+                  </Text> */}
                 </Box>
               )}
             </Flex>

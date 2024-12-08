@@ -260,7 +260,7 @@ export default function PracticeAnalysis() {
               boxShadow="md"
             >
               <Box>
-                <Heading as="h2" size="xs" my={4}>
+                <Heading as="h2" size="xs" my={4} ml={2}>
                   Detailed Analysis
                 </Heading>
               </Box>
@@ -313,7 +313,7 @@ export default function PracticeAnalysis() {
                       {answerAnalysis[currentQuestionIndex]?.detailedFeedback[0]?.languageRefinement ||
                         "No feedback available."}
                     </Text>
-                    <Heading as="h4" size="10pt">STAR Method:</Heading>
+                    <Heading as="h4" size="10pt" mt={2}>STAR Method:</Heading>
                     <Text>
                       {answerAnalysis[currentQuestionIndex]?.detailedFeedback[0]?.starMethod || "No feedback available."}
                     </Text>
@@ -349,7 +349,7 @@ export default function PracticeAnalysis() {
                   </Flex>
   
                   {/* Next Steps and Improvements */}
-                  <Box border="1px" borderColor="brand.blueberryCreme" borderRadius="md" px={4} py={2}>
+                  <Box border="1px" borderColor="brand.blueberryCreme" borderRadius="md" px={4} py={2} mb={8}> 
                     <Heading as="h4" size="10pt" mt={2}>
                       What Worked Well:
                     </Heading>

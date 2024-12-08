@@ -18,6 +18,7 @@ import RecordCamera from "./Camera";
 import Transcriber from "./Transcriber";
 import { supabase } from "@/lib/supabaseClient";
 import LoadingSpinner from "./LoadingSpinner";
+import { Keyboard, Microphone, Keyboard as TextIcon } from "@phosphor-icons/react";
 
 export default function AnswerPractice({ questions, onShowVideoChange }) {
     const router = useRouter();
@@ -483,36 +484,34 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
                 <Heading size="18pt" textAlign="left">
                     Response Type:
                 </Heading>
-                <Divider orientation="horizontal" mb={4} />
+                <Divider orientation="horizontal" mb={1} />
 
                 {/* Response Type Buttons */}
-                <Flex flexDirection="row" gap="2rem">
+                <Flex flexDirection="row" gap="1.5rem">
+
+                    {/* VOICE BUTTON  */}
                     <Button
-                    width={isRecording ? "10rem%" : "7rem"}
-                    onClick={handleVoiceClick}
-                    bg={
-                        activeButton === "voice"
-                        ? "brand.oceanBlue"
-                        : "brand.pureWhite"
-                    }
-                    color={
-                        activeButton === "voice"
-                        ? "brand.pureWhite"
-                        : "brand.oceanBlue"
-                    }
-                    borderColor="brand.oceanBlue"
-                    border="1px"
-                    _hover={{
-                        boxShadow:
-                        "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)",
-                    }}
+                        width={isRecording ? "14rem" : "9rem"}
+                        onClick={handleVoiceClick}
+                        bg={activeButton === "voice" ? "brand.oceanBlue" : "brand.pureWhite"}
+                        color={activeButton === "voice" ? "brand.pureWhite" : "brand.oceanBlue"}
+                        borderColor="brand.oceanBlue"
+                        border="1px"
+                        _hover={{
+                            boxShadow:
+                                "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)",
+                        }}
+                        gap="8px" 
                     >
-                    <Text fontSize="xxs">
-                        {isRecording ? "Stop Recording" : "Voice"}
-                    </Text>
+                        <Microphone size={21}/>
+                        <Text fontSize="xxs">
+                            {isRecording ? "Stop Recording" : "Voice"}
+                        </Text>
                     </Button>
+
+                    {/* TEXT Button */}
                     <Button
-                    width="7rem"
+                    width="9rem"
                     onClick={handleTextClick}
                     bg={
                         activeButton === "text"
@@ -530,9 +529,12 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
                         boxShadow:
                         "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)",
                     }}
+                    gap="10px" 
                     >
+                    <Keyboard size={24} /> {/* Microphone icon on the left */}
                     <Text fontSize="xxs">Text</Text>
                     </Button>
+
                     <Transcriber
                     isRecording={isRecording}
                     setTranscription={setTranscription}
@@ -563,7 +565,7 @@ export default function AnswerPractice({ questions, onShowVideoChange }) {
                             value={editableTranscription}
                             onChange={handleEditableChange}
                             placeholder="Type your answer here..."
-                            size="sm"
+                            size="xs"
                             height="10rem"
                             resize="vertical"
                             />
